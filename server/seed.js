@@ -6,6 +6,7 @@
 import bcrypt from 'bcryptjs'
 import User from './models/User.js'
 import Listing from './models/Listing.js'
+import PurchaseRequest from './models/PurchaseRequest.js'
 import { DEMO_FARMERS, DEMO_CATALOG } from './demoCatalog.js'
 
 const DEMO_PASSWORD = process.env.DEMO_PASSWORD || 'demo1234'
@@ -86,4 +87,54 @@ export async function seedDemoListings() {
   }
 
   if (created) console.log(`✓ Seeded demo marketplace catalogue (${created} real rows)`)
+}
+
+/**
+ * Seeds the demo BUYER account ("Wanjiku Kamau") so the buyer dashboard
+ * showcase has genuine data the first time you open it: two bookmarked
+ * listings and one pending purchase request — all real database records
+ * created through the real APIs' models (no fake UI state). Idempotent:
+ * once the account exists, nothing is touched. Real buyers must sign up
+ * normally and start with empty dashboards.
+ */
+export async function seedDemoBuyer() {
+  const email = process.env.DEMO_BUYER_EMAIL || 'wanjiku@agrilink.co.ke'
+  if (await User.findOne({ email })) return
+
+  /* the demo buyer bookmarks two real listings and has one pending
+     request for the primary demo farmer's Green Maize */
+  const primaryEmail = (process.env.DEMO_EMAIL || 'demo@agrilink.co.ke').toLowerCase()
+  const [graceFarmer, aminaFarmer, maize] = await Promise.all([
+    User.findOne({ email: 'grace@agrilink.co.ke' }),
+    User.findOne({ email: 'amina@agrilink.co.ke' }),
+    (async () => {
+      const demoFarmer = await User.findOne({ email: primaryEmail })
+      return demoFarmer && Listing.findOne({ farmerId: demoFarmer._id, name: 'Green Maize' })
+    })(),
+  ])
+
+  const [potatoRow, mangoRow] = await Promise.all([
+    graceFarmer && Listing.findOne({ name: 'Red Potatoes', farmerId: graceFarmer._id }),
+    aminaFarmer && Listing.findOne({ name: 'Ripe Mangoes', farmerId: aminaFarmer._id }),
+  ])
+
+  const buyer = await User.create({
+    name: 'Wanjiku Kamau',
+    email,
+    passwordHash: await bcrypt.hash(DEMO_PASSWORD, 10),
+    role: 'Buyer',
+    savedListings: [potatoRow?._id, mangoRow?._id].filter(Boolean).map(String),
+  })
+
+  if (maize) {
+    await PurchaseRequest.create({
+      buyerId: buyer._id,
+      listingId: maize._id,
+      quantity: 200,
+      unit: maize.unit,
+      note: 'Weekly supply for a restaurant in Thika.',
+    })
+  }
+
+  console.log(`✓ Seeded demo buyer → ${email} / ${DEMO_PASSWORD}`)
 }

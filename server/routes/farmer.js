@@ -6,7 +6,6 @@
  * Farmer role — enforced HERE on the server, never by frontend state alone.
  */
 import express from 'express'
-import jwt from 'jsonwebtoken'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -14,23 +13,9 @@ import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import User from '../models/User.js'
 import Listing, { CATEGORIES, UNITS } from '../models/Listing.js'
+import { requireAuth } from '../middleware/auth.js'
 
 const router = express.Router()
-
-/* ------------------------------------------------------ auth middleware */
-async function requireAuth(req, res, next) {
-  const token = req.cookies?.agrilink_token
-  if (!token) return res.status(401).json({ error: 'Not signed in.' })
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findById(payload.id)
-    if (!user) return res.status(401).json({ error: 'Session expired.' })
-    req.user = user
-    next()
-  } catch (e) {
-    return res.status(401).json({ error: 'Session expired.' })
-  }
-}
 
 /* Farmer-role gate — buyers/admins never reach farmer functionality. */
 function farmerOnly(req, res, next) {

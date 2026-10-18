@@ -4,13 +4,19 @@
  * full market. Every row is created through the seed at boot (idempotent,
  * keyed by farmer + product name), never fabricated at request time.
  *
- * The four extra farmer accounts exist purely as exhibitors for this
- * showcase; newly-registered farmers still start with an empty store.
+ * The extra farmer accounts exist purely as exhibitors for this showcase;
+ * newly-registered (non-demo) farmers still start with an empty store.
+ *
+ * Multi-offer produce: Joseph's sukuma, Amina's maize and Njoki's potatoes
+ * duplicate produce other exhibitors already sell, at their own prices —
+ * that is what gives the buyer's Price Comparison page real groups of two.
+ * The second offers intentionally carry NO photo: not every farmer
+ * uploads one, and the buyer UI renders an honest category placeholder.
  */
 const unsplash = (id, w = 800, h = 600) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`
 
-/* Additional demo farmer accounts (password: process.env.DEMO_PASSWORD || 'demo1234') */
+/* Demo farmer accounts (password: process.env.DEMO_PASSWORD || 'demo1234') */
 export const DEMO_FARMERS = [
   { name: 'Amina Wanjiru', email: 'amina@agrilink.co.ke', location: 'Nakuru' },
   { name: 'Grace Njeri', email: 'grace@agrilink.co.ke', location: 'Nyeri' },
@@ -27,12 +33,16 @@ export const DEMO_CATALOG = {
     { name: 'Kienyeji Chicken', category: 'Livestock', price: 1200, unit: 'bird', stock: 64, imageUrl: 'https://live.staticflickr.com/2523/3845505147_765bcbc099_b.jpg' },
     { name: 'Sweet Bananas', category: 'Fruits & Veg', price: 300, unit: 'bunch', stock: 310, imageUrl: unsplash('photo-1528825871115-3581a5387919') },
     { name: 'Field Fresh Cabbage', category: 'Fruits & Veg', price: 55, unit: 'head', stock: 560, imageUrl: 'https://live.staticflickr.com/75/190618763_703fc86034_b.jpg' },
+    /* second offer — pairs with Grace's sukuma for price comparison */
+    { name: 'Sukuma Wiki (Collard Greens)', category: 'Fruits & Veg', price: 65, unit: 'kg', stock: 300, imageUrl: '' },
   ],
   'amina@agrilink.co.ke': [
     { name: 'Free-Range Eggs', category: 'Livestock', price: 450, unit: 'tray', stock: 85, imageUrl: unsplash('photo-1506976785307-8732e854ad03') },
     { name: 'Ripe Mangoes', category: 'Fruits & Veg', price: 80, unit: 'kg', stock: 720, imageUrl: unsplash('photo-1553279768-865429fa0078') },
     { name: 'Fresh Dairy Milk', category: 'Livestock', price: 80, unit: 'litre', stock: 900, imageUrl: unsplash('photo-1550583724-b2692b85b150', 800, 500) },
     { name: 'Green Beans', category: 'Fruits & Veg', price: 220, unit: 'kg', stock: 150, imageUrl: unsplash('photo-1515543904379-3d757afe72e4') },
+    /* second offer — pairs with Joseph's maize for price comparison */
+    { name: 'Green Maize', category: 'Grains', price: 55, unit: 'cob', stock: 800, imageUrl: '' },
   ],
   'grace@agrilink.co.ke': [
     { name: 'Baby Spinach', category: 'Fruits & Veg', price: 120, unit: 'kg', stock: 260, imageUrl: unsplash('photo-1574316071802-0d684efa7bf5') },
@@ -49,5 +59,7 @@ export const DEMO_CATALOG = {
   ],
   'njoki@agrilink.co.ke': [
     { name: 'Mwea Pishori Rice', category: 'Grains', price: 320, unit: 'kg', stock: 1100, imageUrl: unsplash('photo-1536304993881-ff6e9eefa2a6') },
+    /* second offer — pairs with Grace's potatoes for price comparison */
+    { name: 'Red Potatoes', category: 'Grains', price: 85, unit: 'kg', stock: 1500, imageUrl: '' },
   ],
 }

@@ -210,16 +210,19 @@ export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
   )
 }
 
-/* The two top-level destinations — buttons (not anchors) switch routes */
+/* The top-level destinations — buttons (not anchors) switch routes.
+   Farmer/Buyer hubs are visible to everyone: clicking the wrong one gets
+   a polite role gate (server-verified), never a silent dead end. */
 const NAV_LINKS = [
   { id: 'shop', label: 'Marketplace' },
   { id: 'farmer/dashboard', label: 'Farmer Panel' },
+  { id: 'buyer/dashboard', label: 'Buyer Hub' },
 ]
 
 export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onSignIn, onSignOut }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const isActive = (link) =>
-    link.id === 'shop' ? route === 'shop' : route.startsWith('farmer/')
+    link.id === 'shop' ? route === 'shop' : route.startsWith(link.id.split('/')[0] + '/')
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-neutral-200/60 bg-white/75 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/60">

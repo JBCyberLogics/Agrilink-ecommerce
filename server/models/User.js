@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema(
     /* stored exactly as the client sends it ('Buyer' | 'Farmer')
        because the UI compares against these exact strings */
     role: { type: String, enum: ['Buyer', 'Farmer'], required: true },
+    /* produce the buyer bookmarked. Unique by construction ($addToSet on
+       the array); referencing Listing ids lets deleted listings be
+       detected (null after populate) and pruned gracefully. */
+    savedListings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Listing' }],
   },
   { timestamps: true },
 )

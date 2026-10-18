@@ -4,25 +4,47 @@ import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
 import Marketplace from './components/Marketplace'
 import FarmerShell from './components/farmer/FarmerShell'
+import BuyerShell from './components/buyer/BuyerShell'
 import Overview from './components/farmer/pages/Overview'
 import MarketIntelligence from './components/farmer/pages/MarketIntelligence'
 import MyProduce from './components/farmer/pages/MyProduce'
 import FarmProfile from './components/farmer/pages/FarmProfile'
 import NotYet from './components/farmer/pages/NotYet'
+import BuyerOverview from './components/buyer/pages/Overview'
+import BuyerBrowse from './components/buyer/pages/Browse'
+import BuyerPriceCompare from './components/buyer/pages/PriceCompare'
+import BuyerRequests from './components/buyer/pages/Requests'
+import BuyerSaved from './components/buyer/pages/Saved'
+import BuyerOrders from './components/buyer/pages/Orders'
+import BuyerProfile from './components/buyer/pages/Profile'
+import BuyerSettings from './components/buyer/pages/Settings'
 import Footer from './components/Footer'
 import { me as fetchMe, login as demoLogin, logout as apiLogout } from './utils/api'
+import Browse, { EMPTY_FILTERS } from './components/buyer/pages/Browse'
 import { MessageSquare, Receipt, Settings as SettingsIcon } from 'lucide-react'
 
 /* ---------------------------------------------------------------- routing
    The app's existing convention is a hash-synced page state (no router
-   dependency). Farmer routes extend it: #/farmer/dashboard, #/farmer/
-   produce, … #/farmer/settings. #farmer (legacy) still lands on the
-   dashboard. Unknown hashes fall back to the shop. */
+   dependency). Role dashboards extend it: #/farmer/dashboard, #/buyer/
+   produce, … (each page set is guarded by the SERVER-verified session
+   role). Legacy #farmer/#buyer aliases land on the first dashboard page;
+   unknown hashes fall back to the shop. */
 const FARMER_PAGE_IDS = [
   'dashboard',
   'market-intelligence',
   'produce',
   'inquiries',
+  'orders',
+  'profile',
+  'settings',
+]
+
+const BUYER_PAGE_IDS = [
+  'dashboard',
+  'produce',
+  'price-comparison',
+  'requests',
+  'saved',
   'orders',
   'profile',
   'settings',
@@ -35,6 +57,11 @@ const parseHash = () => {
   if (h.startsWith('farmer/')) {
     const page = h.slice('farmer/'.length)
     return FARMER_PAGE_IDS.includes(page) ? `farmer/${page}` : 'farmer/dashboard'
+  }
+  if (h === 'buyer') return 'buyer/dashboard' // legacy alias
+  if (h.startsWith('buyer/')) {
+    const page = h.slice('buyer/'.length)
+    return BUYER_PAGE_IDS.includes(page) ? `buyer/${page}` : 'buyer/dashboard'
   }
   return 'shop'
 }
@@ -98,6 +125,18 @@ export default function App() {
     window.scrollTo(0, 0)
   }, [])
 
+  /* Buyer dashboard: Browse's filter state lives at app level so the
+     Overview's "Find Produce" form can jump straight into a pre-filtered
+     Browse (and "clear filters" has a single source of truth). */
+  const [browseFilters, setBrowseFilters] = useState(EMPTY_FILTERS)
+  const jumpToBrowse = useCallback(
+    (patch = {}) => {
+      setBrowseFilters({ ...EMPTY_FILTERS, ...patch })
+      goRoute('buyer/produce')
+    },
+    [goRoute],
+  )
+
   /* Browser back/forward and manual hash edits stay in sync */
   useEffect(() => {
     const onHash = () => setRoute(parseHash())
@@ -130,6 +169,22 @@ export default function App() {
       return
     }
 
+    /* ?demo=buyer — the seeded demo buyer (real MongoDB account) lands on
+       the buyer dashboard for the showcase */
+    if (params.get('demo') === 'buyer') {
+      demoLogin({ email: 'wanjiku@agrilink.co.ke', password: 'demo1234', role: 'Buyer' })
+        .then((u) => {
+          setUser(u)
+          setAuthOpen(false)
+          goRoute('buyer/dashboard')
+        })
+        .catch(() =>
+          handleAuth({ name: 'Wanjiku Kamau', email: 'wanjiku@agrilink.co.ke', role: 'Buyer' }),
+        )
+      if (params.get('auth')) openAuth()
+      return
+    }
+
     if (params.get('auth')) openAuth()
 
     // plain visit — the signed JWT cookie decides who we are
@@ -141,19 +196,28 @@ export default function App() {
 
   // ------------------------------------------------------------------ auth
   /* Every successful login/signup/restore routes by the SERVER-returned
-     role: farmers land on their dashboard (returning to the page they
-     tried to reach, when one was saved), buyers on the shop. A buyer is
-     never dropped into farmer pages. */
+     role — but never steals a deep link the app is already showing:
+     • fresh login from the shop → farmers land on their dashboard,
+       buyers stay on the shop (the marketplace is a buyer's home)
+     • session restored while sitting on #/farmer/* or #/buyer/* → the
+       deep link survives the reload
+     • a saved "returnTo" (the page the user was blocked from) wins over
+       all of the above for its own role */
   const handleAuth = useCallback(
     (authUser) => {
       setUser(authUser)
       setAuthOpen(false)
       const target = returnTo.current
       returnTo.current = null
+      const current = parseHash()
       if (authUser?.role === 'Farmer') {
-        goRoute(target && target.startsWith('farmer/') ? target : 'farmer/dashboard')
+        const deep =
+          current.startsWith('farmer/') ? current : (target && target.startsWith('farmer/')) ? target : 'farmer/dashboard'
+        goRoute(deep)
       } else {
-        goRoute('shop')
+        const deep =
+          current.startsWith('buyer/') ? current : (target && target.startsWith('buyer/')) ? target : 'shop'
+        goRoute(deep)
       }
     },
     [goRoute],
@@ -172,6 +236,7 @@ export default function App() {
 
   // ----------------------------------------------------------------- render
   const page = route.startsWith('farmer/') ? route.slice('farmer/'.length) : null
+  const buyerPage = route.startsWith('buyer/') ? route.slice('buyer/'.length) : null
 
   const farmerPage = {
     dashboard: <Overview onNavigate={goRoute} />,
@@ -195,6 +260,17 @@ export default function App() {
       </NotYet>
     ),
   }[page ?? 'dashboard'] ?? <Overview onNavigate={goRoute} />
+
+  const buyerNode = {
+    dashboard: <BuyerOverview onJumpToBrowse={jumpToBrowse} />,
+    produce: <BuyerBrowse filters={browseFilters} onFiltersChange={setBrowseFilters} />,
+    'price-comparison': <BuyerPriceCompare />,
+    requests: <BuyerRequests />,
+    saved: <BuyerSaved onBrowse={() => jumpToBrowse()} />,
+    orders: <BuyerOrders />,
+    profile: <BuyerProfile />,
+    settings: <BuyerSettings />,
+  }[buyerPage ?? 'dashboard'] ?? <BuyerOverview onJumpToBrowse={jumpToBrowse} />
 
   return (
     <div className="min-h-screen">
@@ -224,6 +300,23 @@ export default function App() {
               onAddToCart={addToCart}
             />
           </>
+        ) : route.startsWith('buyer/') ? (
+          <BuyerShell
+            user={user}
+            page={buyerPage}
+            onNavigate={goRoute}
+            onSignOut={signOut}
+            /* the access guard remembers the buyer route, so after
+               sign-in the user lands where they intended */
+            onOpenAuth={(preset) => {
+              returnTo.current = route
+              openAuth(preset)
+            }}
+            onBackToShop={() => goRoute('shop')}
+            onFarmerDashboard={() => goRoute('farmer/dashboard')}
+          >
+            {buyerNode}
+          </BuyerShell>
         ) : (
           <FarmerShell
             user={user}

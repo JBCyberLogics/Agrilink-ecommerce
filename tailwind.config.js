@@ -18,7 +18,9 @@ export default {
           soft: '#FFF8E1',
         },
         // Farmer dashboard palette (AGRILINK-FE-FARMER-001 design system) —
-        // scoped to farmer pages; the marketplace keeps the brand tokens above.
+        // scoped to the dashboards; both the farmer and buyer shells share this
+        // design system (the buyer spec's tokens are these exact values), while
+        // the marketplace keeps the brand tokens above.
         farmer: {
           primary: '#17633D',
           'primary-hover': '#124D30',
