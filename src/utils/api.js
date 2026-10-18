@@ -53,3 +53,20 @@ export const farmerProfile = () => call('/api/farmer/profile', null, 'GET')
 export const farmerListings = () => call('/api/farmer/listings', null, 'GET')
 export const farmerCreateListing = (body) => call('/api/farmer/listings', body)
 export const farmerDeleteListing = (id) => call(`/api/farmer/listings/${id}`, null, 'DELETE')
+
+/* Multipart photo upload — FormData (fetch sets the boundary itself), the
+   server stores the file under /uploads/ and returns its URL. */
+export async function farmerUploadImage(file) {
+  try {
+    const fd = new FormData()
+    fd.append('image', file)
+    const res = await fetch('/api/farmer/uploads', { method: 'POST', body: fd })
+    const data = await res.json().catch(() => null)
+    if (!res.ok)
+      throw { ...data, status: res.status, error: data?.error || `Upload failed (${res.status})`, field: data?.field }
+    return data
+  } catch (e) {
+    if (e?.status) throw e
+    throw { status: 0, error: 'Could not reach the Agrilink server.', field: 'image' }
+  }
+}

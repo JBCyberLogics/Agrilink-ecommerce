@@ -15,6 +15,9 @@ const listingSchema = new mongoose.Schema(
     price: { type: Number, required: true, min: 1 }, // KES per unit
     unit: { type: String, required: true, enum: UNITS },
     stock: { type: Number, required: true, min: 0 },
+    /* photo of the actual produce — either a file we stored under /uploads
+       (via POST /api/farmer/uploads) or empty; no fabricated remote photos */
+    imageUrl: { type: String, default: '' },
     status: { type: String, enum: ['Active', 'Paused', 'Sold out'], default: 'Active' },
   },
   { timestamps: true },

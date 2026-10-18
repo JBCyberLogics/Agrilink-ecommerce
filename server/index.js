@@ -15,7 +15,7 @@ import dotenv from 'dotenv'
 import { connectDb } from './db.js'
 import { seedDemoUser, seedDemoListings } from './seed.js'
 import authRouter from './routes/auth.js'
-import farmerRouter from './routes/farmer.js'
+import farmerRouter, { UPLOADS_DIR } from './routes/farmer.js'
 
 /* load server/.env regardless of the shell's working directory */
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -31,6 +31,8 @@ app.use(cookieParser())
 app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'agrilink-api' }))
 app.use('/api/auth', authRouter)
 app.use('/api/farmer', farmerRouter)
+/* uploaded product photos (created by farmers only, readable like a CDN) */
+app.use('/uploads', express.static(UPLOADS_DIR, { maxAge: '7d' }))
 
 /* production mode: serve the built SPA alongside the API */
 const dist = path.join(__dirname, '..', 'dist')
@@ -56,7 +58,7 @@ async function main() {
   app.listen(PORT, () => {
     console.log(`✓ Agrilink API  →  http://localhost:${PORT}`)
     console.log(
-      `   routes: /api/auth/* · /api/farmer/{profile,listings} · /api/health`,
+      `   routes: /api/auth/* · /api/farmer/{profile,listings,uploads} · /uploads · /api/health`,
     )
   })
 }

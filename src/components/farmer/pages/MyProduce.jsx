@@ -6,8 +6,8 @@
  * carries a text label.
  */
 import { useState } from 'react'
-import { Sprout, PackagePlus, Wheat, Carrot, Tractor, AlertCircle, RotateCw } from 'lucide-react'
-import { farmerCreateListing, farmerDeleteListing } from '../../../utils/api'
+import { Sprout, PackagePlus, Wheat, Carrot, Tractor, AlertCircle, RotateCw, ImagePlus, Loader2, X } from 'lucide-react'
+import { farmerCreateListing, farmerDeleteListing, farmerUploadImage } from '../../../utils/api'
 import { kes, fmtDate } from '../../../utils/format'
 import Field, { FIELD_ICONS } from '../../ui/Field'
 import EmptyState from '../parts/EmptyState'
@@ -39,15 +39,112 @@ function StatusChip({ stock }) {
   )
 }
 
+/* ------------------------------------------------------- photo picker */
+const MAX_PHOTO = 5 * 1024 * 1024
+const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+/**
+ * Product photo slot — pick a file, it uploads immediately (farmer sees the
+ * real thumbnail as proof), and its URL rides along when the listing is
+ * posted. No image? A lucide placeholder is shown to buyers instead of a
+ * broken external link.
+ */
+function PhotoPicker({ url, busy, error, onPick, onClear }) {
+  return (
+    <div className="sm:col-span-2">
+      <span className="mb-1.5 block text-[13px] font-semibold text-neutral-700">Product photo</span>
+      {/* the sr-only input is the focusable surface; the tile label follows it,
+          so keyboard users tab to it, press Enter to open the file picker and
+          still get a visible focus ring on the tile */}
+      <input
+        id="produce-image"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={onPick}
+        disabled={busy}
+        className="peer sr-only"
+        aria-describedby="produce-image-help"
+      />
+      <div className="flex items-start gap-4">
+        <label
+          htmlFor="produce-image"
+          className="relative grid h-32 w-40 shrink-0 place-items-center overflow-hidden rounded-xl border-2 border-dashed border-farmer-line bg-farmer-page text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary peer-focus-visible:ring-2 peer-focus-visible:ring-farmer-primary/40"
+        >
+          {busy ? (
+            <span className="flex flex-col items-center gap-1.5" aria-live="polite">
+              <Loader2 size={20} aria-hidden="true" className="animate-spin text-farmer-primary" />
+              <span className="text-[11px] font-semibold">Uploading…</span>
+            </span>
+          ) : url ? (
+            <img src={url} alt="Selected product photo preview" className="h-full w-full object-cover" />
+          ) : (
+            <span className="flex flex-col items-center gap-1.5 p-3 text-center">
+              <ImagePlus size={20} aria-hidden="true" />
+              <span className="text-[11px] font-semibold">Add photo</span>
+            </span>
+          )}
+        </label>
+        <div className="flex min-w-0 flex-col justify-end gap-2">
+          <p id="produce-image-help" className="max-w-60 text-xs leading-relaxed text-farmer-muted">
+            JPG, PNG or WebP up to&nbsp;5&nbsp;MB. A real photo of your produce builds buyer trust — it is stored
+            on Agrilink's server, not borrowed from the web.
+          </p>
+          {url && !busy && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="inline-flex h-8 w-fit items-center gap-1.5 rounded-lg border border-farmer-line bg-white px-3 text-[12px] font-semibold text-farmer-ink hover:bg-farmer-page"
+            >
+              <X size={13} aria-hidden="true" /> Remove photo
+            </button>
+          )}
+        </div>
+      </div>
+      {error && (
+        <p role="alert" className="mt-2 flex items-center gap-1.5 text-xs font-medium text-farmer-danger">
+          <AlertCircle size={12} aria-hidden="true" /> {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
 /* --------------------------------------------------------------- form */
 function PostForm({ onSaved }) {
   const [form, setForm] = useState({ name: '', category: '', price: '', unit: 'kg', stock: '' })
+  const [photo, setPhoto] = useState({ url: '', busy: false, error: null }) // uploaded file (not local state of the listing)
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [failed, setFailed] = useState(null)
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
+
+  /* pick → validate locally → upload immediately so the thumbnail the
+     farmer sees is the real stored file, not a temporary preview */
+  const pickPhoto = async (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // allow re-picking the same file after removal
+    if (!file) return
+    if (!PHOTO_TYPES.includes(file.type)) {
+      setPhoto({ url: '', busy: false, error: 'Only JPG, PNG or WebP photos are accepted.' })
+      return
+    }
+    if (file.size > MAX_PHOTO) {
+      setPhoto({ url: '', busy: false, error: 'Photos must be 5 MB or smaller.' })
+      return
+    }
+    setPhoto((p) => ({ ...p, busy: true, error: null }))
+    try {
+      const { url } = await farmerUploadImage(file)
+      setPhoto({ url, busy: false, error: null })
+      setErrors((prev) => (prev.image ? { ...prev, image: undefined } : prev)) // stale server error out
+    } catch (err) {
+      setPhoto({ url: '', busy: false, error: err?.error || 'Photo could not be uploaded.' })
+    }
+  }
+
+  const clearPhoto = () => setPhoto({ url: '', busy: false, error: null })
 
   const submit = async (e) => {
     e.preventDefault()
@@ -57,7 +154,7 @@ function PostForm({ onSaved }) {
     if (!form.price || Number(form.price) <= 0) next.price = 'Price must be greater than zero.'
     if (form.stock === '' || Number(form.stock) < 0) next.stock = 'Enter the units you have.'
     setErrors(next)
-    if (Object.keys(next).length) return
+    if (Object.keys(next).length || photo.busy) return
 
     setSaving(true)
     setSaved(false)
@@ -69,9 +166,11 @@ function PostForm({ onSaved }) {
         price: Number(form.price),
         unit: form.unit,
         stock: Number(form.stock),
+        ...(photo.url ? { imageUrl: photo.url } : {}),
       })
       onSaved(d.listing)
       setForm({ name: '', category: '', price: '', unit: 'kg', stock: '' })
+      setPhoto({ url: '', busy: false, error: null })
       setSaved(true)
       setErrors({})
     } catch (err) {
@@ -150,6 +249,13 @@ function PostForm({ onSaved }) {
           value={form.stock}
           onChange={set('stock')}
           error={errors.stock}
+        />
+        <PhotoPicker
+          url={photo.url}
+          busy={photo.busy}
+          error={photo.error ?? errors.image}
+          onPick={pickPhoto}
+          onClear={clearPhoto}
         />
       </div>
 
@@ -245,6 +351,21 @@ export default function MyProduce() {
           <ul className="divide-y divide-farmer-line">
             {current.map((l) => (
               <li key={l.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3.5 first:pt-0 last:pb-0">
+                {l.imageUrl ? (
+                  <img
+                    src={l.imageUrl}
+                    alt={`${l.name} photo`}
+                    className="h-11 w-11 shrink-0 rounded-lg object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-farmer-page text-farmer-muted"
+                  >
+                    <Sprout size={16} />
+                  </span>
+                )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-farmer-ink">{l.name}</p>
                   <p className="mt-0.5 text-xs text-farmer-muted">
