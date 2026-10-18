@@ -1,22 +1,58 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Navbar from './components/Navbar'
 import AuthModal from './components/AuthModal'
 import Hero from './components/Hero'
 import Marketplace from './components/Marketplace'
-import FarmerPanel from './components/FarmerPanel'
+import FarmerShell from './components/farmer/FarmerShell'
+import Overview from './components/farmer/pages/Overview'
+import MarketIntelligence from './components/farmer/pages/MarketIntelligence'
+import MyProduce from './components/farmer/pages/MyProduce'
+import FarmProfile from './components/farmer/pages/FarmProfile'
+import NotYet from './components/farmer/pages/NotYet'
 import Footer from './components/Footer'
-import { PRODUCTS, MY_LISTINGS, IMAGES } from './data/mockData'
+import { PRODUCTS } from './data/mockData'
+import { me as fetchMe, login as demoLogin, logout as apiLogout } from './utils/api'
+import { MessageSquare, Receipt, Settings as SettingsIcon } from 'lucide-react'
+
+/* ---------------------------------------------------------------- routing
+   The app's existing convention is a hash-synced page state (no router
+   dependency). Farmer routes extend it: #/farmer/dashboard, #/farmer/
+   produce, … #/farmer/settings. #farmer (legacy) still lands on the
+   dashboard. Unknown hashes fall back to the shop. */
+const FARMER_PAGE_IDS = [
+  'dashboard',
+  'market-intelligence',
+  'produce',
+  'inquiries',
+  'orders',
+  'profile',
+  'settings',
+]
+
+const parseHash = () => {
+  const h = window.location.hash.replace(/^#\/?/, '').toLowerCase()
+  if (h === '' || h === 'shop') return 'shop'
+  if (h === 'farmer') return 'farmer/dashboard' // legacy alias
+  if (h.startsWith('farmer/')) {
+    const page = h.slice('farmer/'.length)
+    return FARMER_PAGE_IDS.includes(page) ? `farmer/${page}` : 'farmer/dashboard'
+  }
+  return 'shop'
+}
 
 export default function App() {
   // ------------------------------------------------------------------ state
-  const [user, setUser] = useState(null) // { name, email, role: 'Buyer' | 'Farmer' }
+  const [user, setUser] = useState(null) // { name, email, role: 'Buyer' | 'Farmer' } — server-verified session
+  const [route, setRoute] = useState(parseHash) // 'shop' | 'farmer/<page>'
   const [authOpen, setAuthOpen] = useState(false)
+  const [authPreset, setAuthPreset] = useState(null) // { tab, role } — pre-selects modal state
   const [search, setSearch] = useState('')
   const [cart, setCart] = useState([]) // [{ productId, name, price, unit, image, qty }]
-  // products + farmer listings both live here so a freshly posted listing
-  // immediately appears on the marketplace feed too
-  const [products, setProducts] = useState(PRODUCTS)
-  const [listings, setListings] = useState(MY_LISTINGS)
+  const products = PRODUCTS // marketplace feed (buyer experience, unchanged)
+
+  /* Where a farmer wanted to go before being asked to sign in — restored
+     after a successful auth. A ref so the boot effect can read it too. */
+  const returnTo = useRef(null)
 
   // ------------------------------------------------------------------ cart
   const addToCart = useCallback((product) => {
@@ -48,107 +84,168 @@ export default function App() {
 
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0)
 
-  /* Demo hooks: /?auth=1 opens the auth modal, /?demo=farmer previews the dashboard */
+  /* ---------------------------------------------------------------- routes */
+  const goRoute = useCallback((next) => {
+    setRoute(next)
+    const hash = next === 'shop' ? '#shop' : `#/${next}`
+    if (window.location.hash !== hash) history.replaceState(null, '', hash)
+    window.scrollTo(0, 0)
+  }, [])
+
+  /* Browser back/forward and manual hash edits stay in sync */
+  useEffect(() => {
+    const onHash = () => setRoute(parseHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const openAuth = useCallback((preset = {}) => {
+    setAuthPreset(preset)
+    setAuthOpen(true)
+  }, [])
+
+  /* Session boot:
+     ✓ /?auth=1 opens the auth modal
+     ✓ /?demo=farmer silently signs in as the seeded demo farmer (real
+        MongoDB session; visual fallback if the API is offline)
+     ✓ otherwise restore an in-progress session from the httpOnly cookie,
+        then land each role on its own page (farmer dashboard / shop) */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('auth')) setAuthOpen(true)
-    if (params.get('demo') === 'farmer')
-      setUser({ name: 'Joseph Kariuki', email: 'joseph@agrilink.co.ke', role: 'Farmer' })
+
+    if (params.get('demo') === 'farmer') {
+      demoLogin({ email: 'demo@agrilink.co.ke', password: 'demo1234', role: 'Farmer' })
+        .then(handleAuth)
+        // API offline → visual fallback so the dashboard demo still shows
+        .catch(() =>
+          handleAuth({ name: 'Joseph Kariuki', email: 'joseph@agrilink.co.ke', role: 'Farmer' }),
+        )
+      if (params.get('auth')) openAuth()
+      return
+    }
+
+    if (params.get('auth')) openAuth()
+
+    // plain visit — the signed JWT cookie decides who we are
+    fetchMe()
+      .then((u) => u && handleAuth(u))
+      .catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ------------------------------------------------------------------ auth
-  const handleAuth = useCallback((authUser) => {
-    setUser(authUser)
-    setAuthOpen(false)
-  }, [])
-
-  const signOut = useCallback(() => setUser(null), [])
-
-  // ------------------------------------------------------- farmer listings
-  const postListing = useCallback(
-    (form) => {
-      if (!user) return
-      const id = `L-${Date.now()}`
-      setListings((prev) => [
-        {
-          id,
-          name: form.name,
-          category: form.category,
-          price: form.price,
-          unit: form.unit,
-          stock: form.stock,
-          stockUnit: form.unit,
-          image: IMAGES.covers[form.category],
-          views: 0,
-          orders: 0,
-        },
-        ...prev,
-      ])
-      // make it visible on the marketplace feed instantly
-      setProducts((prev) => [
-        {
-          id,
-          name: form.name,
-          category: form.category,
-          price: form.price,
-          unit: form.unit,
-          stock: form.stock,
-          stockLabel: `${form.stock} ${form.unit}`,
-          image: IMAGES.covers[form.category],
-          farmer: `Farmer ${user.name.split(' ')[0]}`,
-          location: 'Your farm',
-          rating: 4.8,
-          reviews: 3,
-          badge: 'New',
-        },
-        ...prev,
-      ])
+  /* Every successful login/signup/restore routes by the SERVER-returned
+     role: farmers land on their dashboard (returning to the page they
+     tried to reach, when one was saved), buyers on the shop. A buyer is
+     never dropped into farmer pages. */
+  const handleAuth = useCallback(
+    (authUser) => {
+      setUser(authUser)
+      setAuthOpen(false)
+      const target = returnTo.current
+      returnTo.current = null
+      if (authUser?.role === 'Farmer') {
+        goRoute(target && target.startsWith('farmer/') ? target : 'farmer/dashboard')
+      } else {
+        goRoute('shop')
+      }
     },
-    [user],
+    [goRoute],
   )
 
-  const removeListing = useCallback((id) => {
-    setListings((prev) => prev.filter((l) => l.id !== id))
-    setProducts((prev) => prev.filter((p) => p.id !== id))
-  }, [])
+  const signOut = useCallback(async () => {
+    try {
+      await apiLogout() // clear the session cookie server-side
+    } catch {
+      /* API offline — clear local state anyway */
+    }
+    setUser(null)
+    returnTo.current = null
+    goRoute('shop')
+  }, [goRoute])
 
-  // ------------------------------------------------------------------ render
+  // ----------------------------------------------------------------- render
+  const page = route.startsWith('farmer/') ? route.slice('farmer/'.length) : null
+
+  const farmerPage = {
+    dashboard: <Overview onNavigate={goRoute} />,
+    'market-intelligence': <MarketIntelligence />,
+    produce: <MyProduce />,
+    inquiries: (
+      <NotYet icon={MessageSquare} title="Buyer inquiries are not available yet.">
+        No buyer inquiries are available. Messaging between buyers and farmers opens in a later
+        stage — nothing is simulated here.
+      </NotYet>
+    ),
+    orders: (
+      <NotYet icon={Receipt} title="No recorded sales yet.">
+        Sales information will appear when recorded transactions are available.
+      </NotYet>
+    ),
+    profile: <FarmProfile />,
+    settings: (
+      <NotYet icon={SettingsIcon} title="Settings are not available yet.">
+        Account and notification preferences will be available in a later stage.
+      </NotYet>
+    ),
+  }[page ?? 'dashboard'] ?? <Overview onNavigate={goRoute} />
+
   return (
     <div className="min-h-screen">
       <Navbar
         user={user}
+        route={route}
+        onRoute={goRoute}
         search={search}
         onSearch={setSearch}
         cart={cart}
         cartCount={cartCount}
         onQty={changeQty}
-        onSignIn={() => setAuthOpen(true)}
+        onSignIn={() => openAuth()}
         onSignOut={signOut}
       />
 
       {/* offset for the fixed navbar (main row + mobile search row) */}
       <main className="pt-[136px] md:pt-[72px]">
-        <Hero onJoin={() => setAuthOpen(true)} />
-        <Marketplace
-          products={products}
-          search={search}
-          onClearSearch={() => setSearch('')}
-          onAddToCart={addToCart}
-        />
-        <section id="farmer-panel" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-10 sm:px-6 lg:px-8">
-          <FarmerPanel
+        {route === 'shop' ? (
+          <>
+            {/* hero CTA pre-picks the Farmer card: "Join as a Farmer" leads
+                straight into farmer signup */}
+            <Hero onJoin={() => openAuth({ tab: 'signup', role: 'Farmer' })} />
+            <Marketplace
+              products={products}
+              search={search}
+              onClearSearch={() => setSearch('')}
+              onAddToCart={addToCart}
+            />
+          </>
+        ) : (
+          <FarmerShell
             user={user}
-            onOpenAuth={() => setAuthOpen(true)}
-            onSwitchRole={() => setUser((u) => ({ ...u, role: 'Farmer' }))}
-            listings={listings}
-            onPostListing={postListing}
-            onRemoveListing={removeListing}
-          />
-        </section>
+            page={page}
+            onNavigate={goRoute}
+            onSignOut={signOut}
+            /* the access guard remembers the farmer route, so after
+               sign-in the user lands where they intended */
+            onOpenAuth={(preset) => {
+              returnTo.current = route
+              openAuth(preset)
+            }}
+            onBackToShop={() => goRoute('shop')}
+          >
+            {farmerPage}
+          </FarmerShell>
+        )}
         <Footer />
       </main>
 
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onAuth={handleAuth} />
+      <AuthModal
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onAuth={handleAuth}
+        initialTab={authPreset?.tab ?? 'login'}
+        initialRole={authPreset?.role ?? null}
+      />
     </div>
   )
 }

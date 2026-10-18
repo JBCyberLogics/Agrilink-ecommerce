@@ -1,0 +1,55 @@
+/**
+ * Tiny fetch wrapper for the Agrilink API.
+ *
+ * In dev every call goes to the same origin ("/api/...") and Vite's proxy
+ * forwards it to the Express backend — first-party cookies, zero CORS.
+ * Auth routes resolve to { name, email, role } and reject with a plain
+ * { status, error, field? } object so forms can map failures inline.
+ */
+async function call(url, body = null, method) {
+  /* method defaults to POST when there's a JSON body, otherwise GET */
+  const verb = method ?? (body ? 'POST' : 'GET')
+  let res
+  try {
+    res = await fetch(
+      url,
+      body
+        ? {
+            method: verb,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          }
+        : verb === 'GET'
+          ? undefined
+          : { method: verb },
+    )
+  } catch {
+    throw { status: 0, error: 'Could not reach the Agrilink server.' }
+  }
+
+  let data = null
+  try {
+    data = await res.json()
+  } catch {
+    /* non-JSON response — fall through */
+  }
+  if (!res.ok)
+    /* spread the full error payload so fields like `accountRole` reach the form */
+    throw { ...data, status: res.status, error: data?.error || `Request failed (${res.status})`, field: data?.field }
+
+  return data?.user ?? data
+}
+
+export const signup = (body) => call('/api/auth/signup', body)
+export const login = (body) => call('/api/auth/login', body)
+export const me = () => call('/api/auth/me').then((d) => (d?.name ? d : null))
+export const logout = () => call('/api/auth/logout', {})
+
+/* ------------------------------------------------ farmer dashboard (real) */
+/* Role + auth are enforced server-side; these only work with a
+   Farmer-session cookie. Market prices have no source yet — the UI shows
+   honest "not configured" states instead of fabricated data. */
+export const farmerProfile = () => call('/api/farmer/profile', null, 'GET')
+export const farmerListings = () => call('/api/farmer/listings', null, 'GET')
+export const farmerCreateListing = (body) => call('/api/farmer/listings', body)
+export const farmerDeleteListing = (id) => call(`/api/farmer/listings/${id}`, null, 'DELETE')

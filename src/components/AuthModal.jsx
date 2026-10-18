@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { Sprout, X, LogIn, UserPlus, ShoppingBag, Tractor, Check, Eye, EyeOff, Lock, Loader2, ShieldCheck } from 'lucide-react'
+import { Sprout, X, LogIn, UserPlus, ShoppingBag, Tractor, Check, Eye, EyeOff, Lock, Loader2, ShieldCheck, AlertCircle } from 'lucide-react'
 import Field, { FIELD_ICONS } from './ui/Field'
+import { signup as apiSignup, login as apiLogin } from '../utils/api'
 
 const TABS = [
   { id: 'login', label: 'Login', icon: LogIn },
@@ -14,26 +15,30 @@ const ROLES = [
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export default function AuthModal({ open, onClose, onAuth }) {
+export default function AuthModal({ open, onClose, onAuth, initialTab = 'login', initialRole = null }) {
   const [tab, setTab] = useState('login')
   const [role, setRole] = useState(null)
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [showPass, setShowPass] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const panelRef = useRef(null)
 
-  /* Reset transient state whenever the dialog opens */
+  /* Reset transient state whenever the dialog opens (honouring role presets,
+     e.g. the "sell your harvest" upsell pre-picking the Farmer card) */
   useEffect(() => {
     if (open) {
-      setTab('login')
-      setRole(null)
-      setForm({ name: '', email: '', password: '' })
+      setTab(initialTab)
+      setRole(initialRole)
+      setForm({ name: '', email: '', password: '', confirmPassword: '' })
       setErrors({})
       setSubmitting(false)
       setShowPass(false)
+      setShowConfirm(false)
       panelRef.current?.querySelector('input')?.focus()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   /* Scroll lock + Escape to close + simple focus trap (Tab cycling) */
@@ -78,11 +83,16 @@ export default function AuthModal({ open, onClose, onAuth }) {
       next.name = 'Please tell us your full name.'
     if (!EMAIL_RE.test(form.email)) next.email = 'Enter a valid email address.'
     if (form.password.length < 6) next.password = 'Use at least 6 characters.'
+    if (tab === 'signup') {
+      if (!form.confirmPassword) next.confirmPassword = 'Please confirm your password.'
+      else if (form.confirmPassword !== form.password)
+        next.confirmPassword = "Passwords don't match."
+    }
     if (!role) next.role = 'Choose how you use Agrilink.'
     return next
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const found = validate()
     setErrors(found)
@@ -92,19 +102,34 @@ export default function AuthModal({ open, onClose, onAuth }) {
         ?.focus()
       return
     }
+
     setSubmitting(true)
-    /* --- Mock auth latency; replace with a real API call post-backend --- */
-    setTimeout(() => {
-      setSubmitting(false)
-      const name =
+    try {
+      /* Real auth — login/signup hit MongoDB through the Agrilink API;
+         on success the backend also sets the httpOnly session cookie. */
+      const apiUser =
         tab === 'signup'
-          ? form.name.trim()
-          : form.email
-              .split('@')[0]
-              .replace(/[._-]+/g, ' ')
-              .replace(/\b\w/g, (c) => c.toUpperCase())
-      onAuth({ name, email: form.email, role })
-    }, 900)
+          ? await apiSignup({
+              name: form.name.trim(),
+              email: form.email.trim(),
+              password: form.password,
+              role,
+            })
+          : await apiLogin({ email: form.email.trim(), password: form.password, role })
+
+      onAuth(apiUser) // { name, email, role } — exactly the shape App expects
+    } catch (err) {
+      const next = {}
+      if (err?.field) next[err.field] = err.error
+      else next.global = err?.error || 'Something went wrong. Please try again.'
+      /* role gate 403: pre-select the account's real role so the user
+         can simply press Sign In again */
+      if (err?.field === 'role' && (err?.accountRole === 'Buyer' || err?.accountRole === 'Farmer'))
+        setRole(err.accountRole)
+      setErrors(next)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -246,6 +271,32 @@ export default function AuthModal({ open, onClose, onAuth }) {
                 }
               />
 
+              {/* Sign-up only: plaintext-mismatch guard (never sent to the API) */}
+              {tab === 'signup' && (
+                <Field
+                  id="confirm-password"
+                  label="Confirm password"
+                  type={showConfirm ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  icon={FIELD_ICONS.password}
+                  value={form.confirmPassword}
+                  onChange={setField('confirmPassword')}
+                  error={errors.confirmPassword}
+                  autoComplete="new-password"
+                  className="animate-fade-up"
+                  rightSlot={
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirm((v) => !v)}
+                      aria-label={showConfirm ? 'Hide confirm password' : 'Show confirm password'}
+                      className="grid h-8 w-8 place-items-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
+                    >
+                      {showConfirm ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+                    </button>
+                  }
+                />
+              )}
+
               {/* --- Custom role selector (Buyer / Farmer) --- */}
               <fieldset>
                 <legend className="mb-1.5 text-[13px] font-semibold text-neutral-700">
@@ -316,6 +367,17 @@ export default function AuthModal({ open, onClose, onAuth }) {
                   </button>
                 </div>
               ) : null}
+
+              {/* server-level errors (bad credentials, network, 500s) */}
+              {errors.global && (
+                <p
+                  role="alert"
+                  className="flex items-center gap-1.5 rounded-xl bg-red-50/90 px-3 py-2 text-xs font-medium text-red-600"
+                >
+                  <AlertCircle size={13} aria-hidden="true" className="shrink-0" />
+                  {errors.global}
+                </p>
+              )}
 
               {/* submit */}
               <button

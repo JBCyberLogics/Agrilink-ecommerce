@@ -17,6 +17,20 @@ export default {
           dark: '#C77800',
           soft: '#FFF8E1',
         },
+        // Farmer dashboard palette (AGRILINK-FE-FARMER-001 design system) —
+        // scoped to farmer pages; the marketplace keeps the brand tokens above.
+        farmer: {
+          primary: '#17633D',
+          'primary-hover': '#124D30',
+          surface: '#EAF5EE',
+          page: '#F7F9F7',
+          ink: '#17231C',
+          muted: '#647067',
+          line: '#E1E8E2',
+          success: '#207A45',
+          warning: '#946200',
+          danger: '#B42318',
+        },
       },
       fontFamily: {
         display: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],

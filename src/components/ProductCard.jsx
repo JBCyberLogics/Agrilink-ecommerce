@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { MapPin, BadgeCheck, ShoppingCart, Check, Star } from 'lucide-react'
+import { kes } from '../utils/format'
 
 const LOW_STOCK = 50
 
@@ -70,7 +71,7 @@ export default function ProductCard({ product, onAddToCart }) {
 
         <div className="mt-4 flex items-center justify-between gap-2 pt-1">
           <p className="font-display text-lg font-bold text-primary-dark">
-            ${product.price.toFixed(2)}
+            {kes(product.price)}
             <span className="ml-1 text-xs font-medium text-neutral-400">/ {product.unit.split(' ')[0]}</span>
           </p>
 

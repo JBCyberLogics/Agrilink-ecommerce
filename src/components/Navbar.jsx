@@ -1,23 +1,18 @@
 import { useState } from 'react'
 import { Sprout, Search, ShoppingBag, Menu, X, LogOut, ChevronDown, Plus, Minus, ArrowRight } from 'lucide-react'
+import { kes } from '../utils/format'
 
-const formatMoney = (n) => `$${n.toFixed(2)}`
-
-/* Brand mark: leaf icon tile + wordmark */
+/* Navbar logo — the official Agrilink brand artwork (logo.png).
+   The source PNG is square with generous margins, so object-cover
+   crops to the wordmark band at the visual center. */
 function Brand() {
   return (
-    <a href="#" aria-label="Agrilink home" className="flex shrink-0 items-center gap-2.5">
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-primary-dark text-white shadow-lift">
-        <Sprout size={22} aria-hidden="true" />
-      </span>
-      <span className="leading-none">
-        <span className="block font-display text-lg font-bold tracking-tight text-neutral-900">
-          Agri<span className="text-primary">link</span>
-        </span>
-        <span className="mt-0.5 block text-[10px] font-medium uppercase tracking-[0.22em] text-neutral-400">
-          Farm to table
-        </span>
-      </span>
+    <a href="#" aria-label="Agrilink home" className="flex shrink-0 items-center">
+      <img
+        src="/images/logo.png"
+        alt="Agrilink — Connecting Farm to Future"
+        className="h-10 w-32 object-cover object-center sm:h-11 sm:w-36"
+      />
     </a>
   )
 }
@@ -119,7 +114,7 @@ function CartButton({ cart, onQty, onRemove, count }) {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13px] font-semibold text-neutral-900">{it.name}</p>
                     <p className="text-xs text-neutral-400">
-                      {formatMoney(it.price)} / {it.unit}
+                      {kes(it.price)} / {it.unit}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
@@ -150,7 +145,7 @@ function CartButton({ cart, onQty, onRemove, count }) {
             <div className="border-t border-neutral-200/60 bg-white/50 p-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-neutral-500">Subtotal</span>
-                <span className="font-display text-lg font-bold text-neutral-900">{formatMoney(subtotal)}</span>
+                <span className="font-display text-lg font-bold text-neutral-900">{kes(subtotal)}</span>
               </div>
               <button
                 type="button"
@@ -215,8 +210,16 @@ export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
   )
 }
 
-export default function Navbar({ user, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onSignIn, onSignOut }) {
+/* The two top-level destinations — buttons (not anchors) switch routes */
+const NAV_LINKS = [
+  { id: 'shop', label: 'Marketplace' },
+  { id: 'farmer/dashboard', label: 'Farmer Panel' },
+]
+
+export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onSignIn, onSignOut }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const isActive = (link) =>
+    link.id === 'shop' ? route === 'shop' : route.startsWith('farmer/')
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-neutral-200/60 bg-white/75 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/60">
@@ -231,14 +234,20 @@ export default function Navbar({ user, search, onSearch, cart, cartCount, onQty,
         {/* right cluster */}
         <div className="ml-auto flex items-center gap-1 sm:gap-2">
           <ul className="mr-2 hidden items-center gap-1 lg:flex">
-            {['Marketplace', 'Farmer Panel'].map((item) => (
-              <li key={item}>
-                <a
-                  href={`#${item.toLowerCase().replace(' ', '-')}`}
-                  className="rounded-full px-3.5 py-2 text-sm font-medium text-neutral-600 transition-colors hover:bg-primary-soft/60 hover:text-primary-dark"
+            {NAV_LINKS.map((link) => (
+              <li key={link.id}>
+                <button
+                  type="button"
+                  onClick={() => onRoute(link.id)}
+                  aria-current={isActive(link) ? 'page' : undefined}
+                  className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                    isActive(link)
+                      ? 'bg-primary-soft text-primary-dark'
+                      : 'text-neutral-600 hover:bg-primary-soft/60 hover:text-primary-dark'
+                  }`}
                 >
-                  {item}
-                </a>
+                  {link.label}
+                </button>
               </li>
             ))}
           </ul>
@@ -270,16 +279,24 @@ export default function Navbar({ user, search, onSearch, cart, cartCount, onQty,
       {mobileOpen && (
         <div className="border-t border-neutral-200/60 bg-white/90 p-4 backdrop-blur-xl lg:hidden">
           <ul className="space-y-1">
-            {['Marketplace', 'Farmer Panel'].map((item) => (
-              <li key={item}>
-                <a
-                  href={`#${item.toLowerCase().replace(' ', '-')}`}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-between rounded-xl px-3 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100"
+            {NAV_LINKS.map((link) => (
+              <li key={link.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onRoute(link.id)
+                    setMobileOpen(false)
+                  }}
+                  aria-current={isActive(link) ? 'page' : undefined}
+                  className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
+                    isActive(link)
+                      ? 'bg-primary-soft text-primary-dark'
+                      : 'text-neutral-700 hover:bg-neutral-100'
+                  }`}
                 >
-                  {item}
+                  {link.label}
                   <ChevronDown size={16} className="rotate-[-90deg] text-neutral-300" aria-hidden="true" />
-                </a>
+                </button>
               </li>
             ))}
           </ul>
