@@ -18,7 +18,8 @@ The API reads `server/.env` — copy `server/.env.example` and fill in your Mong
 | URL | What it shows |
 | --- | --- |
 | `/?auth=1` | Opens the glassmorphism auth modal on load |
-| `/?demo=farmer` | Silently signs in as the seeded demo farmer → lands on `#/farmer/dashboard` |
+| `/?demo=farmer` | Silently signs in as the seeded demo farmer (`demo@agrilink.co.ke` / `demo1234`) → lands on `#/farmer/dashboard` |
+| — Demo farmers | `demo@agrilink.co.ke` · `amina@agrilink.co.ke` · `grace@agrilink.co.ke` · `kwame@agrilink.co.ke` · `njoki@agrilink.co.ke` — all password `demo1234`. They exist purely as exhibitors for the seeded marketplace catalogue; real (non-demo) farmers start empty |
 | `#shop` | Buyer marketplace |
 | `#/farmer/{dashboard,market-intelligence,produce,inquiries,orders,profile,settings}` | Farmer dashboard pages (`#farmer` still redirects to the dashboard for compatibility) |
 
@@ -38,8 +39,8 @@ The API reads `server/.env` — copy `server/.env.example` and fill in your Mong
   - **My Produce** — live CRUD against MongoDB: seeded or new listings (name, category, price/unit, stock **and a product photo**), validation errors mapped to fields from the API, mobile-friendly rows, labels like "Low stock" (never color-only), two-step confirm delete with optimistic removal. Photos are uploaded to the API (`POST /api/farmer/uploads`, 5 MB cap, JPEG/PNG/WebP, stored under `server/uploads/` and served from `/uploads`), previewed instantly with a "Remove photo" action, rendered as thumbnails on every listing row, and deleted from disk when their listing is deleted.
   - **Buyer Inquiries / Orders & Sales / Settings** — honest "not yet available" placeholders (no fabricated counts or toggles).
   - **Farm Profile** — the server-verified session (name, email, role, member since); profile editing is labelled as a later stage.
-- **Buyer marketplace** — hero banner with floating glass stat cards, category filter pills (All / Grains / Fruits & Veg / Livestock with counts), responsive product card grid (1→2→3→4 columns): photo, name, `KSh 130 / kg` pricing, farmer + county badge, rating chip, "Add to Cart" with confirm state, low-stock and badge chips.
-- **Data honesty policy** — the farmer dashboard contains **no mock data**: listings are real MongoDB documents (`listings` collection), market prices/inquiries/sales don't exist yet and are shown as explicitly "not available" rather than simulated. The marketplace feed (`PRODUCTS`) remains the only mock dataset, scoped to the buyer view.
+- **Buyer marketplace — real DB feed** — hero banner with floating glass stat cards, then a **live feed of what farmers actually post** (`GET /api/market/listings`, fetched fresh every time the shop mounts, so a listing saved moments ago is already on the shelf). Category filter pills (All / Grains / Fruits & Veg / Livestock with live counts from the feed) + navbar search across name/farmer/county, responsive product card grid (1→2→3→4 columns): photo (or honest category-icon placeholder), name, `KSh 130 / kg` pricing, real farmer + county chip, stock reality as text ("Low stock", "28 head left", "Sold out"), "Add to Cart" with confirm state, plus dedicated loading skeleton, unreachable-API retry state and empty-market state. Cart honours the listing's real stock (also in client-side quantity clamping).
+- **Data honesty policy** — **no part of the app is backed by mock product data anymore.** The farmer dashboard reads `/api/farmer/*` and the buyer marketplace reads `/api/market/listings` — every card on the shop is a real MongoDB listing (including the main demo farmer's rows, the exhibitor accounts' showcase rows, and any real user's own posts, like account `muchiribithon@gmail.com`'s "Rabbits" listing). Market prices/inquiries/sales don't exist yet and are shown as explicitly "not available" rather than simulated. Cards carry only factual fields — no fabricated ratings, reviews or marketing badges; stock chips ("Low stock" / "Sold out") come from the real stock number, and listings without a photo show a category-icon placeholder instead of a borrowed stock photo.
 
 ## Backend (`server/`)
 
@@ -50,6 +51,7 @@ The API reads `server/.env` — copy `server/.env.example` and fill in your Mong
 | `POST /api/auth/logout` | Clears the session cookie |
 | `GET /api/auth/me` | Returns `{ name, email, role }` from the JWT cookie; anonymous → `{ user: null }` |
 | `GET /api/farmer/profile` | Server-verified session for farmer pages (401 anon, 403 buyer) |
+| `GET /api/market/listings` | **Public** shop feed: ACTIVE listings of every farmer, newest first, farmer name joined from the DB — this is what buyers see, so what farmers post is what the marketplace sells |
 | `GET /api/farmer/listings` | The signed-in farmer's own listings, newest first |
 | `POST /api/farmer/listings` | Creates a listing (name, category, price KES ≥ 1, unit, stock, optional `imageUrl` that must point at a stored `/uploads/` file); field-level 400 errors |
 | `DELETE /api/farmer/listings/:id` | Deletes **own** listing only (foreign/missing ids → 404); its uploaded photo file is removed too |
@@ -87,11 +89,12 @@ src/components/farmer/
 server/
 ├── index.js                   # Express entry: /api routes + static dist/ when built
 ├── db.js                      # Mongoose connect (seedlist Atlas URI)
-├── seed.js                    # demo farmer + demo listings upsert
+├── seed.js                    # demo farmer + demo listings upsert (idempotent)
+├── demoCatalog.js             # the showcase catalogue (real rows seeded at boot) + demo farmer accounts
 ├── .env / .env.example        # MONGODB_URI, JWT_SECRET, PORT, demo creds (env gitignored)
 ├── models/User.js             # unique email, bcrypt hash, role enum
-├── models/Listing.js          # produce listings (KES price, category/unit enums, photo)
-└── routes/{auth,farmer.js}    # signup · login · logout · me / profile · listings CRUD · photo uploads
+├── models/Listing.js          # produce listings (KES price, category/unit enums, photo, county)
+└── routes/{auth,farmer,market}.js  # auth / farmer CRUD + photo uploads / public shop feed
 
 src/
 ├── main.jsx                  # entry
@@ -142,8 +145,9 @@ The repo is verified with headless-Chrome CDP suites (`/tmp/opencode/cdp-*.mjs`)
 | `cdp-roles.mjs` | visitor/buyer/farmer routing, login-role 403 + auto-correct, refresh restore | 9/9 |
 | `cdp-auth.mjs` | signup, inline validation (mismatch/duplicate/409), wrong password, cookie session restore, sign-out, demo farmer → real listings | 11/11 |
 | `cdp-dashboard.mjs` | farmer gate + return path, honest empty states, no fabricated metrics, market-intelligence contract, profile, produce CRUD (post + two-step delete), **photo upload E2E: real browser file pick → multipart POST → instant preview → row thumbnail from `/uploads/` → picker reset**, deep-link refresh, 390px drawer + overflow, buyer block, zero console errors/exceptions | 34/34 |
-| `cdp-search.mjs` / `cdp-cart.mjs` | shop feed filtering/empty state; cart count, dropdown basket, subtotal math | verified |
-| curl API probes | 401 anon · 403 buyer (`FARMER_ONLY`) · 201 create · 400 field errors · 404 foreign/missing · ownership-enforced delete · uploads: 201 farmer / 401 anon / 403 buyer / 400 wrong-type / 400 >5 MB / bogus `imageUrl` rejected / delete removes the stored file | verified |
+| `cdp-market.mjs` | **the core loop: farmer posts (with photo) → card appears on the public marketplace instantly → delete removes it**; real feed for visitors (farmer names, KSh pricing, no fabricated ratings), search narrowing, real-card add-to-cart, user-posted rows rendering | 12/12 |
+| `cdp-search.mjs` / `cdp-cart.mjs` | shop feed filtering/empty state (20 real rows); cart count, dropdown basket, subtotal math — all against the live API feed | verified |
+| curl API probes | 401 anon · 403 buyer (`FARMER_ONLY`) · 201 create · 400 field errors · 404 foreign/missing · ownership-enforced delete · uploads: 201 farmer / 401 anon / 403 buyer / 400 wrong-type / 400 >5 MB / bogus `imageUrl` rejected / delete removes the stored file · `GET /api/market/listings` public 200 with farmer-joined rows | verified |
 | `npm run build` | production build + Express serving `dist/` on one port (smoke-tested in headless Chrome) | passing |
 
 **Dev-tooling note:** after changing `tailwind.config.js` (like the farmer palette), a **full Vite restart** is required — HMR / "page reload of the config" does not rescan the JIT for new theme colors, which silently renders new palette classes transparent (the "Post produce" button was white-on-white until the dev server was restarted).

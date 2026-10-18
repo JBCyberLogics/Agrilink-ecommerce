@@ -13,9 +13,10 @@ import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 
 import { connectDb } from './db.js'
-import { seedDemoUser, seedDemoListings } from './seed.js'
+import { seedDemoUser, seedDemoFarmers, seedDemoListings } from './seed.js'
 import authRouter from './routes/auth.js'
 import farmerRouter, { UPLOADS_DIR } from './routes/farmer.js'
+import marketRouter from './routes/market.js'
 
 /* load server/.env regardless of the shell's working directory */
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -31,6 +32,7 @@ app.use(cookieParser())
 app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'agrilink-api' }))
 app.use('/api/auth', authRouter)
 app.use('/api/farmer', farmerRouter)
+app.use('/api/market', marketRouter)
 /* uploaded product photos (created by farmers only, readable like a CDN) */
 app.use('/uploads', express.static(UPLOADS_DIR, { maxAge: '7d' }))
 
@@ -53,12 +55,13 @@ async function main() {
 
   await connectDb()
   await seedDemoUser()
+  await seedDemoFarmers()
   await seedDemoListings()
 
   app.listen(PORT, () => {
     console.log(`✓ Agrilink API  →  http://localhost:${PORT}`)
     console.log(
-      `   routes: /api/auth/* · /api/farmer/{profile,listings,uploads} · /uploads · /api/health`,
+      `   routes: /api/auth/* · /api/farmer/{profile,listings,uploads} · /api/market/listings · /uploads · /api/health`,
     )
   })
 }

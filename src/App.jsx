@@ -10,7 +10,6 @@ import MyProduce from './components/farmer/pages/MyProduce'
 import FarmProfile from './components/farmer/pages/FarmProfile'
 import NotYet from './components/farmer/pages/NotYet'
 import Footer from './components/Footer'
-import { PRODUCTS } from './data/mockData'
 import { me as fetchMe, login as demoLogin, logout as apiLogout } from './utils/api'
 import { MessageSquare, Receipt, Settings as SettingsIcon } from 'lucide-react'
 
@@ -47,8 +46,7 @@ export default function App() {
   const [authOpen, setAuthOpen] = useState(false)
   const [authPreset, setAuthPreset] = useState(null) // { tab, role } — pre-selects modal state
   const [search, setSearch] = useState('')
-  const [cart, setCart] = useState([]) // [{ productId, name, price, unit, image, qty }]
-  const products = PRODUCTS // marketplace feed (buyer experience, unchanged)
+  const [cart, setCart] = useState([]) // [{ productId, name, price, unit, image, stock, qty }]
 
   /* Where a farmer wanted to go before being asked to sign in — restored
      after a successful auth. A ref so the boot effect can read it too. */
@@ -58,8 +56,11 @@ export default function App() {
   const addToCart = useCallback((product) => {
     setCart((prev) => {
       const found = prev.find((i) => i.productId === product.id)
+      /* respect the farmer's real stock: never allow more than is listed */
       if (found)
-        return prev.map((i) => (i.productId === product.id ? { ...i, qty: i.qty + 1 } : i))
+        return prev.map((i) =>
+          i.productId === product.id ? { ...i, qty: Math.min(i.qty + 1, product.stock) } : i,
+        )
       return [
         ...prev,
         {
@@ -68,6 +69,7 @@ export default function App() {
           price: product.price,
           unit: product.unit.split(' ')[0],
           image: product.image,
+          stock: product.stock,
           qty: 1,
         },
       ]
@@ -77,7 +79,11 @@ export default function App() {
   const changeQty = useCallback((productId, delta) => {
     setCart((prev) =>
       prev
-        .map((i) => (i.productId === productId ? { ...i, qty: i.qty + delta } : i))
+        .map((i) =>
+          i.productId === productId
+            ? { ...i, qty: Math.min(Math.max(i.qty + delta, 1), i.stock ?? 99) }
+            : i,
+        )
         .filter((i) => i.qty > 0),
     )
   }, [])
@@ -213,7 +219,6 @@ export default function App() {
                 straight into farmer signup */}
             <Hero onJoin={() => openAuth({ tab: 'signup', role: 'Farmer' })} />
             <Marketplace
-              products={products}
               search={search}
               onClearSearch={() => setSearch('')}
               onAddToCart={addToCart}

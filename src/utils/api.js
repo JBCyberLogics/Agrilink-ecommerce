@@ -54,6 +54,11 @@ export const farmerListings = () => call('/api/farmer/listings', null, 'GET')
 export const farmerCreateListing = (body) => call('/api/farmer/listings', body)
 export const farmerDeleteListing = (id) => call(`/api/farmer/listings/${id}`, null, 'DELETE')
 
+/* ------------------------------------------------------ public marketplace */
+/* What farmers post is what buyers see — the shop feed is real MongoDB
+   data (active listings of every farmer, newest first), not a mock list. */
+export const marketListings = () => call('/api/market/listings', null, 'GET')
+
 /* Multipart photo upload — FormData (fetch sets the boundary itself), the
    server stores the file under /uploads/ and returns its URL. */
 export async function farmerUploadImage(file) {
