@@ -19,6 +19,7 @@ import BuyerOrders from './components/buyer/pages/Orders'
 import BuyerProfile from './components/buyer/pages/Profile'
 import BuyerSettings from './components/buyer/pages/Settings'
 import Footer from './components/Footer'
+import Checkout from './components/shop/Checkout'
 import { me as fetchMe, login as demoLogin, logout as apiLogout } from './utils/api'
 import Browse, { EMPTY_FILTERS } from './components/buyer/pages/Browse'
 import { MessageSquare, Receipt, Settings as SettingsIcon } from 'lucide-react'
@@ -50,9 +51,15 @@ const BUYER_PAGE_IDS = [
   'settings',
 ]
 
+const SHOP_PAGE_IDS = ['checkout']
+
 const parseHash = () => {
   const h = window.location.hash.replace(/^#\/?/, '').toLowerCase()
   if (h === '' || h === 'shop') return 'shop'
+  if (h.startsWith('shop/')) {
+    const page = h.slice('shop/'.length)
+    return SHOP_PAGE_IDS.includes(page) ? `shop/${page}` : 'shop'
+  }
   if (h === 'farmer') return 'farmer/dashboard' // legacy alias
   if (h.startsWith('farmer/')) {
     const page = h.slice('farmer/'.length)
@@ -115,6 +122,11 @@ export default function App() {
     )
   }, [])
 
+  const removeFromCart = useCallback(
+    (productId) => setCart((prev) => prev.filter((i) => i.productId !== productId)),
+    [],
+  )
+
   const cartCount = cart.reduce((sum, i) => sum + i.qty, 0)
 
   /* ---------------------------------------------------------------- routes */
@@ -148,6 +160,17 @@ export default function App() {
     setAuthPreset(preset)
     setAuthOpen(true)
   }, [])
+
+  /* Checkout gate: signed-in buyers go straight to checkout; anonymous
+     users open the login modal and return here after signing in. */
+  const openCheckout = useCallback(() => {
+    if (!user) {
+      returnTo.current = 'shop/checkout'
+      openAuth({ tab: 'login' })
+      return
+    }
+    goRoute('shop/checkout')
+  }, [user, goRoute, openAuth])
 
   /* Session boot:
      ✓ /?auth=1 opens the auth modal
@@ -210,6 +233,11 @@ export default function App() {
       const target = returnTo.current
       returnTo.current = null
       const current = parseHash()
+      /* checkout deep link restored after login/signup */
+      if (target === 'shop/checkout') {
+        goRoute('shop/checkout')
+        return
+      }
       if (authUser?.role === 'Farmer') {
         const deep =
           current.startsWith('farmer/') ? current : (target && target.startsWith('farmer/')) ? target : 'farmer/dashboard'
@@ -283,13 +311,32 @@ export default function App() {
         cart={cart}
         cartCount={cartCount}
         onQty={changeQty}
+        onCheckout={openCheckout}
         onSignIn={() => openAuth()}
         onSignOut={signOut}
       />
 
       {/* offset for the fixed navbar (main row + mobile search row) */}
       <main className="pt-[136px] md:pt-[72px]">
-        {route === 'shop' ? (
+        {route === 'shop/checkout' ? (
+          !user ? (
+            <Checkout
+              user={null}
+              onSignIn={() => {
+                returnTo.current = 'shop/checkout'
+                openAuth({ tab: 'login' })
+              }}
+            />
+          ) : (
+            <Checkout
+              cart={cart}
+              user={user}
+              onQty={changeQty}
+              onRemove={removeFromCart}
+              onBack={() => goRoute('shop')}
+            />
+          )
+        ) : route === 'shop' ? (
           <>
             {/* hero CTA pre-picks the Farmer card: "Join as a Farmer" leads
                 straight into farmer signup */}

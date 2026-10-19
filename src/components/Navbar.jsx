@@ -54,7 +54,7 @@ function SearchBar({ search, onSearch, id = 'nav-search' }) {
 }
 
 /* Cart with glass dropdown panel: qty steppers, remove, subtotal */
-function CartButton({ cart, onQty, onRemove, count }) {
+function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
   const [open, setOpen] = useState(false)
   const subtotal = cart.reduce((sum, it) => sum + it.price * it.qty, 0)
 
@@ -149,6 +149,7 @@ function CartButton({ cart, onQty, onRemove, count }) {
               </div>
               <button
                 type="button"
+                onClick={onCheckout}
                 className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-white shadow-lift transition-all hover:bg-primary-dark active:scale-[0.98]"
               >
                 Checkout <ArrowRight size={16} aria-hidden="true" />
@@ -219,7 +220,7 @@ const NAV_LINKS = [
   { id: 'buyer/dashboard', label: 'Buyer Hub' },
 ]
 
-export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onSignIn, onSignOut }) {
+export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onCheckout, onSignIn, onSignOut }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const isActive = (link) =>
     link.id === 'shop' ? route === 'shop' : route.startsWith(link.id.split('/')[0] + '/')
@@ -255,7 +256,7 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
             ))}
           </ul>
 
-          <CartButton cart={cart} count={cartCount} onQty={onQty} onRemove={onRemoveFromCart} />
+          <CartButton cart={cart} count={cartCount} onQty={onQty} onRemove={onRemoveFromCart} onCheckout={onCheckout} />
           <div className="hidden sm:block">
             <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
           </div>
