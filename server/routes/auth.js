@@ -10,6 +10,7 @@ import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
+import { rateLimit } from '../middleware/rateLimit.js'
 
 const router = express.Router()
 
@@ -23,7 +24,7 @@ const shape = ({ name, email, role }) => ({ name, email, role })
 const fail = (res) => res.status(500).json({ error: 'Server error — please try again.' })
 
 /* ------------------------------------------------ POST /api/auth/signup */
-router.post('/signup', async (req, res) => {
+router.post('/signup', rateLimit({ max: 10 }), async (req, res) => {
   try {
     const { name = '', email = '', password = '', role = '' } = req.body || {}
     const bad = (field, error) => res.status(400).json({ error, field })
@@ -54,7 +55,7 @@ router.post('/signup', async (req, res) => {
 })
 
 /* ------------------------------------------------ POST /api/auth/login */
-router.post('/login', async (req, res) => {
+router.post('/login', rateLimit({ max: 20 }), async (req, res) => {
   try {
     const { email = '', password = '', role = '' } = req.body || {}
     const em = String(email).trim().toLowerCase()

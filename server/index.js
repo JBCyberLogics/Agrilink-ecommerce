@@ -18,6 +18,8 @@ import authRouter from './routes/auth.js'
 import farmerRouter, { UPLOADS_DIR } from './routes/farmer.js'
 import marketRouter from './routes/market.js'
 import buyerRouter from './routes/buyer.js'
+import { rateLimit } from './middleware/rateLimit.js'
+import { securityHeaders } from './middleware/securityHeaders.js'
 
 /* load server/.env regardless of the shell's working directory */
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -29,6 +31,7 @@ const app = express()
 app.disable('x-powered-by')
 app.use(express.json())
 app.use(cookieParser())
+app.use(securityHeaders)
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'agrilink-api' }))
 app.use('/api/auth', authRouter)
