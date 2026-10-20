@@ -17,7 +17,15 @@ const router = express.Router()
 const COOKIE = 'agrilink_token'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000
-const cookieOpts = { httpOnly: true, sameSite: 'lax', path: '/', maxAge: SEVEN_DAYS }
+const cookieOpts = {
+  httpOnly: true,
+  sameSite: 'lax',
+  path: '/',
+  maxAge: SEVEN_DAYS,
+  /* Secure flag only over HTTPS (production). Dev runs on plain localhost,
+     so Secure would block the cookie there. */
+  ...(process.env.NODE_ENV === 'production' ? { secure: true } : {}),
+}
 
 const signToken = (user) => jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
 const shape = ({ name, email, role }) => ({ name, email, role })

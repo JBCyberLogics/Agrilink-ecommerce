@@ -9,6 +9,8 @@ import Overview from './components/farmer/pages/Overview'
 import MarketIntelligence from './components/farmer/pages/MarketIntelligence'
 import MyProduce from './components/farmer/pages/MyProduce'
 import FarmProfile from './components/farmer/pages/FarmProfile'
+import FarmerOrders from './components/farmer/pages/Orders'
+import FarmerInquiries from './components/farmer/pages/Inquiries'
 import NotYet from './components/farmer/pages/NotYet'
 import BuyerOverview from './components/buyer/pages/Overview'
 import BuyerBrowse from './components/buyer/pages/Browse'
@@ -16,13 +18,15 @@ import BuyerPriceCompare from './components/buyer/pages/PriceCompare'
 import BuyerRequests from './components/buyer/pages/Requests'
 import BuyerSaved from './components/buyer/pages/Saved'
 import BuyerOrders from './components/buyer/pages/Orders'
+import BuyerInquiries from './components/buyer/pages/Inquiries'
 import BuyerProfile from './components/buyer/pages/Profile'
 import BuyerSettings from './components/buyer/pages/Settings'
 import Footer from './components/Footer'
 import Checkout from './components/shop/Checkout'
+import NotFound from './components/NotFound'
 import { me as fetchMe, login as demoLogin, logout as apiLogout } from './utils/api'
 import Browse, { EMPTY_FILTERS } from './components/buyer/pages/Browse'
-import { MessageSquare, Receipt, Settings as SettingsIcon } from 'lucide-react'
+import { Settings as SettingsIcon } from 'lucide-react'
 
 /* ---------------------------------------------------------------- routing
    The app's existing convention is a hash-synced page state (no router
@@ -45,6 +49,7 @@ const BUYER_PAGE_IDS = [
   'produce',
   'price-comparison',
   'requests',
+  'inquiries',
   'saved',
   'orders',
   'profile',
@@ -58,19 +63,19 @@ const parseHash = () => {
   if (h === '' || h === 'shop') return 'shop'
   if (h.startsWith('shop/')) {
     const page = h.slice('shop/'.length)
-    return SHOP_PAGE_IDS.includes(page) ? `shop/${page}` : 'shop'
+    return SHOP_PAGE_IDS.includes(page) ? `shop/${page}` : 'not-found'
   }
   if (h === 'farmer') return 'farmer/dashboard' // legacy alias
   if (h.startsWith('farmer/')) {
     const page = h.slice('farmer/'.length)
-    return FARMER_PAGE_IDS.includes(page) ? `farmer/${page}` : 'farmer/dashboard'
+    return FARMER_PAGE_IDS.includes(page) ? `farmer/${page}` : 'not-found'
   }
   if (h === 'buyer') return 'buyer/dashboard' // legacy alias
   if (h.startsWith('buyer/')) {
     const page = h.slice('buyer/'.length)
-    return BUYER_PAGE_IDS.includes(page) ? `buyer/${page}` : 'buyer/dashboard'
+    return BUYER_PAGE_IDS.includes(page) ? `buyer/${page}` : 'not-found'
   }
-  return 'shop'
+  return 'not-found'
 }
 
 export default function App() {
@@ -81,12 +86,65 @@ export default function App() {
   const [authPreset, setAuthPreset] = useState(null) // { tab, role } — pre-selects modal state
   const [search, setSearch] = useState('')
   const [cart, setCart] = useState([]) // [{ productId, name, price, unit, image, stock, qty }]
+  const [hydrated, setHydrated] = useState(false) // localStorage cart restored
 
   /* Where a farmer wanted to go before being asked to sign in — restored
      after a successful auth. A ref so the boot effect can read it too. */
   const returnTo = useRef(null)
 
   // ------------------------------------------------------------------ cart
+  /* Persist the cart to a versioned localStorage key so it survives
+     refreshes. Restored data is validated before use; corrupted storage
+     is ignored. No tokens, payment credentials or other sensitive data
+     are ever persisted. */
+  const CART_STORAGE_KEY = 'agrilink_cart_v1'
+
+  const loadCart = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(CART_STORAGE_KEY)
+      if (!raw) return
+      const parsed = JSON.parse(raw)
+      if (!Array.isArray(parsed)) return
+      const valid = parsed.filter(
+        (i) =>
+          i &&
+          typeof i.productId === 'string' &&
+          typeof i.name === 'string' &&
+          typeof i.price === 'number' &&
+          i.price > 0 &&
+          typeof i.unit === 'string' &&
+          typeof i.qty === 'number' &&
+          i.qty >= 1 &&
+          typeof i.stock === 'number' &&
+          i.qty <= i.stock,
+      )
+      setCart(valid)
+    } catch {
+      /* corrupted or unreadable storage — start with an empty cart */
+    }
+    setHydrated(true)
+  }, [])
+
+  const saveCart = useCallback(
+    (c) => {
+      try {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(c))
+      } catch {
+        /* storage unavailable or quota exceeded — cart lives in memory only */
+      }
+    },
+    [],
+  )
+
+  useEffect(() => {
+    loadCart()
+  }, [loadCart])
+
+  useEffect(() => {
+    if (!hydrated) return
+    saveCart(cart)
+  }, [cart, hydrated, saveCart])
+
   const addToCart = useCallback((product) => {
     setCart((prev) => {
       const found = prev.find((i) => i.productId === product.id)
@@ -270,17 +328,8 @@ export default function App() {
     dashboard: <Overview onNavigate={goRoute} />,
     'market-intelligence': <MarketIntelligence />,
     produce: <MyProduce />,
-    inquiries: (
-      <NotYet icon={MessageSquare} title="Buyer inquiries are not available yet.">
-        No buyer inquiries are available. Messaging between buyers and farmers opens in a later
-        stage — nothing is simulated here.
-      </NotYet>
-    ),
-    orders: (
-      <NotYet icon={Receipt} title="No recorded sales yet.">
-        Sales information will appear when recorded transactions are available.
-      </NotYet>
-    ),
+    inquiries: <FarmerInquiries />,
+    orders: <FarmerOrders />,
     profile: <FarmProfile />,
     settings: (
       <NotYet icon={SettingsIcon} title="Settings are not available yet.">
@@ -294,6 +343,7 @@ export default function App() {
     produce: <BuyerBrowse filters={browseFilters} onFiltersChange={setBrowseFilters} />,
     'price-comparison': <BuyerPriceCompare />,
     requests: <BuyerRequests />,
+    inquiries: <BuyerInquiries />,
     saved: <BuyerSaved onBrowse={() => jumpToBrowse()} />,
     orders: <BuyerOrders />,
     profile: <BuyerProfile />,
@@ -334,8 +384,11 @@ export default function App() {
               onQty={changeQty}
               onRemove={removeFromCart}
               onBack={() => goRoute('shop')}
+              onOrderPlaced={() => setCart([])}
             />
           )
+        ) : route === 'not-found' ? (
+          <NotFound user={user} onRoute={goRoute} />
         ) : route === 'shop' ? (
           <>
             {/* hero CTA pre-picks the Farmer card: "Join as a Farmer" leads

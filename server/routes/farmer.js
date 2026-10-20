@@ -13,6 +13,8 @@ import { fileURLToPath } from 'node:url'
 import multer from 'multer'
 import User from '../models/User.js'
 import Listing, { CATEGORIES, UNITS } from '../models/Listing.js'
+import Order, { ORDER_STATUSES } from '../models/Order.js'
+import Inquiry, { INQUIRY_STATUSES } from '../models/Inquiry.js'
 import { requireAuth } from '../middleware/auth.js'
 
 const router = express.Router()
@@ -23,6 +25,8 @@ function farmerOnly(req, res, next) {
     return res.status(403).json({ error: 'Farmer accounts only.', code: 'FARMER_ONLY' })
   next()
 }
+
+const isValidId = (id) => typeof id === 'string' && /^[0-9a-f]{24}$/i.test(id)
 
 const shape = (l) => ({
   id: l._id,
@@ -150,6 +154,137 @@ router.delete('/listings/:id', farmerOnly, async (req, res) => {
     res.json({ ok: true })
   } catch (e) {
     res.status(500).json({ error: 'Could not delete the listing. Please try again.' })
+  }
+})
+
+/* -------------------------------------- GET /api/farmer/orders
+   Orders involving the authenticated farmer's own listings, newest first. */
+router.get('/orders', farmerOnly, async (req, res) => {
+  try {
+    const docs = await Order.find({ farmerId: req.user._id })
+      .populate('buyerId', 'name')
+      .sort({ createdAt: -1 })
+      .limit(100)
+    const shape = (o) => ({
+      id: o._id,
+      buyerId: o.buyerId,
+      buyerName: (o.buyerId && o.buyerId.name) || 'Buyer',
+      listingId: o.listingId,
+      name: o.name,
+      unit: o.unit,
+      quantity: o.quantity,
+      unitPrice: o.unitPrice,
+      totalAmount: o.totalAmount,
+      status: o.status,
+      paymentStatus: o.paymentStatus,
+      createdAt: o.createdAt,
+      updatedAt: o.updatedAt,
+    })
+    res.json({ orders: docs.map(shape) })
+  } catch (e) {
+    res.status(500).json({ error: 'Could not load your orders. Please try again.' })
+  }
+})
+
+/* ----------------------------- PATCH /api/farmer/orders/:id/status
+   Farmer updates the status of an order on one of their own listings.
+   Explicit transitions: Pending → Confirmed | Cancelled only. */
+router.patch('/orders/:id/status', farmerOnly, async (req, res) => {
+  try {
+    if (!isValidId(req.params.id)) return res.status(404).json({ error: 'Order not found.' })
+    const { status } = req.body ?? {}
+    if (!ORDER_STATUSES.includes(status))
+      return res.status(400).json({ error: 'Invalid order status.', field: 'status' })
+
+    const order = await Order.findOne({ _id: req.params.id, farmerId: req.user._id })
+    if (!order) return res.status(404).json({ error: 'Order not found.' })
+
+    if (order.status !== 'Pending')
+      return res
+        .status(400)
+        .json({ error: `Cannot change an order that is already ${order.status.toLowerCase()}.`, field: 'status' })
+    if (!['Confirmed', 'Cancelled'].includes(status))
+      return res.status(400).json({ error: 'Pending orders can only be confirmed or cancelled.', field: 'status' })
+
+    order.status = status
+    await order.save()
+
+    /* Releasing stock when an order is cancelled keeps inventory honest. */
+    if (status === 'Cancelled') {
+      await Listing.findByIdAndUpdate(order.listingId, { $inc: { stock: order.quantity } })
+    }
+
+    res.json({ ok: true, order: { id: order._id, status: order.status, paymentStatus: order.paymentStatus } })
+  } catch (e) {
+    res.status(500).json({ error: 'Could not update the order. Please try again.' })
+  }
+})
+
+/* ------------------------------- GET /api/farmer/inquiries
+   Inquiries for the authenticated farmer's own listings, newest first. */
+router.get('/inquiries', farmerOnly, async (req, res) => {
+  try {
+    const docs = await Inquiry.find({ farmerId: req.user._id })
+      .populate({ path: 'buyerId', select: 'name' })
+      .populate({ path: 'listingId', select: 'name status' })
+      .sort({ createdAt: -1 })
+      .limit(100)
+    const shape = (i) => ({
+      id: i._id,
+      buyerId: i.buyerId,
+      buyerName: (i.buyerId && i.buyerId.name) || 'Buyer',
+      listingId: i.listingId,
+      listingName: (i.listingId && i.listingId.name) || 'Listing',
+      message: i.message,
+      status: i.status,
+      reply: i.reply,
+      createdAt: i.createdAt,
+      updatedAt: i.updatedAt,
+    })
+    res.json({ inquiries: docs.map(shape) })
+  } catch (e) {
+    res.status(500).json({ error: 'Could not load your inquiries. Please try again.' })
+  }
+})
+
+/* -------------------------- PATCH /api/farmer/inquiries/:id
+   Farmer replies to or updates the status of an inquiry on their own listing.
+   Explicit transitions: Open → Replied | Closed only. */
+router.patch('/inquiries/:id', farmerOnly, async (req, res) => {
+  try {
+    if (!isValidId(req.params.id)) return res.status(404).json({ error: 'Inquiry not found.' })
+    const { status, reply } = req.body ?? {}
+
+    const inquiry = await Inquiry.findOne({ _id: req.params.id, farmerId: req.user._id })
+    if (!inquiry) return res.status(404).json({ error: 'Inquiry not found.' })
+
+    if (inquiry.status !== 'Open')
+      return res
+        .status(400)
+        .json({ error: `Cannot change an inquiry that is already ${inquiry.status.toLowerCase()}.`, field: 'status' })
+    if (status && !['Replied', 'Closed'].includes(status))
+      return res.status(400).json({ error: 'Open inquiries can only be marked replied or closed.', field: 'status' })
+
+    if (status) inquiry.status = status
+    if (typeof reply === 'string') inquiry.reply = reply.trim()
+
+    await inquiry.save()
+    await inquiry.populate({ path: 'buyerId', select: 'name' })
+    await inquiry.populate({ path: 'listingId', select: 'name' })
+
+    res.json({
+      inquiry: {
+        id: inquiry._id,
+        buyerName: (inquiry.buyerId && inquiry.buyerId.name) || 'Buyer',
+        listingName: (inquiry.listingId && inquiry.listingId.name) || 'Listing',
+        message: inquiry.message,
+        status: inquiry.status,
+        reply: inquiry.reply,
+        createdAt: inquiry.createdAt,
+      },
+    })
+  } catch (e) {
+    res.status(500).json({ error: 'Could not update the inquiry. Please try again.' })
   }
 })
 

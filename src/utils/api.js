@@ -71,6 +71,14 @@ export const buyerRequests = () => call('/api/buyer/requests', null, 'GET')
 export const buyerCreateRequest = (body) => call('/api/buyer/requests', body)
 export const buyerCancelRequest = (id) => call(`/api/buyer/requests/${id}`, null, 'DELETE')
 
+/* ------------------------------------------------------------- orders */
+export const createOrder = (body) => call('/api/orders', body)
+export const buyerOrders = () => call('/api/orders', null, 'GET')
+
+/* ------------------------------------------------------------- inquiries */
+export const createInquiry = (body) => call('/api/inquiries', body)
+export const buyerInquiries = () => call('/api/inquiries', null, 'GET')
+
 /* Multipart photo upload — FormData (fetch sets the boundary itself), the
    server stores the file under /uploads/ and returns its URL. */
 export async function farmerUploadImage(file) {

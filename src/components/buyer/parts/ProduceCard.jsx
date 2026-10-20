@@ -14,7 +14,7 @@ const CATEGORY_ART = {
   Livestock: Tractor,
 }
 
-export default function ProduceCard({ listing, saved = false, saveBusy = false, onToggleSave, onRequest }) {
+export default function ProduceCard({ listing, saved = false, saveBusy = false, onToggleSave, onRequest, onInquire }) {
   const out = listing.stock <= 0
   const Icon = CATEGORY_ART[listing.category] ?? Wheat
 
@@ -105,6 +105,16 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
                 }`}
               >
                 <MessageSquarePlus size={14} aria-hidden="true" /> Request
+              </button>
+            )}
+            {onInquire && !out && (
+              <button
+                type="button"
+                onClick={() => onInquire(listing)}
+                aria-label={`Send an inquiry about ${listing.name} to ${listing.farmer || 'the farmer'}`}
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-farmer-line bg-white px-3 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+              >
+                <MessageSquarePlus size={14} aria-hidden="true" /> Inquire
               </button>
             )}
           </div>

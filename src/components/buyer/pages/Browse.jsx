@@ -9,10 +9,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, RotateCw, SlidersHorizontal, SearchX, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
 import { buyerSave, buyerUnsave } from '../../../utils/api'
+import { createInquiry } from '../../../utils/api'
 import { CATEGORIES } from '../../../data/mockData'
 import { useMarketFeed, useBuyerSaved } from '../parts/useBuyerData'
 import ProduceCard from '../parts/ProduceCard'
 import RequestDialog from '../parts/RequestDialog'
+import InquiryDialog from '../parts/InquiryDialog'
 import EmptyState from '../parts/EmptyState'
 
 const SORTS = [
@@ -43,6 +45,7 @@ export default function Browse({ filters, onFiltersChange }) {
   const [page, setPage] = useState(1)
   const [busySave, setBusySave] = useState(null)
   const [dialog, setDialog] = useState(null) // listing open in the request dialog
+  const [inquiryDialog, setInquiryDialog] = useState(null) // listing open in the inquiry dialog
   const [banner, setBanner] = useState('')
 
   const setF = (k) => (e) => {
@@ -98,6 +101,12 @@ export default function Browse({ filters, onFiltersChange }) {
       savedQ.refresh()
       setTimeout(() => setBanner(''), 3500)
     }
+  }
+
+  /* send an inquiry to the farmer about this listing */
+  const toggleInquiry = (listing) => {
+    if (listing.stock <= 0) return
+    setInquiryDialog(listing)
   }
 
   const activeFilterCount = ['q', 'category', 'location', 'min', 'max', 'minQty', 'sort'].filter(
@@ -263,6 +272,7 @@ export default function Browse({ filters, onFiltersChange }) {
                 saveBusy={busySave === l.id}
                 onToggleSave={toggleSave}
                 onRequest={setDialog}
+                onInquire={toggleInquiry}
               />
             </li>
           ))}
@@ -304,11 +314,26 @@ export default function Browse({ filters, onFiltersChange }) {
         </p>
       )}
 
+      {banner === 'inquired' && (
+        <p className="flex items-center gap-2 rounded-lg bg-farmer-surface px-4 py-3 text-[13px] text-farmer-ink" role="status">
+          <CheckCircle2 size={15} aria-hidden="true" className="text-farmer-success" />
+          Inquiry sent — the farmer will see it under their buyer inquiries.
+        </p>
+      )}
+
       {dialog && (
         <RequestDialog
           listing={dialog}
           onClose={() => setDialog(null)}
           onSent={() => setBanner('requested')}
+        />
+      )}
+
+      {inquiryDialog && (
+        <InquiryDialog
+          listing={inquiryDialog}
+          onClose={() => setInquiryDialog(null)}
+          onSent={() => setBanner('inquired')}
         />
       )}
     </div>

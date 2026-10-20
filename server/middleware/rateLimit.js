@@ -44,3 +44,9 @@ export function rateLimit({ windowMs = WINDOW_MS, max = MAX } = {}) {
 if (typeof process !== 'undefined' && process.on) {
   process.on('exit', () => buckets.clear())
 }
+
+/* Test-only helper: clears all rate-limit buckets so tests are isolated from
+   each other's request counts. Not used by the production server entry point. */
+export function resetRateLimitBuckets() {
+  buckets.clear()
+}
