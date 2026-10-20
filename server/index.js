@@ -9,6 +9,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
+import express from 'express'
 
 import app from './app.js'
 import { connectDb } from './db.js'
@@ -35,6 +36,17 @@ async function main() {
   await seedDemoFarmers()
   await seedDemoListings()
   await seedDemoBuyer()
+
+  /* Production: serve the built SPA alongside the API */
+  const dist = path.join(__dirname, '..', 'dist')
+  if (fs.existsSync(dist)) {
+    app.use(express.static(dist))
+    app.use((_req, res) => res.sendFile(path.join(dist, 'index.html')))
+  }
+  /* Catch-all 404 for unmatched routes — our securityHeaders middleware
+     already set the CSP on the response. This runs before Express's
+     default 404 handler, which would override it with default-src 'none'. */
+  app.use((_req, res) => res.status(404).json({ error: 'Not found.' }))
 
   app.listen(PORT, () => {
     console.log(`✓ Agrilink API  →  http://localhost:${PORT}`)
