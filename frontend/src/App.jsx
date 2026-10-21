@@ -11,7 +11,11 @@ import MyProduce from './features/farmer/pages/MyProduce'
 import FarmProfile from './features/farmer/pages/FarmProfile'
 import FarmerOrders from './features/farmer/pages/Orders'
 import FarmerInquiries from './features/farmer/pages/Inquiries'
-import NotYet from './features/farmer/pages/NotYet'
+import FarmerSettings from './features/farmer/pages/Settings'
+import ContactPage from './features/public/Contact'
+import HowItWorks from './features/public/HowItWorks'
+import AboutPage from './features/public/About'
+import StartSelling from './features/public/StartSelling'
 import BuyerOverview from './features/buyer/pages/Overview'
 import BuyerBrowse from './features/buyer/pages/Browse'
 import BuyerPriceCompare from './features/buyer/pages/PriceCompare'
@@ -43,7 +47,6 @@ import Checkout from './features/buyer/Checkout'
 import NotFound from './components/common/NotFound'
 import { me as fetchMe, login as demoLogin, logout as apiLogout } from './api/endpoints'
 import Browse, { EMPTY_FILTERS } from './features/buyer/pages/Browse'
-import { Settings as SettingsIcon } from 'lucide-react'
 import { parseHash } from './router/routes'
 
 export default function App() {
@@ -175,9 +178,14 @@ export default function App() {
     [goRoute],
   )
 
-  /* Browser back/forward and manual hash edits stay in sync */
+  /* Browser back/forward and manual hash edits stay in sync. Scrolling to
+     the top matches goRoute() so hash-anchor links (footer/nav CTAs) land
+     the user at the start of the destination page, like the buttons do. */
   useEffect(() => {
-    const onHash = () => setRoute(parseHash())
+    const onHash = () => {
+      setRoute(parseHash())
+      window.scrollTo(0, 0)
+    }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
@@ -299,11 +307,7 @@ export default function App() {
     inquiries: <FarmerInquiries />,
     orders: <FarmerOrders />,
     profile: <FarmProfile />,
-    settings: (
-      <NotYet icon={SettingsIcon} title="Settings are not available yet.">
-        Account and notification preferences will be available in a later stage.
-      </NotYet>
-    ),
+    settings: <FarmerSettings />,
     'ai-market-advisor': <AIAdvisor />,
     'ai-agricultural-assistant': <AIAssistant />,
     'ai-recommendations': <AIRecommendations userRole="farmer" />,
@@ -369,6 +373,14 @@ export default function App() {
               onOrderPlaced={() => setCart([])}
             />
           )
+        ) : route === 'contact' ? (
+          <ContactPage onOpenAuth={openAuth} />
+        ) : route === 'how-it-works' ? (
+          <HowItWorks />
+        ) : route === 'about' ? (
+          <AboutPage />
+        ) : route === 'start-selling' ? (
+          <StartSelling user={user} onOpenAuth={openAuth} onNavigate={goRoute} />
         ) : route === 'not-found' ? (
           <NotFound user={user} onRoute={goRoute} />
         ) : route === 'shop' ? (
@@ -416,7 +428,7 @@ export default function App() {
             {farmerPage}
           </FarmerShell>
         )}
-        <Footer />
+        <Footer onLogin={() => openAuth({ tab: 'login' })} />
       </main>
 
       <AuthModal

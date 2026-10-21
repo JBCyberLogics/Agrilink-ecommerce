@@ -43,6 +43,9 @@ export const BUYER_PAGE_IDS = [
 
 export const SHOP_PAGE_IDS = ['checkout']
 
+/* Public content pages — plain top-level hash routes */
+export const PUBLIC_PAGE_IDS = ['contact', 'how-it-works', 'about', 'start-selling']
+
 export const parseHash = () => {
   const h = window.location.hash.replace(/^#\/?/, '').toLowerCase()
   if (h === '' || h === 'shop') return 'shop'
@@ -60,5 +63,6 @@ export const parseHash = () => {
     const page = h.slice('buyer/'.length)
     return BUYER_PAGE_IDS.includes(page) ? `buyer/${page}` : 'not-found'
   }
+  if (PUBLIC_PAGE_IDS.includes(h)) return h
   return 'not-found'
 }

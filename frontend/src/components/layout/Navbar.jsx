@@ -7,7 +7,7 @@ import { kes } from '../../utils/format'
    crops to the wordmark band at the visual center. */
 function Brand() {
   return (
-    <a href="#" aria-label="Agrilink home" className="flex shrink-0 items-center">
+    <a href="#/" aria-label="Agrilink home — back to the marketplace" className="flex shrink-0 items-center">
       <img
         src="/images/logo.png"
         alt="Agrilink — Connecting Farm to Future"
@@ -212,18 +212,31 @@ export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
 }
 
 /* The top-level destinations — buttons (not anchors) switch routes.
-   Farmer/Buyer hubs are visible to everyone: clicking the wrong one gets
-   a polite role gate (server-verified), never a silent dead end. */
+   Public content pages (how-it-works, about, contact) sit beside the app
+   destinations; Farmer/Buyer hubs are visible to everyone: clicking the
+   wrong one gets a polite role gate (server-verified), never a silent
+   dead end. */
 const NAV_LINKS = [
   { id: 'shop', label: 'Marketplace' },
   { id: 'farmer/dashboard', label: 'Farmer Panel' },
   { id: 'buyer/dashboard', label: 'Buyer Hub' },
+  { id: 'how-it-works', label: 'How it works' },
+  { id: 'about', label: 'About' },
+  { id: 'contact', label: 'Contact' },
 ]
 
-export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onCheckout, onSignIn, onSignOut }) {
+export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onCheckout, onSignIn, onSignOut, onOpenAuth = () => {} }) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const isActive = (link) =>
-    link.id === 'shop' ? route === 'shop' : route.startsWith(link.id.split('/')[0] + '/')
+  const isActive = (link) => {
+    const base = link.id.split('/')[0]
+    /* dashboard hubs stay active across their pages; simple pages match exactly */
+    return base === 'shop'
+      ? route === 'shop'
+      : link.id.includes('/')
+        ? route.startsWith(base + '/')
+        : route === link.id
+  }
+  const showSellingCta = !user || user.role !== 'Farmer'
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-neutral-200/60 bg-white/75 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/60">
@@ -255,6 +268,17 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
               </li>
             ))}
           </ul>
+
+          {/* public sell-side CTA — hidden for signed-in farmers who already
+              live in their dashboard */}
+          {showSellingCta && (
+            <a
+              href="#/start-selling"
+              className="mr-1 hidden rounded-full border border-primary/25 bg-primary-soft/70 px-4 py-2 text-sm font-semibold text-primary-dark transition-colors hover:bg-primary-soft lg:inline-flex"
+            >
+              Start Selling
+            </a>
+          )}
 
           <CartButton cart={cart} count={cartCount} onQty={onQty} onRemove={onRemoveFromCart} onCheckout={onCheckout} />
           <div className="hidden sm:block">
@@ -304,6 +328,15 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
               </li>
             ))}
           </ul>
+          {showSellingCta && (
+            <a
+              href="#/start-selling"
+              onClick={() => setMobileOpen(false)}
+              className="mt-3 flex h-11 w-full items-center justify-center rounded-xl border border-primary/25 bg-primary-soft/70 text-sm font-semibold text-primary-dark transition-colors hover:bg-primary-soft"
+            >
+              Start Selling
+            </a>
+          )}
           <div className="mt-3 border-t border-neutral-200/60 pt-3 sm:hidden">
             <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} mobile />
           </div>

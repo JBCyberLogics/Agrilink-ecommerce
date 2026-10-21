@@ -99,7 +99,14 @@ export default function AuthModal({ open, onClose, onAuth, initialTab = 'login',
      doing nothing or pretending a reset email was sent. */
   const handleForgotPassword = () => {
     setRecoveryMessage(
-      'Password recovery is not configured yet — no email provider is connected. Please contact support to reset your password.',
+      <span>
+        Password recovery is not configured yet — no email provider is connected, so no email
+        will be sent from here. For help with account access, reach the team from the{' '}
+        <a href="#/contact" onClick={onClose} className="font-semibold underline hover:text-blue-900">
+          Contact page
+        </a>
+        .
+      </span>,
     )
   }
 
