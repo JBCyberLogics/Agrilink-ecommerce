@@ -30,15 +30,15 @@ export default function Requests() {
     return (
       <div className="space-y-3" aria-busy="true" aria-label="Loading requests">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-24 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+          <div key={i} className="h-24 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
         ))}
       </div>
     )
 
   if (status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{error || 'Could not load your purchase requests.'}</p>
@@ -72,15 +72,15 @@ export default function Requests() {
   return (
     <div className="space-y-3">
       {cancelErr && (
-        <p className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-[13px] text-farmer-danger" role="alert">
+        <p className="flex items-center gap-2 rounded-lg bg-danger-wash px-3 py-2 text-[13px] text-farmer-danger" role="alert">
           <AlertCircle size={14} aria-hidden="true" /> {cancelErr}
         </p>
       )}
 
       {requests.map((r) => (
-        <article key={r.id} className="flex flex-wrap items-start gap-4 rounded-xl border border-farmer-line bg-white p-4 sm:p-5">
+        <article key={r.id} className="flex flex-wrap items-start gap-4 rounded-xl border border-farmer-line bg-paper p-4 sm:p-5">
           {/* listing thumbnail or honest placeholder */}
-          <span className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-lg bg-farmer-surface/70 text-farmer-primary/50">
+          <span className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-lg bg-farmer-surface/70 text-farmer-brand/50">
             {r.listing?.imageUrl ? (
               <img src={r.listing.imageUrl} alt={r.listing.name} className="h-full w-full object-cover" />
             ) : (
@@ -116,7 +116,7 @@ export default function Requests() {
         </article>
       ))}
 
-      <p className="flex items-start gap-2 rounded-xl border border-farmer-line bg-white px-4 py-3 text-xs leading-relaxed text-farmer-muted">
+      <p className="flex items-start gap-2 rounded-xl border border-farmer-line bg-paper px-4 py-3 text-xs leading-relaxed text-farmer-muted">
         <CheckCircle2 size={14} aria-hidden="true" className="mt-0.5 shrink-0 text-farmer-success" />
         <span>
           Statuses come straight from the backend. Farmers accepting or declining requests is a future stage — until

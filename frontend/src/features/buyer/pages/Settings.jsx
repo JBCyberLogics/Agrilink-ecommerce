@@ -55,13 +55,13 @@ export default function Settings() {
 
   if (state.status === 'loading')
     return (
-      <div className="h-48 animate-pulse rounded-xl border border-farmer-line bg-white/70" aria-busy="true" aria-label="Loading settings" />
+      <div className="h-48 animate-pulse rounded-xl border border-farmer-line bg-paper/70" aria-busy="true" aria-label="Loading settings" />
     )
 
   if (state.status === 'error' || (state.status === 'ok' && !state.user))
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">

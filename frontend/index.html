@@ -9,6 +9,31 @@
       content="Agrilink directly connects farmers and buyers. Fresh produce, fair prices, zero middlemen."
     />
     <meta name="theme-color" content="#2E7D32" />
+    <script>
+      /* Theme boot (AGRILINK-FAQ-GLOBAL-THEME-001) — applies the saved
+         user preference (or the OS color scheme) BEFORE first paint so a
+         dark mode never flashes light on refresh. The shared ThemeProvider
+         (src/features/theme) adopts this same state after mount; the key
+         constant is duplicated here by necessity (no bundler yet). */
+      (function () {
+        var theme = 'light'
+        try {
+          var saved = localStorage.getItem('agrilink_theme')
+          if (saved === 'light' || saved === 'dark') theme = saved
+          else theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        } catch (e) {
+          /* storage / matchMedia unavailable — stay light */
+        }
+        var root = document.documentElement
+        root.classList.toggle('dark', theme === 'dark')
+        root.style.colorScheme = theme
+        try {
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute('content', theme === 'dark' ? '#121814' : '#2E7D32')
+        } catch (e) {}
+      })()
+    </script>
     <link
       rel="icon"
       type="image/svg+xml"

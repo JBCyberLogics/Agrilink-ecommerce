@@ -68,9 +68,9 @@ export default function AIListingImprovement() {
   if (!result && !error && !submitting) {
     return (
       <div className="space-y-6">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <Search size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <Search size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             AI Listing Improvement
           </h2>
           <p className="mt-1 text-xs text-farmer-muted">
@@ -92,10 +92,10 @@ export default function AIListingImprovement() {
               placeholder="e.g. Fresh maize for sale"
               aria-label="Existing listing title"
               aria-invalid={!!errors.existingTitle}
-              className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+              className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                 errors.existingTitle
                   ? 'border-farmer-danger'
-                  : 'border-farmer-line focus:border-farmer-primary/50'
+                  : 'border-farmer-line focus:border-farmer-brand/50'
               }`}
             />
             {errors.existingTitle && (
@@ -117,10 +117,10 @@ export default function AIListingImprovement() {
               placeholder="Describe your produce quality, freshness, and any special features…"
               aria-label="Produce description"
               aria-invalid={!!errors.description}
-              className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+              className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                 errors.description
                   ? 'border-farmer-danger'
-                  : 'border-farmer-line focus:border-farmer-primary/50'
+                  : 'border-farmer-line focus:border-farmer-brand/50'
               }`}
             />
             {errors.description && (
@@ -141,7 +141,7 @@ export default function AIListingImprovement() {
               onChange={setField('qualityDetails')}
               placeholder="e.g. Grade A, pesticide-free, sun-dried"
               aria-label="Quality details"
-              className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+              className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
             />
           </label>
           <label className="block">
@@ -155,7 +155,7 @@ export default function AIListingImprovement() {
               onChange={setField('quantity')}
               placeholder="e.g. 500 kg"
               aria-label="Quantity"
-              className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+              className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
             />
           </label>
           <label className="block">
@@ -169,7 +169,7 @@ export default function AIListingImprovement() {
               onChange={setField('availability')}
               placeholder="e.g. Ready in 2 weeks"
               aria-label="Availability"
-              className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+              className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
             />
           </label>
           <button
@@ -189,8 +189,8 @@ export default function AIListingImprovement() {
 if (error) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -211,10 +211,10 @@ if (error) {
 if (submitting) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-center gap-3">
           <span
-            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-primary/30 border-t-farmer-primary"
+            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-brand/30 border-t-farmer-primary"
             aria-hidden="true"
           />
           <div>
@@ -231,20 +231,20 @@ if (submitting) {
 
 return (
   <div className="space-y-6">
-    <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+    <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
       <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
         <CheckCircle2 size={16} aria-hidden="true" className="mr-2 text-farmer-success" />
         Improved listing
       </h2>
       <div className="grid gap-6 sm:grid-cols-2">
-        <section className="rounded-xl border border-farmer-line bg-white p-6">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-farmer-muted mb-3">
             Original listing
           </h3>
           <p className="text-sm text-farmer-ink">{form.existingTitle}</p>
           <p className="mt-2 text-xs text-farmer-muted">{form.description}</p>
         </section>
-        <section className="rounded-xl border border-farmer-line bg-white p-6">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-farmer-muted mb-3">
             Improved listing
           </h3>
@@ -258,7 +258,7 @@ return (
       </div>
     </section>
     {result.suggestions && result.suggestions.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
           Improvement suggestions
         </h2>
@@ -281,7 +281,7 @@ return (
           // Integration point: transfer improved title/description to listing form
           setError('Apply to listing form requires backend integration.')
         }}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-farmer-line bg-white px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-farmer-line bg-paper px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
       >
         <Search size={14} aria-hidden="true" />
         Apply to listing form
@@ -292,7 +292,7 @@ return (
           // Integration point: copy to clipboard
           setError('Copy to clipboard requires browser clipboard API integration.')
         }}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-white px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:bg-farmer-page"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-paper px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:bg-farmer-page"
       >
         <Search size={14} aria-hidden="true" />
         Copy suggestion

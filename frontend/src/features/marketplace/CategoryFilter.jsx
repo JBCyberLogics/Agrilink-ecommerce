@@ -3,9 +3,9 @@ import { LayoutGrid, Wheat, Carrot, Tractor } from 'lucide-react'
 /* Pill style catalog for each category state */
 const PILL_STYLES = {
   active:
-    'border-primary bg-primary text-white shadow-lift hover:bg-primary-dark',
+    'border-brand bg-primary text-white shadow-lift hover:bg-primary-dark',
   inactive:
-    'border-neutral-200/90 bg-white text-neutral-600 shadow-sm hover:border-primary/40 hover:text-primary-dark',
+    'border-line/90 bg-paper text-ink-4 shadow-sm hover:border-brand/40 hover:text-brand-deep',
 }
 
 const ICONS = {
@@ -44,7 +44,7 @@ export default function CategoryFilter({ active, onChange, counts }) {
             {cat}
             <span
               className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none ${
-                isActive ? 'bg-white/20 text-white' : 'bg-neutral-100 text-neutral-500'
+                isActive ? 'bg-paper/20 text-white' : 'bg-soft text-muted'
               }`}
             >
               {count}

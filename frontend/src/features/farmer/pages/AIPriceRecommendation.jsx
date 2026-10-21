@@ -79,9 +79,9 @@ export default function AIPriceRecommendation() {
   if (!result && !error && !submitting) {
     return (
       <div className="space-y-6">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <DollarSign size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <DollarSign size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             AI Price Recommendation
           </h2>
           <p className="mt-1 text-xs text-farmer-muted">
@@ -104,10 +104,10 @@ export default function AIPriceRecommendation() {
                 placeholder="e.g. maize, tomatoes…"
                 aria-label="Produce"
                 aria-invalid={!!errors.produce}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.produce
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.produce && (
@@ -131,10 +131,10 @@ export default function AIPriceRecommendation() {
                 placeholder="e.g. 100"
                 aria-label="Quantity"
                 aria-invalid={!!errors.quantity}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.quantity
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.quantity && (
@@ -153,7 +153,7 @@ export default function AIPriceRecommendation() {
                 value={form.qualityGrade}
                 onChange={setField('qualityGrade')}
                 aria-label="Quality grade"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               >
                 <option value="">Select quality grade</option>
                 {QUALITY_GRADES.map((g) => (
@@ -181,10 +181,10 @@ export default function AIPriceRecommendation() {
                 placeholder="e.g. Nyeri"
                 aria-label="Location"
                 aria-invalid={!!errors.location}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.location
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.location && (
@@ -203,7 +203,7 @@ export default function AIPriceRecommendation() {
                 value={form.unit}
                 onChange={setField('unit')}
                 aria-label="Unit"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               >
                 {UNITS.map((u) => (
                   <option key={u} value={u}>
@@ -230,8 +230,8 @@ export default function AIPriceRecommendation() {
 if (error) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -252,10 +252,10 @@ if (error) {
 if (submitting) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-center gap-3">
           <span
-            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-primary/30 border-t-farmer-primary"
+            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-brand/30 border-t-farmer-primary"
             aria-hidden="true"
           />
           <div>
@@ -272,7 +272,7 @@ if (submitting) {
 
 return (
   <div className="space-y-6">
-    <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+    <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
       <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
         <CheckCircle2 size={16} aria-hidden="true" className="mr-2 text-farmer-success" />
         Suggested price range
@@ -289,7 +289,7 @@ return (
       </p>
     </section>
     {result.factors && result.factors.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
           Factors influencing the suggestion
         </h2>
@@ -304,7 +304,7 @@ return (
       </section>
     )}
     {result.confidence && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
           Confidence indicator
         </h2>
@@ -320,14 +320,14 @@ return (
       </section>
     )}
     {result.transferable !== false && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <button
           type="button"
           onClick={() => {
             // Integration point: transfer suggested price to listing form
             setError('Price transfer to listing form requires backend integration.')
           }}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-farmer-line bg-white px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-farmer-line bg-paper px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
         >
           <Search size={14} aria-hidden="true" />
           Apply suggested price to listing form

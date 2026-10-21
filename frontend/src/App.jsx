@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { RotateCw } from 'lucide-react'
 import Navbar from './components/layout/Navbar'
 import AuthModal from './features/auth/AuthModal'
 import Hero from './features/marketplace/Hero'
@@ -25,6 +26,8 @@ import BuyerOrders from './features/buyer/pages/Orders'
 import BuyerInquiries from './features/buyer/pages/Inquiries'
 import BuyerProfile from './features/buyer/pages/Profile'
 import BuyerSettings from './features/buyer/pages/Settings'
+import FAQ from './features/faq/FAQ'
+import { ThemeProvider } from './features/theme/theme'
 
 /* Shared AI pages */
 import AIAdvisor from './features/ai/AIAdvisor'
@@ -49,6 +52,27 @@ import { me as fetchMe, login as demoLogin, logout as apiLogout } from './api/en
 import Browse, { EMPTY_FILTERS } from './features/buyer/pages/Browse'
 import { parseHash } from './router/routes'
 
+/* Auth boot panel — shown on protected routes while the boot session
+   check (httpOnly cookie restore via GET /api/auth/me) is still in
+   flight. Prevents the shells from flashing their signed-out access
+   gate before flipping to the dashboard on refresh. */
+function AuthBoot() {
+  return (
+    <div className="min-h-[calc(100vh-72px)] bg-farmer-page px-4 py-16" aria-busy="true">
+      <div
+        role="status"
+        className="mx-auto max-w-md rounded-2xl border border-line/80 bg-paper p-8 text-center shadow-sm"
+      >
+        <RotateCw size={26} aria-hidden="true" className="mx-auto animate-spin text-brand" />
+        <h2 className="mt-3 font-display text-lg font-bold text-ink">Checking your session…</h2>
+        <p className="mt-1 text-sm text-muted">
+          Restoring your sign-in from the secure session cookie.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   // ------------------------------------------------------------------ state
   const [user, setUser] = useState(null) // { name, email, role: 'Buyer' | 'Farmer' } — server-verified session
@@ -58,6 +82,12 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [cart, setCart] = useState([]) // [{ productId, name, price, unit, image, stock, qty }]
   const [hydrated, setHydrated] = useState(false) // localStorage cart restored
+  /* Auth boot: the fresh mount looks identical to "signed out" until the
+     cookie-restore check answers. authReady turns true once the boot check
+     settles (fetchMe resolve/reject or demo fallback), so protected routes
+     show a loading state instead of flashing an access panel before
+     flipping to the dashboard. */
+  const [authReady, setAuthReady] = useState(false)
 
   /* Where a farmer wanted to go before being asked to sign in — restored
      after a successful auth. A ref so the boot effect can read it too. */
@@ -222,6 +252,7 @@ export default function App() {
         .catch(() =>
           handleAuth({ name: 'Joseph Kariuki', email: 'joseph@agrilink.co.ke', role: 'Farmer' }),
         )
+        .finally(() => setAuthReady(true))
       if (params.get('auth')) openAuth()
       return
     }
@@ -238,6 +269,7 @@ export default function App() {
         .catch(() =>
           handleAuth({ name: 'Wanjiku Kamau', email: 'wanjiku@agrilink.co.ke', role: 'Buyer' }),
         )
+        .finally(() => setAuthReady(true))
       if (params.get('auth')) openAuth()
       return
     }
@@ -248,14 +280,15 @@ export default function App() {
     fetchMe()
       .then((u) => u && handleAuth(u))
       .catch(() => {})
+      .finally(() => setAuthReady(true))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ------------------------------------------------------------------ auth
   /* Every successful login/signup/restore routes by the SERVER-returned
      role — but never steals a deep link the app is already showing:
-     • fresh login from the shop → farmers land on their dashboard,
-       buyers stay on the shop (the marketplace is a buyer's home)
+     • fresh login from a public page → each role lands on its own
+       dashboard (farmer dashboard / buyer dashboard)
      • session restored while sitting on #/farmer/* or #/buyer/* → the
        deep link survives the reload
      • a saved "returnTo" (the page the user was blocked from) wins over
@@ -278,7 +311,7 @@ export default function App() {
         goRoute(deep)
       } else {
         const deep =
-          current.startsWith('buyer/') ? current : (target && target.startsWith('buyer/')) ? target : 'shop'
+          current.startsWith('buyer/') ? current : (target && target.startsWith('buyer/')) ? target : 'buyer/dashboard'
         goRoute(deep)
       }
     },
@@ -337,7 +370,8 @@ export default function App() {
   }[buyerPage ?? 'dashboard'] ?? <BuyerOverview onJumpToBrowse={jumpToBrowse} />
 
   return (
-    <div className="min-h-screen">
+    <ThemeProvider>
+      <div className="min-h-screen">
       <Navbar
         user={user}
         route={route}
@@ -354,7 +388,12 @@ export default function App() {
 
       {/* offset for the fixed navbar (main row + mobile search row) */}
       <main className="pt-[136px] md:pt-[72px]">
-        {route === 'shop/checkout' ? (
+        {/* while the boot session check is in flight, protected routes
+            render a loading state — never a flash of the signed-out gate
+            followed by the dashboard */}
+        {!authReady && (route.startsWith('farmer/') || route.startsWith('buyer/')) ? (
+          <AuthBoot />
+        ) : route === 'shop/checkout' ? (
           !user ? (
             <Checkout
               user={null}
@@ -377,6 +416,8 @@ export default function App() {
           <ContactPage onOpenAuth={openAuth} />
         ) : route === 'how-it-works' ? (
           <HowItWorks />
+        ) : route === 'faq' ? (
+          <FAQ />
         ) : route === 'about' ? (
           <AboutPage />
         ) : route === 'start-selling' ? (
@@ -428,7 +469,13 @@ export default function App() {
             {farmerPage}
           </FarmerShell>
         )}
-        <Footer onLogin={() => openAuth({ tab: 'login' })} />
+        {/* The marketing footer belongs to the public-side chrome (shop,
+            checkout, public content pages). Farmer/Buyer dashboard routes
+            — including their signed-out access gates — render without it;
+            the shells' own full-height layout fills the viewport instead. */}
+        {!route.startsWith('farmer/') && !route.startsWith('buyer/') && (
+          <Footer onLogin={() => openAuth({ tab: 'login' })} />
+        )}
       </main>
 
       <AuthModal
@@ -438,6 +485,7 @@ export default function App() {
         initialTab={authPreset?.tab ?? 'login'}
         initialRole={authPreset?.role ?? null}
       />
-    </div>
+      </div>
+    </ThemeProvider>
   )
 }

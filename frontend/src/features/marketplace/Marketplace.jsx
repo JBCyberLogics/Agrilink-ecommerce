@@ -71,27 +71,27 @@ export default function Marketplace({ search, onClearSearch, onAddToCart }) {
       {/* ---------------- header row ---------------- */}
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand">
             <Sprout size={14} aria-hidden="true" />
             Farm fresh — no middlemen
           </p>
-          <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-neutral-900 sm:text-[28px]">
+          <h2 className="mt-1.5 font-display text-2xl font-bold tracking-tight text-ink sm:text-[28px]">
             Today&apos;s Marketplace
           </h2>
           {search && (
-            <p className="mt-1 text-sm text-neutral-500" aria-live="polite">
+            <p className="mt-1 text-sm text-muted" aria-live="polite">
               Showing results for{' '}
-              <span className="font-semibold text-neutral-800">“{search}”</span> —{' '}
-              <button onClick={onClearSearch} className="font-semibold text-primary hover:text-primary-dark">
+              <span className="font-semibold text-ink-2">“{search}”</span> —{' '}
+              <button onClick={onClearSearch} className="font-semibold text-brand hover:text-brand-deep">
                 clear
               </button>
             </p>
           )}
         </div>
-        {!feed && <p className="text-sm text-neutral-400" aria-live="polite">Loading the market…</p>}
+        {!feed && <p className="text-sm text-muted-2" aria-live="polite">Loading the market…</p>}
         {feed && (
-          <p className="text-sm text-neutral-400" aria-live="polite">
-            <span className="font-bold text-neutral-700">{filtered.length}</span> of {products.length} listings
+          <p className="text-sm text-muted-2" aria-live="polite">
+            <span className="font-bold text-ink-3">{filtered.length}</span> of {products.length} listings
           </p>
         )}
       </div>
@@ -104,26 +104,26 @@ export default function Marketplace({ search, onClearSearch, onAddToCart }) {
         /* loading; a quiet skeleton keeps the layout stable */
         <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-busy="true">
           {Array.from({ length: 8 }).map((_, i) => (
-            <li key={i} className="animate-pulse overflow-hidden rounded-2xl border border-neutral-100 bg-white">
-              <div className="h-44 bg-neutral-100" />
+            <li key={i} className="animate-pulse overflow-hidden rounded-2xl border border-line bg-paper">
+              <div className="h-44 bg-soft" />
               <div className="space-y-3 p-4">
-                <div className="h-4 w-3/4 rounded bg-neutral-100" />
-                <div className="h-3 w-1/2 rounded bg-neutral-100" />
+                <div className="h-4 w-3/4 rounded bg-soft" />
+                <div className="h-3 w-1/2 rounded bg-soft" />
                 <div className="flex items-center justify-between pt-2">
-                  <div className="h-5 w-20 rounded bg-neutral-100" />
-                  <div className="h-10 w-24 rounded-xl bg-neutral-100" />
+                  <div className="h-5 w-20 rounded bg-soft" />
+                  <div className="h-10 w-24 rounded-xl bg-soft" />
                 </div>
               </div>
             </li>
           ))}
         </ul>
       ) : dead ? (
-        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 bg-white/60 px-6 py-16 text-center">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-red-50 text-red-400">
+        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-line-strong bg-paper/60 px-6 py-16 text-center">
+          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-danger-wash text-danger">
             <SearchX size={26} aria-hidden="true" />
           </span>
-          <h3 className="mt-4 font-display text-lg font-bold text-neutral-900">Marketplace is unavailable</h3>
-          <p className="mt-1 max-w-sm text-sm text-neutral-500">
+          <h3 className="mt-4 font-display text-lg font-bold text-ink">Marketplace is unavailable</h3>
+          <p className="mt-1 max-w-sm text-sm text-muted">
             The market feed could not be reached — check your connection and try again.
           </p>
           <button
@@ -147,24 +147,24 @@ export default function Marketplace({ search, onClearSearch, onAddToCart }) {
         </ul>
       ) : products.length === 0 ? (
         /* honest empty market: no farmer has posted anything yet */
-        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 bg-white/60 px-6 py-16 text-center">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-primary-soft text-primary">
+        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-line-strong bg-paper/60 px-6 py-16 text-center">
+          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-primary-soft text-brand">
             <Sprout size={26} aria-hidden="true" />
           </span>
-          <h3 className="mt-4 font-display text-lg font-bold text-neutral-900">No produce listed yet</h3>
-          <p className="mt-1 max-w-sm text-sm text-neutral-500">
+          <h3 className="mt-4 font-display text-lg font-bold text-ink">No produce listed yet</h3>
+          <p className="mt-1 max-w-sm text-sm text-muted">
             Farmers are still resting their harvests — everything they post on Agrilink appears here the moment
             it is listed.
           </p>
         </div>
       ) : (
         /* filtered empty state */
-        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 bg-white/60 px-6 py-16 text-center">
-          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-neutral-100 text-neutral-400">
+        <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-line-strong bg-paper/60 px-6 py-16 text-center">
+          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-soft text-muted-2">
             <SearchX size={26} aria-hidden="true" />
           </span>
-          <h3 className="mt-4 font-display text-lg font-bold text-neutral-900">No produce found</h3>
-          <p className="mt-1 max-w-sm text-sm text-neutral-500">
+          <h3 className="mt-4 font-display text-lg font-bold text-ink">No produce found</h3>
+          <p className="mt-1 max-w-sm text-sm text-muted">
             Try a different search term or category filter — new harvests are listed every day.
           </p>
           <button

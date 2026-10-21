@@ -70,9 +70,9 @@ const TRUST_CARDS = [
 
 function StepCard({ index, icon: Icon, title, desc }) {
   return (
-    <li className="flex items-start gap-4 rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm">
+    <li className="flex items-start gap-4 rounded-2xl border border-line/80 bg-paper p-5 shadow-sm">
       <span className="relative shrink-0">
-        <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary-soft text-primary-dark">
+        <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary-soft text-brand-deep">
           <Icon size={19} aria-hidden="true" />
         </span>
         <span
@@ -83,8 +83,8 @@ function StepCard({ index, icon: Icon, title, desc }) {
         </span>
       </span>
       <div className="min-w-0">
-        <h3 className="text-[15px] font-semibold text-neutral-900">{title}</h3>
-        <p className="mt-1 text-[13px] leading-relaxed text-neutral-500">{desc}</p>
+        <h3 className="text-[15px] font-semibold text-ink">{title}</h3>
+        <p className="mt-1 text-[13px] leading-relaxed text-muted">{desc}</p>
       </div>
     </li>
   )
@@ -95,9 +95,9 @@ export default function HowItWorks() {
     <div className="mx-auto max-w-7xl px-4 pb-14 pt-10 sm:px-6 lg:px-8">
       {/* ------------------------------ hero ------------------------------ */}
       <section className="mx-auto max-w-3xl text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">The process</p>
-        <h1 className="mt-2 font-display text-3xl font-bold text-neutral-900 sm:text-4xl">How AgriLink Works</h1>
-        <p className="mt-3 text-[15px] leading-relaxed text-neutral-600">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand">The process</p>
+        <h1 className="mt-2 font-display text-3xl font-bold text-ink sm:text-4xl">How AgriLink Works</h1>
+        <p className="mt-3 text-[15px] leading-relaxed text-ink-4">
           AgriLink is a direct marketplace: farmers list their produce, buyers browse and reach
           them — no middlemen between the farm and the enquiry.
         </p>
@@ -110,7 +110,7 @@ export default function HowItWorks() {
           </a>
           <a
             href="#/"
-            className="inline-flex h-11 items-center justify-center rounded-full border border-neutral-200 px-6 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-100"
+            className="inline-flex h-11 items-center justify-center rounded-full border border-line px-6 text-sm font-semibold text-ink-3 transition-colors hover:bg-soft"
           >
             Find Produce
           </a>
@@ -120,10 +120,10 @@ export default function HowItWorks() {
       {/* --------------------------- for farmers --------------------------- */}
       <section aria-labelledby="how-farmers" className="mt-12">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-soft text-primary-dark">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-soft text-brand-deep">
             <Sprout size={17} aria-hidden="true" />
           </span>
-          <h2 id="how-farmers" className="font-display text-xl font-bold text-neutral-900">
+          <h2 id="how-farmers" className="font-display text-xl font-bold text-ink">
             For Farmers
           </h2>
         </div>
@@ -137,10 +137,10 @@ export default function HowItWorks() {
       {/* --------------------------- for buyers ---------------------------- */}
       <section aria-labelledby="how-buyers" className="mt-10">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-secondary/40 text-neutral-800">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-secondary/40 text-ink-2">
             <ShoppingBag size={17} aria-hidden="true" />
           </span>
-          <h2 id="how-buyers" className="font-display text-xl font-bold text-neutral-900">
+          <h2 id="how-buyers" className="font-display text-xl font-bold text-ink">
             For Buyers
           </h2>
         </div>
@@ -153,17 +153,17 @@ export default function HowItWorks() {
 
       {/* ---------------------- trust & transparency ----------------------- */}
       <section aria-labelledby="how-trust" className="mt-12">
-        <h2 id="how-trust" className="font-display text-xl font-bold text-neutral-900">
+        <h2 id="how-trust" className="font-display text-xl font-bold text-ink">
           Trust and transparency
         </h2>
-        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-neutral-500">
+        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted">
           What AgriLink commits to today — and where it honestly stops.
         </p>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {TRUST_CARDS.map((c) => (
-            <article key={c.title} className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm">
-              <h3 className="text-[15px] font-semibold text-neutral-900">{c.title}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-500">{c.desc}</p>
+            <article key={c.title} className="rounded-2xl border border-line/80 bg-paper p-5 shadow-sm">
+              <h3 className="text-[15px] font-semibold text-ink">{c.title}</h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{c.desc}</p>
             </article>
           ))}
         </div>

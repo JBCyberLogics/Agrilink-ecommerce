@@ -23,6 +23,7 @@ const LINK_GROUPS = [
     title: 'Company',
     links: [
       { label: 'About AgriLink', href: '#/about' },
+      { label: 'FAQ', href: '#/faq' },
       { label: 'Contact us', href: '#/contact' },
     ],
   },
@@ -46,14 +47,14 @@ export default function Footer({ onLogin }) {
                 <Sprout size={17} aria-hidden="true" />
               </span>
               <span className="font-display text-[15px] font-bold text-white">
-                Agri<span className="text-secondary">link</span>
+                Agri<span className="text-brand-amber">link</span>
               </span>
             </a>
             <p className="mt-2 max-w-xs text-xs leading-relaxed text-emerald-100/60">
               Directly connecting farmers and buyers — fair prices for growers, fresher food for
               everyone. Zero middlemen, 100% traceable.
             </p>
-            <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-[11px] font-medium text-emerald-100/70 ring-1 ring-white/10">
+            <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-paper/5 px-2.5 py-1 text-[11px] font-medium text-emerald-100/70 ring-1 ring-white/10">
               <ShieldCheck size={12} aria-hidden="true" className="text-primary-light" />
               Escrow-secured payments
             </p>

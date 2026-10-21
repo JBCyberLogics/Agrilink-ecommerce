@@ -69,9 +69,9 @@ export default function AIAssistant() {
 
   return (
     <div className="flex flex-col h-full">
-      <header className="border-b border-farmer-line bg-white px-6 py-4">
+      <header className="border-b border-farmer-line bg-paper px-6 py-4">
         <h1 className="font-display text-[15px] font-semibold text-farmer-ink">
-          <MessageSquare size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+          <MessageSquare size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
           AI Agricultural Assistant
         </h1>
         <p className="text-xs text-farmer-muted mt-0.5">
@@ -89,7 +89,7 @@ export default function AIAssistant() {
               className={`max-w-[85%] rounded-xl p-4 ${
                 m.type === 'user'
                   ? 'bg-farmer-primary text-white'
-                  : 'bg-white border border-farmer-line text-farmer-ink'
+                  : 'bg-paper border border-farmer-line text-farmer-ink'
               }`}
             >
               <p className="text-sm leading-relaxed">{m.content}</p>
@@ -103,7 +103,7 @@ export default function AIAssistant() {
         ))}
         {submitting && (
           <div className="flex justify-start mb-4">
-            <div className="flex items-center gap-2 rounded-lg bg-white border border-farmer-line p-4">
+            <div className="flex items-center gap-2 rounded-lg bg-paper border border-farmer-line p-4">
               <div className="h-3 w-3 rounded-full bg-farmer-primary animate-pulse" />
               <span className="text-xs text-farmer-muted">Assistant is thinking…</span>
             </div>
@@ -111,7 +111,7 @@ export default function AIAssistant() {
         )}
       </main>
 
-      <footer className="border-t border-farmer-line bg-white p-6 sm:p-8">
+      <footer className="border-t border-farmer-line bg-paper p-6 sm:p-8">
         <form onSubmit={handleSubmit} noValidate className="flex gap-3">
           <input
             id="assistant-input"
@@ -121,7 +121,7 @@ export default function AIAssistant() {
             placeholder="Ask about produce, pricing, or trends…"
             disabled={submitting}
             aria-label="Your question"
-            className="flex-1 rounded-lg border bg-white px-4 py-3 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex-1 rounded-lg border bg-paper px-4 py-3 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 disabled:opacity-60 disabled:cursor-not-allowed"
           />
           <button
             type="submit"

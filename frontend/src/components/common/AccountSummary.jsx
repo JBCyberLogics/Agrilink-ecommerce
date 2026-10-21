@@ -5,7 +5,7 @@
  */
 export default function AccountSummary({ title = 'Account', note, rows }) {
   return (
-    <section className="rounded-xl border border-farmer-line bg-white p-4 sm:p-5">
+    <section className="rounded-xl border border-farmer-line bg-paper p-4 sm:p-5">
       <h3 className="text-sm font-semibold text-farmer-ink">{title}</h3>
       {note && <p className="mt-1 text-[13px] leading-relaxed text-farmer-muted">{note}</p>}
       <dl className="mt-3 divide-y divide-farmer-line">

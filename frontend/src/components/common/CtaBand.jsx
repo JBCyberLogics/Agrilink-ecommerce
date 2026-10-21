@@ -7,8 +7,8 @@ export default function CtaBand({ title, subtitle, actions = [] }) {
   const base =
     'inline-flex h-11 items-center justify-center rounded-full px-6 text-sm font-semibold shadow-lift transition-all active:scale-[0.98]'
   const styles = {
-    primary: `${base} bg-white text-primary-dark hover:bg-neutral-100`,
-    outline: `${base} border border-white/40 bg-transparent text-white hover:bg-white/10 shadow-none`,
+    primary: `${base} bg-paper text-brand-deep hover:bg-soft`,
+    outline: `${base} border border-white/40 bg-transparent text-white hover:bg-paper/10 shadow-none`,
   }
   return (
     <section className="rounded-3xl bg-gradient-to-br from-primary to-primary-dark px-6 py-9 text-center sm:py-12">

@@ -118,15 +118,15 @@ export default function Browse({ filters, onFiltersChange }) {
     return (
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading produce">
         {Array.from({ length: 6 }).map((_, i) => (
-          <li key={i} className="h-72 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+          <li key={i} className="h-72 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
         ))}
       </ul>
     )
 
   if (feed.status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{feed.error || 'The market feed is unreachable right now.'}</p>
@@ -143,7 +143,7 @@ export default function Browse({ filters, onFiltersChange }) {
   return (
     <div className="space-y-5">
       {/* ----------------------------- filter bar ----------------------------- */}
-      <section aria-labelledby="browse-filters-title" className="rounded-xl border border-farmer-line bg-white p-4 sm:p-5">
+      <section aria-labelledby="browse-filters-title" className="rounded-xl border border-farmer-line bg-paper p-4 sm:p-5">
         <h2 id="browse-filters-title" className="mb-3 flex items-center gap-2 font-display text-[15px] font-semibold text-farmer-ink">
           <SlidersHorizontal size={15} aria-hidden="true" /> Find produce
         </h2>
@@ -237,7 +237,7 @@ export default function Browse({ filters, onFiltersChange }) {
                   onFiltersChange(EMPTY_FILTERS)
                   setPage(1)
                 }}
-                className="inline-flex h-9 items-center rounded-lg border border-farmer-line px-3 text-xs font-semibold text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+                className="inline-flex h-9 items-center rounded-lg border border-farmer-line px-3 text-xs font-semibold text-farmer-muted transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
               >
                 Clear filters ({activeFilterCount})
               </button>
@@ -245,7 +245,7 @@ export default function Browse({ filters, onFiltersChange }) {
           </div>
         </div>
         {banner && (
-          <p className="mt-3 flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-[13px] text-farmer-danger" role="alert">
+          <p className="mt-3 flex items-center gap-2 rounded-lg bg-danger-wash px-3 py-2 text-[13px] text-farmer-danger" role="alert">
             <AlertCircle size={14} aria-hidden="true" /> {banner}
           </p>
         )}
@@ -287,7 +287,7 @@ export default function Browse({ filters, onFiltersChange }) {
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={Math.min(page, pages) <= 1}
             aria-label="Previous page"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-farmer-line text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary disabled:opacity-40"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-farmer-line text-farmer-muted transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand disabled:opacity-40"
           >
             <ChevronLeft size={15} aria-hidden="true" />
           </button>
@@ -299,7 +299,7 @@ export default function Browse({ filters, onFiltersChange }) {
             onClick={() => setPage((p) => Math.min(pages, p + 1))}
             disabled={Math.min(page, pages) >= pages}
             aria-label="Next page"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-farmer-line text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary disabled:opacity-40"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-farmer-line text-farmer-muted transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand disabled:opacity-40"
           >
             <ChevronRight size={15} aria-hidden="true" />
           </button>
@@ -341,4 +341,4 @@ export default function Browse({ filters, onFiltersChange }) {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-farmer-line bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40'
+  'w-full rounded-lg border border-farmer-line bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40'

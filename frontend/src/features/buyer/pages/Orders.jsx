@@ -39,15 +39,15 @@ export default function Orders() {
     return (
       <div className="space-y-3" aria-busy="true" aria-label="Loading orders">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-24 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+          <div key={i} className="h-24 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
         ))}
       </div>
     )
 
   if (status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{error || 'Could not load your orders.'}</p>
@@ -64,13 +64,13 @@ export default function Orders() {
   if (orders.length === 0)
     return (
       <div className="space-y-4">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <EmptyState icon={Receipt} title="No orders yet.">
             Place an order from Browse Produce and it will appear here as a pending, unpaid record until checkout
             and payment go live in a later stage.
           </EmptyState>
         </section>
-        <p className="rounded-xl border border-farmer-line bg-white px-4 py-3 text-xs leading-relaxed text-farmer-muted">
+        <p className="rounded-xl border border-farmer-line bg-paper px-4 py-3 text-xs leading-relaxed text-farmer-muted">
           In the meantime you can track the offers you have sent to farmers under{' '}
           <span className="font-semibold text-farmer-ink">Purchase Requests</span> — those records are live in the
           database today.
@@ -80,16 +80,16 @@ export default function Orders() {
 
   return (
     <div className="space-y-4">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <Truck size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <Truck size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             Your orders
           </h2>
           <button
             type="button"
             onClick={refresh}
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-farmer-line bg-white px-4 text-[13px] font-semibold text-farmer-ink hover:border-farmer-primary/40 hover:text-farmer-primary"
+            className="inline-flex h-10 items-center gap-2 rounded-lg border border-farmer-line bg-paper px-4 text-[13px] font-semibold text-farmer-ink hover:border-farmer-brand/40 hover:text-farmer-brand"
           >
             <RotateCw size={14} aria-hidden="true" /> Refresh
           </button>

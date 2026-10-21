@@ -2,7 +2,7 @@ import { Leaf, ArrowRight, Tractor, ShieldCheck, Star } from 'lucide-react'
 import { IMAGES } from '../../utils/constants'
 
 const GLASS =
-  'rounded-2xl border border-white/20 bg-white/10 shadow-glass backdrop-blur-md'
+  'rounded-2xl border border-white/20 bg-paper/10 shadow-glass backdrop-blur-md'
 
 export default function Hero({ onJoin }) {
   return (
@@ -29,7 +29,7 @@ export default function Hero({ onJoin }) {
           <div className="relative grid items-center gap-12 p-8 sm:p-12 lg:grid-cols-[1.05fr_0.95fr] lg:p-16">
             {/* left copy */}
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-100 backdrop-blur">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-paper/10 px-3.5 py-1.5 text-xs font-semibold text-emerald-100 backdrop-blur">
                 <span className="grid h-5 w-5 place-items-center rounded-full bg-secondary text-neutral-900">
                   <Star size={10} fill="currentColor" aria-hidden="true" />
                 </span>
@@ -39,7 +39,7 @@ export default function Hero({ onJoin }) {
               <h1 className="mt-5 font-display text-4xl font-bold leading-[1.12] tracking-tight text-white sm:text-5xl">
                 From the farm gate,
                 <br />
-                <span className="text-secondary">straight to your table.</span>
+                <span className="text-brand-amber">straight to your table.</span>
               </h1>
 
               <p className="mt-4 max-w-md text-[15px] leading-relaxed text-emerald-100/85">
@@ -62,7 +62,7 @@ export default function Hero({ onJoin }) {
                 <button
                   type="button"
                   onClick={onJoin}
-                  className="flex h-12 items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
+                  className="flex h-12 items-center gap-2 rounded-full border border-white/25 bg-paper/10 px-6 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-paper/20"
                 >
                   <Tractor size={17} aria-hidden="true" />
                   Join as a Farmer
@@ -128,7 +128,7 @@ export default function Hero({ onJoin }) {
               <div
                 className={`${GLASS} absolute bottom-3 right-8 w-56 p-4 motion-safe:animate-float [animation-delay:-1.8s]`}
               >
-                <div className="flex items-center gap-1 text-secondary">
+                <div className="flex items-center gap-1 text-brand-amber">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={13} fill="currentColor" aria-hidden="true" />
                   ))}

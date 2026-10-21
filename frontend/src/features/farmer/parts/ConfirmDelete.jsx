@@ -24,7 +24,7 @@ export default function ConfirmDelete({ label, onConfirm, className = '' }) {
       onClick={armed ? onConfirm : arm}
       className={`inline-flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold transition-colors ${
         armed
-          ? 'border-farmer-danger bg-red-50 text-farmer-danger'
+          ? 'border-farmer-danger bg-danger-wash text-farmer-danger'
           : 'border-farmer-line text-farmer-muted hover:border-farmer-danger/40 hover:text-farmer-danger'
       } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-danger/40 ${className}`}
     >

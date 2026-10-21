@@ -30,6 +30,7 @@ import {
   Plus,
   SlidersHorizontal,
 } from 'lucide-react'
+import ThemeToggle from '../../features/theme/ThemeToggle'
 
 export const FARMER_PAGES = [
   { id: 'dashboard', label: 'Farmer Overview', nav: 'Overview', icon: LayoutDashboard, intro: 'Monitor market prices and manage your farm business.' },
@@ -52,8 +53,8 @@ export const FARMER_PAGES = [
 /* ---------------------------------------------------------------- guard */
 function AccessPanel({ icon: Icon, title, desc, cta, onClick, secondaryCta, onSecondary, note }) {
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center rounded-2xl border border-farmer-line bg-white px-6 py-12 text-center shadow-sm">
-      <span className="grid h-14 w-14 place-items-center rounded-2xl bg-farmer-surface text-farmer-primary">
+    <div className="mx-auto flex max-w-md flex-col items-center rounded-2xl border border-farmer-line bg-paper px-6 py-12 text-center shadow-sm">
+      <span className="grid h-14 w-14 place-items-center rounded-2xl bg-farmer-surface text-farmer-brand">
         <Icon size={24} aria-hidden="true" />
       </span>
       <h2 className="mt-4 font-display text-xl font-semibold text-farmer-ink">{title}</h2>
@@ -62,7 +63,7 @@ function AccessPanel({ icon: Icon, title, desc, cta, onClick, secondaryCta, onSe
         <button
           type="button"
           onClick={onClick}
-          className="inline-flex h-11 items-center gap-2 rounded-lg bg-farmer-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-farmer-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-primary/40 focus-visible:ring-offset-2"
+          className="inline-flex h-11 items-center gap-2 rounded-lg bg-farmer-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-farmer-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-brand/40 focus-visible:ring-offset-2"
         >
           {cta}
           <ArrowRight size={15} aria-hidden="true" />
@@ -71,7 +72,7 @@ function AccessPanel({ icon: Icon, title, desc, cta, onClick, secondaryCta, onSe
           <button
             type="button"
             onClick={onSecondary}
-            className="inline-flex h-11 items-center rounded-lg border border-farmer-line px-5 text-sm font-semibold text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+            className="inline-flex h-11 items-center rounded-lg border border-farmer-line px-5 text-sm font-semibold text-farmer-muted transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
           >
             {secondaryCta}
           </button>
@@ -98,13 +99,13 @@ function NavList({ active, onNavigate, onAfterNavigate }) {
                   onAfterNavigate?.()
                 }}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-primary/40 ${
+                className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-brand/40 ${
                   isActive
-                    ? 'bg-farmer-surface text-farmer-primary'
+                    ? 'bg-farmer-surface text-farmer-brand'
                     : 'text-farmer-muted hover:bg-farmer-page hover:text-farmer-ink'
                 }`}
               >
-                <p.icon size={16} aria-hidden="true" className={isActive ? 'text-farmer-primary' : 'text-farmer-muted'} />
+                <p.icon size={16} aria-hidden="true" className={isActive ? 'text-farmer-brand' : 'text-farmer-muted'} />
                 {p.nav}
               </button>
             </li>
@@ -131,7 +132,7 @@ function UserFooter({ user, onSignOut }) {
           onClick={onSignOut}
           title="Sign out"
           aria-label="Sign out"
-          className="ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-lg text-farmer-muted transition-colors hover:bg-red-50 hover:text-farmer-danger"
+          className="ml-auto grid h-9 w-9 shrink-0 place-items-center rounded-lg text-farmer-muted transition-colors hover:bg-danger-wash hover:text-farmer-danger"
         >
           <LogOut size={16} aria-hidden="true" />
         </button>
@@ -204,7 +205,7 @@ function ShellFrame({ user, page, meta, onNavigate, onSignOut, children }) {
     <div className="min-h-[calc(100vh-72px)] bg-farmer-page">
       <div className="mx-auto flex max-w-[1440px]">
         {/* -------------------------- desktop sidebar -------------------------- */}
-        <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[264px] shrink-0 flex-col border-r border-farmer-line bg-white px-4 py-6 lg:flex">
+        <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[264px] shrink-0 flex-col border-r border-farmer-line bg-paper px-4 py-6 lg:flex">
           <div className="mb-5 flex items-center gap-2 px-2">
             <span className="grid h-9 w-9 place-items-center rounded-lg bg-farmer-primary text-white">
               <Sprout size={17} aria-hidden="true" />
@@ -220,23 +221,28 @@ function ShellFrame({ user, page, meta, onNavigate, onSignOut, children }) {
 
         {/* ------------------------------ content ------------------------------ */}
         <div className="min-w-0 flex-1">
-          <header className="border-b border-farmer-line bg-white px-4 py-5 sm:px-6 lg:px-8">
+          <header className="border-b border-farmer-line bg-paper px-4 py-5 sm:px-6 lg:px-8">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h1 className="font-display text-xl font-semibold text-farmer-ink">{meta.label}</h1>
                 <p className="mt-0.5 text-[13px] text-farmer-muted">{meta.intro}</p>
               </div>
-              <button
-                ref={menuBtn}
-                type="button"
-                onClick={() => setDrawer(true)}
-                aria-expanded={drawer}
-                aria-controls="farmer-drawer"
-                aria-label="Open dashboard menu"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-farmer-line text-farmer-muted transition-colors hover:bg-farmer-page hover:text-farmer-ink lg:hidden"
-              >
-                <Menu size={18} aria-hidden="true" />
-              </button>
+              <div className="flex shrink-0 items-center gap-2">
+                {/* shared light/dark controller — same ThemeProvider instance
+                    as the navbar and buyer shell (app-level provider) */}
+                <ThemeToggle className="h-10 w-10 border border-farmer-line bg-paper" size={17} />
+                <button
+                  ref={menuBtn}
+                  type="button"
+                  onClick={() => setDrawer(true)}
+                  aria-expanded={drawer}
+                  aria-controls="farmer-drawer"
+                  aria-label="Open dashboard menu"
+                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-farmer-line text-farmer-muted transition-colors hover:bg-farmer-page hover:text-farmer-ink lg:hidden"
+                >
+                  <Menu size={18} aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </header>
 
@@ -250,7 +256,7 @@ function ShellFrame({ user, page, meta, onNavigate, onSignOut, children }) {
       {drawer && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <div
-            className="absolute inset-0 bg-farmer-ink/30"
+            className="absolute inset-0 bg-black/30"
             onClick={() => setDrawer(false)}
             aria-hidden="true"
           />
@@ -260,7 +266,7 @@ function ShellFrame({ user, page, meta, onNavigate, onSignOut, children }) {
             role="dialog"
             aria-modal="true"
             aria-label="Dashboard navigation"
-            className="absolute inset-y-0 left-0 flex w-[280px] flex-col bg-white px-4 py-6 shadow-xl"
+            className="absolute inset-y-0 left-0 flex w-[280px] flex-col bg-paper px-4 py-6 shadow-xl"
           >
             <div className="mb-5 flex items-center justify-between px-1">
               <span className="font-display text-[15px] font-semibold text-farmer-ink">Dashboard menu</span>

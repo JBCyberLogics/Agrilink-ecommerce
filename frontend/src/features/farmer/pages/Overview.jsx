@@ -21,7 +21,7 @@ function quickAction(onNavigate, page, label) {
     <button
       type="button"
       onClick={() => onNavigate(`farmer/${page}`)}
-      className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-farmer-line bg-white px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-primary/40"
+      className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-farmer-line bg-paper px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-brand/40"
     >
       {label}
       <ArrowRight size={14} aria-hidden="true" />
@@ -31,7 +31,7 @@ function quickAction(onNavigate, page, label) {
 
 function Card({ title, children, action }) {
   return (
-    <section className="rounded-xl border border-farmer-line bg-white p-5 sm:p-6">
+    <section className="rounded-xl border border-farmer-line bg-paper p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">{title}</h2>
         {action}
@@ -59,15 +59,15 @@ export default function Overview({ onNavigate }) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy="true" aria-label="Loading overview">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-[118px] animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+          <div key={i} className="h-[118px] animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
         ))}
       </div>
     )
 
   if (status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{error || 'Something went wrong.'}</p>
@@ -148,7 +148,7 @@ export default function Overview({ onNavigate }) {
             <ul className="divide-y divide-farmer-line">
               {activity.slice(0, 6).map((a) => (
                 <li key={a.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-primary">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-brand">
                     <a.icon size={15} aria-hidden="true" />
                   </span>
                   <p className="min-w-0 flex-1 truncate text-[13px] font-medium text-farmer-ink">{a.text}</p>

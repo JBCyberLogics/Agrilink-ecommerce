@@ -7,7 +7,7 @@
  */
 export default function SettingUnavailable({ icon: Icon, title, reason, requires = [] }) {
   return (
-    <section className="rounded-xl border border-farmer-line bg-white p-4 sm:p-5">
+    <section className="rounded-xl border border-farmer-line bg-paper p-4 sm:p-5">
       <div className="flex items-start gap-3">
         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-muted">
           <Icon size={16} aria-hidden="true" />

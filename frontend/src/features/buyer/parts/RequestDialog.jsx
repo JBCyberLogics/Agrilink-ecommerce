@@ -65,13 +65,13 @@ export default function RequestDialog({ listing, onClose, onSent }) {
 
   return (
     <div className="fixed inset-0 z-[70] grid place-items-center px-4">
-      <div className="absolute inset-0 bg-farmer-ink/40" onClick={() => !saving && onClose()} aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/40" onClick={() => !saving && onClose()} aria-hidden="true" />
       <div
         ref={panel}
         role="dialog"
         aria-modal="true"
         aria-labelledby="request-dialog-title"
-        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-lift"
+        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-paper shadow-lift"
       >
         <div className="flex items-start justify-between gap-3 border-b border-farmer-line px-5 py-4">
           <div>
@@ -200,8 +200,8 @@ export default function RequestDialog({ listing, onClose, onSent }) {
 }
 
 const inputCls = (bad) =>
-  `w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
-    bad ? 'border-farmer-danger' : 'border-farmer-line focus:border-farmer-primary/50'
+  `w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
+    bad ? 'border-farmer-danger' : 'border-farmer-line focus:border-farmer-brand/50'
   }`
 
 function Field({ id, label, hint, error, input }) {

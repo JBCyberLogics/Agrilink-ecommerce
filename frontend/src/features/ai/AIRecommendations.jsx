@@ -72,9 +72,9 @@ export default function AIRecommendations({ userRole }) {
   if (!result && !error && !submitting) {
     return (
       <div className="space-y-6">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <Scale size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <Scale size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             AI Recommendations Center
           </h2>
           <p className="mt-1 text-xs text-farmer-muted">
@@ -97,10 +97,10 @@ export default function AIRecommendations({ userRole }) {
                 placeholder="e.g. maize, spinach…"
                 aria-label="Produce type"
                 aria-invalid={!!errors.produceType}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.produceType
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.produceType && (
@@ -122,10 +122,10 @@ export default function AIRecommendations({ userRole }) {
                 placeholder="e.g. Meru"
                 aria-label="Location"
                 aria-invalid={!!errors.location}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.location
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.location && (
@@ -148,7 +148,7 @@ export default function AIRecommendations({ userRole }) {
                 onChange={setField('budget')}
                 placeholder="e.g. 5000"
                 aria-label="Budget"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
             </label>
           </div>
@@ -169,8 +169,8 @@ export default function AIRecommendations({ userRole }) {
 if (error) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -191,10 +191,10 @@ if (error) {
 if (submitting) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-center gap-3">
           <span
-            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-primary/30 border-t-farmer-primary"
+            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-brand/30 border-t-farmer-primary"
             aria-hidden="true"
           />
           <div>
@@ -211,7 +211,7 @@ if (submitting) {
 
 return (
   <div className="space-y-6">
-    <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+    <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
       <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
         <CheckCircle2 size={16} aria-hidden="true" className="mr-2 text-farmer-success" />
         Recommendations for {form.role}
@@ -238,7 +238,7 @@ return (
       )}
     </section>
     {result.items && result.items.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
           Recommended items
         </h2>

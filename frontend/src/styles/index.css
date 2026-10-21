@@ -2,22 +2,140 @@
 @tailwind base;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------ theme
+   Single source of truth for the app's light/dark palette (task
+   AGRILINK-FAQ-GLOBAL-THEME-001). Every value here is an rgb triplet that
+   Tailwind consumes via tailwind.config.js (`--ag-*` tokens), so alpha
+   variants (bg-paper/75, ring-line etc.) work everywhere. Light values are
+   byte-identical to the palette the app shipped with; only the .dark block
+   introduces new values.
+
+   The .dark class is toggled on <html> by:
+   • the inline boot script in frontend/index.html (runs before first paint
+     when a saved preference exists), and
+   • the shared ThemeProvider (frontend/src/features/theme/) on toggle.
+*/
 @layer base {
+  :root {
+    /* surfaces */
+    --ag-paper: 255 255 255;          /* was bg-white */
+    --ag-paper-soft: 250 250 250;     /* was neutral-50 */
+    --ag-soft: 245 245 245;           /* was neutral-100 */
+    --ag-soft-strong: 229 229 229;    /* was neutral-200 */
+    --ag-line: 229 229 229;           /* was border-neutral-200 */
+    --ag-line-strong: 212 212 212;    /* was border-neutral-300 */
+
+    /* text / icon steps (was neutral-900 … neutral-300 text) */
+    --ag-ink: 10 10 10;
+    --ag-ink-2: 38 38 38;
+    --ag-ink-3: 64 64 64;
+    --ag-ink-4: 82 82 82;
+    --ag-muted: 115 115 115;          /* neutral-500 */
+    --ag-muted-2: 163 163 163;        /* neutral-400 icons & placeholders */
+    --ag-faint: 212 212 212;          /* neutral-300 decorative */
+
+    /* brand text shades (readable in dark mode) */
+    --ag-brand: 46 125 50;            /* was text-primary #2E7D32 */
+    --ag-brand-deep: 27 94 32;        /* was text-primary-dark #1B5E20 */
+    --ag-brand-soft: 232 245 233;     /* was primary-soft #E8F5E9 */
+    --ag-brand-amber: 255 160 0;      /* was text-secondary #FFA000 */
+    --ag-brand-amber-deep: 199 120 0; /* was text-secondary-dark #C77800 */
+    --ag-brand-amber-soft: 255 248 225; /* was secondary-soft #FFF8E1 */
+
+    /* state washes: red (danger) / green (ok) / blue (info) */
+    --ag-danger: 220 38 38;           /* red-600/500/700 text */
+    --ag-danger-wash: 254 242 242;    /* red-50 chip background */
+    --ag-danger-line: 252 165 165;    /* red-200/300 borders & rings */
+    --ag-ok: 21 128 61;               /* green-700 text */
+    --ag-ok-strong: 22 101 52;        /* green-800 strong text */
+    --ag-ok-wash: 240 253 244;        /* green-50 chip background */
+    --ag-ok-line: 187 247 208;        /* green-200 border */
+    --ag-info: 29 78 216;             /* blue-700 text */
+    --ag-info-wash: 219 234 254;      /* blue-50 chip background */
+
+    /* farmer/buyer dashboard system (farmer-* tokens) */
+    --ag-fbrand: 23 99 61;            /* was text-farmer-primary #17633D */
+    --ag-fsurface: 234 245 238;       /* was farmer-surface #EAF5EE */
+    --ag-fpage: 247 249 247;          /* was farmer-page #F7F9F7 */
+    --ag-fink: 23 35 28;              /* was farmer-ink #17231C */
+    --ag-fmuted: 100 112 103;         /* was farmer-muted #647067 */
+    --ag-fline: 225 232 226;          /* was farmer-line #E1E8E2 */
+    --ag-fsuccess: 32 122 69;         /* was farmer-success #207A45 */
+    --ag-fwarning: 148 98 0;          /* was farmer-warning #946200 */
+    --ag-fdanger: 180 35 24;          /* was farmer-danger #B42318 */
+
+    /* keyboard focus: inner ring matches the surface so the green ring
+       is always the visible part of the outline */
+    --ag-focus-inner: 255 255 255;
+  }
+
+  .dark {
+    /* slightly green-tinted charcoal — dark neutrals, never pure black */
+    --ag-paper: 26 32 27;             /* #1A201B cards & raised surfaces */
+    --ag-paper-soft: 18 24 20;        /* #121814 page background */
+    --ag-soft: 30 38 32;              /* #1E2620 skeleton fills, icon wells */
+    --ag-soft-strong: 41 51 43;       /* #29332B stronger wells */
+    --ag-line: 45 56 48;              /* #2D3830 default borders */
+    --ag-line-strong: 63 78 66;       /* #3F4E42 strong borders */
+
+    --ag-ink: 241 244 241;            /* #F1F4F1 primary text */
+    --ag-ink-2: 225 231 226;          /* #E1E7E2 */
+    --ag-ink-3: 205 213 206;          /* #CDD5CE */
+    --ag-ink-4: 184 194 185;          /* #B8C2B9 */
+    --ag-muted: 154 165 156;          /* #9AA59C secondary text ≈6:1 */
+    --ag-muted-2: 131 140 132;        /* icons & placeholders ≈4:1 */
+    --ag-faint: 128 138 129;          /* decorative chevrons etc. */
+
+    --ag-brand: 124 199 130;          /* #7CC782 readable brand green */
+    --ag-brand-deep: 167 217 173;     /* #A7D9AD */
+    --ag-brand-soft: 32 54 39;        /* #203627 translucent-friendly wash */
+    --ag-brand-amber: 255 192 36;     /* #FFC024 */
+    --ag-brand-amber-deep: 255 208 90; /* #FFD05A */
+    --ag-brand-amber-soft: 58 49 21;  /* #3A3115 */
+
+    --ag-danger: 249 113 96;          /* #F97160 ≈5.5:1 on washes */
+    --ag-danger-wash: 46 20 18;       /* #2E1412 */
+    --ag-danger-line: 116 44 38;      /* #742C26 */
+    --ag-ok: 110 210 141;             /* #6ED28D */
+    --ag-ok-strong: 141 227 165;      /* #8DE3A5 */
+    --ag-ok-wash: 18 44 28;           /* #122C1C */
+    --ag-ok-line: 47 92 61;           /* #2F5C3D */
+    --ag-info: 147 197 253;           /* #93C5FD */
+    --ag-info-wash: 22 38 61;         /* #16263D */
+
+    --ag-fbrand: 129 210 141;         /* #81D28D */
+    --ag-fsurface: 32 42 35;          /* #202A23 */
+    --ag-fpage: 16 21 18;             /* #101512 */
+    --ag-fink: 238 243 239;
+    --ag-fmuted: 158 170 159;         /* #9EAA9F */
+    --ag-fline: 45 56 48;
+    --ag-fsuccess: 116 220 152;       /* #74DC98 */
+    --ag-fwarning: 232 181 92;        /* #E8B55C */
+    --ag-fdanger: 248 138 118;        /* #F88A76 */
+
+    --ag-focus-inner: 18 24 20;       /* blends with the dark surface */
+  }
+
   html {
     @apply antialiased;
   }
   body {
-    @apply bg-neutral-50 text-neutral-900 font-sans;
+    @apply bg-paper-soft text-ink font-sans;
   }
   ::selection {
     background: #fff8e1;
     color: #1b5e20;
   }
-  /* Visible keyboard focus everywhere (WCAG 2.4.7/2.4.13) */
+  .dark ::selection {
+    background: #3a3115;
+    color: #fff8e1;
+  }
+  /* Visible keyboard focus everywhere (WCAG 2.4.7/2.4.13) — token-driven
+     so the ring stays visible on both the light and dark surfaces */
   :focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px #ffffff,
+      0 0 0 2px rgb(var(--ag-focus-inner)),
       0 0 0 4px rgba(46, 125, 50, 0.55);
     border-radius: 8px;
   }
@@ -32,3 +150,68 @@
     display: none;
   }
 }
+
+/* ----------------------------------------------------------------- auth
+   Orbiting badge ornament (AGRILINK-AUTH-UI-REVAMP-001).
+
+   The --orbit angle is interpolated via @property and consumed with
+   trig functions inside the transform, so each badge travels its own
+   ellipse (rx/ry around the auth card) while the ICON STAYS UPRIGHT —
+   the transform is a pure translation. Only the transform is animated:
+   smear-free, GPU-composited, zero layout work, no scrollbar effects
+   (the layer is overflow-hidden, the card paints above it).
+
+   Without @property/trig support (or under prefers-reduced-motion) the
+   animation cannot interpolate: badges rest at their phased positions as
+   a static ring — decorative, harmless, never broken. */
+@property --orbit {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.auth-orbit {
+  /* orbit radii: comfortably wider than half the card, flattened
+     vertically by viewport height so badges stay near the card edges */
+  --orbit-rx: clamp(15rem, 26vw, 21rem);
+  --orbit-ry: clamp(19rem, 44vh, 27rem);
+}
+
+@media (max-width: 640px) {
+  /* phones: tighter ring around the single-column card */
+  .auth-orbit {
+    --orbit-rx: 58vw;
+    --orbit-ry: min(46vh, 22rem);
+  }
+}
+
+.auth-orbit-dot {
+  --orbit-delay: 0s;
+  animation: auth-orbit 32s linear infinite;
+  animation-delay: var(--orbit-delay);
+  /* resting pose = phase position (also what reduced-motion shows) */
+  transform:
+    translate(-50%, -50%)
+    translate3d(
+      calc(cos(calc(0deg + var(--phase, 0deg))) * var(--orbit-rx)),
+      calc(sin(calc(0deg + var(--phase, 0deg))) * var(--orbit-ry)),
+      0
+    );
+  will-change: transform;
+}
+
+@keyframes auth-orbit {
+  from {
+    --orbit: 0deg;
+  }
+  to {
+    --orbit: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-orbit-dot {
+    animation: none;
+  }
+}
+

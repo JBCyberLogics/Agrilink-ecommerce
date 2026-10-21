@@ -76,9 +76,9 @@ export default function AIProduceFinder() {
   if (!result && !error && !submitting) {
     return (
       <div className="space-y-6">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <Search size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <Search size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             AI Produce Finder
           </h2>
           <p className="mt-1 text-xs text-farmer-muted">
@@ -100,10 +100,10 @@ export default function AIProduceFinder() {
                 placeholder="e.g. maize, spinach…"
                 aria-label="Produce type"
                 aria-invalid={!!errors.produceType}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.produceType
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.produceType && (
@@ -127,10 +127,10 @@ export default function AIProduceFinder() {
                 placeholder="e.g. 200"
                 aria-label="Required quantity"
                 aria-invalid={!!errors.requiredQuantity}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.requiredQuantity
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.requiredQuantity && (
@@ -151,7 +151,7 @@ export default function AIProduceFinder() {
                 onChange={setField('location')}
                 placeholder="e.g. Thika"
                 aria-label="Location"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
             </label>
             <label className="block">
@@ -165,7 +165,7 @@ export default function AIProduceFinder() {
                 onChange={setField('qualityRequirements')}
                 placeholder="e.g. Grade A, organic"
                 aria-label="Quality requirements"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
             </label>
           </div>
@@ -180,7 +180,7 @@ export default function AIProduceFinder() {
               onChange={setField('budgetRange')}
               placeholder="e.g. 5000-10000"
               aria-label="Budget range"
-              className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+              className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
             />
           </label>
           <label className="block">
@@ -193,7 +193,7 @@ export default function AIProduceFinder() {
               value={form.requiredAvailabilityDate}
               onChange={setField('requiredAvailabilityDate')}
               aria-label="Required availability date"
-              className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+              className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
             />
           </label>
           <button
@@ -213,8 +213,8 @@ export default function AIProduceFinder() {
 if (error) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -235,10 +235,10 @@ if (error) {
 if (submitting) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-center gap-3">
           <span
-            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-primary/30 border-t-farmer-primary"
+            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-brand/30 border-t-farmer-primary"
             aria-hidden="true"
           />
           <div>
@@ -255,7 +255,7 @@ if (submitting) {
 
 return (
   <div className="space-y-6">
-    <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+    <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
       <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
         <CheckCircle2 size={16} aria-hidden="true" className="mr-2 text-farmer-success" />
         Matching produce
@@ -267,7 +267,7 @@ return (
       </p>
     </section>
     {result.matches && result.matches.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <ul className="divide-y divide-farmer-line">
           {result.matches.map((match, i) => (
             <li key={i} className="py-4 first:pt-0 last:pb-0">
@@ -300,7 +300,7 @@ return (
         </ul>
       </section>
     )}
-    <p className="rounded-xl border border-farmer-line bg-white px-4 py-3 text-xs leading-relaxed text-farmer-muted">
+    <p className="rounded-xl border border-farmer-line bg-paper px-4 py-3 text-xs leading-relaxed text-farmer-muted">
       Match factors include produce type, quantity, quality, location, and
       availability. Units are never converted — matches are shown for the same
       unit you specified.

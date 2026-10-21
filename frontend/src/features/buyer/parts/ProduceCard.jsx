@@ -19,7 +19,7 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
   const Icon = CATEGORY_ART[listing.category] ?? Wheat
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-farmer-line bg-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
+    <article className="group flex flex-col overflow-hidden rounded-xl border border-farmer-line bg-paper transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift">
       {/* ------------------------------ image ------------------------------ */}
       <div className="relative h-40 overflow-hidden bg-farmer-surface/60">
         {listing.imageUrl ? (
@@ -30,11 +30,11 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
             className="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
           />
         ) : (
-          <span className="grid h-full w-full place-items-center text-farmer-primary/50">
+          <span className="grid h-full w-full place-items-center text-farmer-brand/50">
             <Icon size={40} aria-hidden="true" />
           </span>
         )}
-        <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-farmer-primary shadow-glass backdrop-blur">
+        <span className="absolute right-3 top-3 rounded-full bg-paper/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-farmer-brand shadow-glass backdrop-blur">
           {listing.category}
         </span>
 
@@ -45,8 +45,8 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
           disabled={saveBusy}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${listing.name} from saved produce` : `Save ${listing.name}`}
-          className={`absolute left-3 top-3 grid h-9 w-9 place-items-center rounded-full shadow-glass backdrop-blur transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-primary/40 ${
-            saved ? 'bg-white text-farmer-danger' : saveBusy ? 'bg-white/70 text-farmer-muted' : 'bg-white/95 text-farmer-muted hover:text-farmer-danger'
+          className={`absolute left-3 top-3 grid h-9 w-9 place-items-center rounded-full shadow-glass backdrop-blur transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-brand/40 ${
+            saved ? 'bg-paper text-farmer-danger' : saveBusy ? 'bg-paper/70 text-farmer-muted' : 'bg-paper/95 text-farmer-muted hover:text-farmer-danger'
           }`}
         >
           <Heart size={16} aria-hidden="true" className={saved ? 'fill-current' : ''} />
@@ -74,9 +74,9 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
         {/* stock reality — text, never color-only; sold-out cannot be requested */}
         <p className="mt-2 text-xs font-medium">
           {out ? (
-            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-farmer-muted">Sold out</span>
+            <span className="rounded-full bg-soft px-2 py-0.5 text-farmer-muted">Sold out</span>
           ) : listing.stock <= 50 ? (
-            <span className="rounded-full bg-secondary-soft px-2 py-0.5 font-bold text-secondary-dark">
+            <span className="rounded-full bg-secondary-soft px-2 py-0.5 font-bold text-brand-amber-deep">
               Only {listing.stock.toLocaleString('en-KE')} {listing.unit} left
             </span>
           ) : (
@@ -87,7 +87,7 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
         </p>
 
         <div className="mt-auto flex items-end justify-between gap-2 pt-3">
-          <p className="font-display text-lg font-bold text-farmer-primary">
+          <p className="font-display text-lg font-bold text-farmer-brand">
             {kes(listing.price)}
             <span className="ml-1 text-xs font-medium text-farmer-muted">/ {String(listing.unit).split(' ')[0]}</span>
           </p>
@@ -100,7 +100,7 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
                 aria-label={`Send a purchase request for ${listing.name}`}
                 className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold transition-all ${
                   out
-                    ? 'cursor-not-allowed bg-neutral-100 text-farmer-muted'
+                    ? 'cursor-not-allowed bg-soft text-farmer-muted'
                     : 'bg-farmer-primary text-white hover:bg-farmer-primary-hover active:scale-95'
                 }`}
               >
@@ -112,7 +112,7 @@ export default function ProduceCard({ listing, saved = false, saveBusy = false, 
                 type="button"
                 onClick={() => onInquire(listing)}
                 aria-label={`Send an inquiry about ${listing.name} to ${listing.farmer || 'the farmer'}`}
-                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-farmer-line bg-white px-3 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+                className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-farmer-line bg-paper px-3 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
               >
                 <MessageSquarePlus size={14} aria-hidden="true" /> Inquire
               </button>

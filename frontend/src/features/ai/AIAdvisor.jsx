@@ -72,9 +72,9 @@ export default function AIAdvisor() {
   if (!result && !error && !submitting) {
     return (
       <div className="space-y-6">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <LineChart size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <LineChart size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             AI Market Advisor
           </h2>
           <p className="mt-1 text-xs text-farmer-muted">
@@ -97,10 +97,10 @@ export default function AIAdvisor() {
                 placeholder="e.g. maize, tomatoes…"
                 aria-label="Produce type"
                 aria-invalid={!!errors.produce}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.produce
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.produce && (
@@ -122,10 +122,10 @@ export default function AIAdvisor() {
                 placeholder="e.g. Nyeri"
                 aria-label="Location"
                 aria-invalid={!!errors.location}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.location
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.location && (
@@ -149,10 +149,10 @@ export default function AIAdvisor() {
                 placeholder="e.g. 100"
                 aria-label="Quantity"
                 aria-invalid={!!errors.quantity}
-                className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+                className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                   errors.quantity
                     ? 'border-farmer-danger'
-                    : 'border-farmer-line focus:border-farmer-primary/50'
+                    : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.quantity && (
@@ -171,7 +171,7 @@ export default function AIAdvisor() {
                 value={form.timePeriod}
                 onChange={setField('timePeriod')}
                 aria-label="Time period"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               >
                 <option value="week">1 week</option>
                 <option value="month">1 month</option>
@@ -195,8 +195,8 @@ export default function AIAdvisor() {
 if (error) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -217,10 +217,10 @@ if (error) {
 if (submitting) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-center gap-3">
           <span
-            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-primary/30 border-t-farmer-primary"
+            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-brand/30 border-t-farmer-primary"
             aria-hidden="true"
           />
           <div>
@@ -237,7 +237,7 @@ if (submitting) {
 
 return (
   <div className="space-y-6">
-    <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+    <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
       <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
         <CheckCircle2 size={16} aria-hidden="true" className="mr-2 text-farmer-success" />
         Market insights
@@ -264,9 +264,9 @@ return (
       </div>
     </section>
     {result.recommendedActions && result.recommendedActions.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-          <Search size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+          <Search size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
           Recommended next actions
         </h2>
         <ul className="space-y-2">

@@ -23,7 +23,7 @@ export default function ProductCard({ product, onAddToCart }) {
   }
 
   return (
-    <article className="group relative flex animate-fade-up flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+    <article className="group relative flex animate-fade-up flex-col overflow-hidden rounded-2xl border border-line bg-paper shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
       {/* ------------------------------ image ------------------------------ */}
       <div className="relative h-44 overflow-hidden bg-primary-soft/60">
         {product.image ? (
@@ -36,7 +36,7 @@ export default function ProductCard({ product, onAddToCart }) {
         ) : (
           /* no photo on this listing yet — neutral icon block, never a
              borrowed "similar-looking" stock photo */
-          <span className="grid h-full w-full place-items-center text-primary/60">
+          <span className="grid h-full w-full place-items-center text-brand/60">
             <Icon size={44} aria-hidden="true" />
           </span>
         )}
@@ -55,13 +55,13 @@ export default function ProductCard({ product, onAddToCart }) {
         )}
 
         {/* right chip: category */}
-        <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary-dark shadow-glass backdrop-blur">
+        <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-paper/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-brand-deep shadow-glass backdrop-blur">
           {product.category}
         </span>
 
         {/* bottom chip: real farmer identity */}
         <span className="absolute bottom-3 left-3 inline-flex max-w-[85%] items-center gap-1.5 rounded-full bg-neutral-900/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
-          <MapPin size={11} aria-hidden="true" className="shrink-0 text-secondary" />
+          <MapPin size={11} aria-hidden="true" className="shrink-0 text-brand-amber" />
           <span className="truncate">
             {product.farmer}
             {product.location ? ` • ${product.location}` : ''}
@@ -71,30 +71,30 @@ export default function ProductCard({ product, onAddToCart }) {
 
       {/* ------------------------------ content ------------------------------ */}
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-display text-[15px] font-bold leading-tight text-neutral-900">
+        <h3 className="font-display text-[15px] font-bold leading-tight text-ink">
           {product.name}
         </h3>
 
-        <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-neutral-500">
+        <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-muted">
           {product.farmer}
-          <BadgeCheck size={14} aria-label="Verified farmer" className="shrink-0 text-primary" />
+          <BadgeCheck size={14} aria-label="Verified farmer" className="shrink-0 text-brand" />
           {product.location && (
             <>
-              <span className="text-neutral-300">|</span>
+              <span className="text-faint">|</span>
               {product.location}
             </>
           )}
           {low && (
-            <span className="ml-1 rounded-full bg-secondary-soft px-2 py-0.5 text-[10px] font-bold text-secondary-dark">
+            <span className="ml-1 rounded-full bg-secondary-soft px-2 py-0.5 text-[10px] font-bold text-brand-amber-deep">
               {product.stock.toLocaleString('en-KE')} {product.unit} left
             </span>
           )}
         </p>
 
         <div className="mt-4 flex items-center justify-between gap-2 pt-1">
-          <p className="font-display text-lg font-bold text-primary-dark">
+          <p className="font-display text-lg font-bold text-brand-deep">
             {kes(product.price)}
-            <span className="ml-1 text-xs font-medium text-neutral-400">/ {product.unit.split(' ')[0]}</span>
+            <span className="ml-1 text-xs font-medium text-muted-2">/ {product.unit.split(' ')[0]}</span>
           </p>
 
           {/* Add to Cart — swapped label/icon confirms the action; sold-out rows
@@ -106,7 +106,7 @@ export default function ProductCard({ product, onAddToCart }) {
             aria-label={`Add ${product.name} to cart`}
             className={`inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-sm font-semibold text-white transition-all duration-200 ${
               out
-                ? 'cursor-not-allowed bg-neutral-300'
+                ? 'cursor-not-allowed bg-soft-strong'
                 : added
                   ? 'bg-primary-light shadow-soft active:scale-95'
                   : 'bg-primary shadow-lift hover:bg-primary-dark active:scale-95'

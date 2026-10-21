@@ -20,7 +20,7 @@ import { kes, fmtDate } from '../../../utils/format'
 
 function Card({ title, children, action }) {
   return (
-    <section className="rounded-xl border border-farmer-line bg-white p-5 sm:p-6">
+    <section className="rounded-xl border border-farmer-line bg-paper p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">{title}</h2>
         {action}
@@ -37,15 +37,15 @@ export default function Overview({ onJumpToBrowse }) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy="true" aria-label="Loading overview">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-[118px] animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+          <div key={i} className="h-[118px] animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
         ))}
       </div>
     )
 
   if (status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{error || 'Something went wrong.'}</p>
@@ -120,7 +120,7 @@ export default function Overview({ onJumpToBrowse }) {
               <button
                 type="button"
                 onClick={() => onJumpToBrowse({ category: topCategory })}
-                className="text-[13px] font-semibold text-farmer-primary hover:text-farmer-primary-hover"
+                className="text-[13px] font-semibold text-farmer-brand hover:text-farmer-primary-hover"
               >
                 More {topCategory} <ArrowRight size={13} aria-hidden="true" className="inline" />
               </button>
@@ -143,7 +143,7 @@ export default function Overview({ onJumpToBrowse }) {
                         {l.location ? ` · ${l.location}` : ''}
                       </span>
                     </span>
-                    <span className="text-[13px] font-bold text-farmer-primary">{kes(l.price)}</span>
+                    <span className="text-[13px] font-bold text-farmer-brand">{kes(l.price)}</span>
                   </li>
                 ))}
               </ul>
@@ -162,7 +162,7 @@ export default function Overview({ onJumpToBrowse }) {
             <button
               type="button"
               onClick={() => onJumpToBrowse({ sort: 'newest' })}
-              className="text-[13px] font-semibold text-farmer-primary hover:text-farmer-primary-hover"
+              className="text-[13px] font-semibold text-farmer-brand hover:text-farmer-primary-hover"
             >
               View all <ArrowRight size={13} aria-hidden="true" className="inline" />
             </button>
@@ -178,7 +178,7 @@ export default function Overview({ onJumpToBrowse }) {
                       Listed {fmtDate(l.createdAt)} · {l.farmer}
                     </span>
                   </span>
-                  <span className="text-[13px] font-bold text-farmer-primary">{kes(l.price)}</span>
+                  <span className="text-[13px] font-bold text-farmer-brand">{kes(l.price)}</span>
                 </li>
               ))}
             </ul>
@@ -236,7 +236,7 @@ function FindProduceForm({ onJumpToBrowse, listings }) {
   }
 
   return (
-    <section aria-labelledby="find-produce-title" className="rounded-xl border border-farmer-line bg-white p-5 sm:p-6">
+    <section aria-labelledby="find-produce-title" className="rounded-xl border border-farmer-line bg-paper p-5 sm:p-6">
       <h2 id="find-produce-title" className="flex items-center gap-2 font-display text-[15px] font-semibold text-farmer-ink">
         <Search size={15} aria-hidden="true" /> Find Produce
       </h2>
@@ -283,7 +283,7 @@ function FindProduceForm({ onJumpToBrowse, listings }) {
                 setF({ q: '', category: 'All', location: '', min: '', max: '', minQty: '' })
                 setErr('')
               }}
-              className="inline-flex h-10 items-center rounded-lg border border-farmer-line px-4 text-[13px] font-semibold text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+              className="inline-flex h-10 items-center rounded-lg border border-farmer-line px-4 text-[13px] font-semibold text-farmer-muted transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
             >
               Clear
             </button>
@@ -311,4 +311,4 @@ const num = (v) => {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-farmer-line bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40'
+  'w-full rounded-lg border border-farmer-line bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40'

@@ -22,15 +22,15 @@ export default function Saved({ onBrowse }) {
     return (
       <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading saved produce">
         {Array.from({ length: 3 }).map((_, i) => (
-          <li key={i} className="h-72 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+          <li key={i} className="h-72 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
         ))}
       </ul>
     )
 
   if (status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{error || 'Could not load your saved produce.'}</p>
@@ -61,7 +61,7 @@ export default function Saved({ onBrowse }) {
   return (
     <div className="space-y-5">
       {banner && (
-        <p className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-[13px] text-farmer-danger" role="alert">
+        <p className="flex items-center gap-2 rounded-lg bg-danger-wash px-3 py-2 text-[13px] text-farmer-danger" role="alert">
           <AlertCircle size={14} aria-hidden="true" /> {banner}
         </p>
       )}
@@ -91,7 +91,7 @@ export default function Saved({ onBrowse }) {
         <button
           type="button"
           onClick={onBrowse}
-          className="inline-flex h-10 items-center gap-2 rounded-lg border border-farmer-line bg-white px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary"
+          className="inline-flex h-10 items-center gap-2 rounded-lg border border-farmer-line bg-paper px-4 text-[13px] font-semibold text-farmer-ink transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand"
         >
           <HeartOff size={14} aria-hidden="true" /> More sourcing ideas in Browse Produce
         </button>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Sprout, Search, ShoppingBag, Menu, X, LogOut, ChevronDown, Plus, Minus, ArrowRight } from 'lucide-react'
 import { kes } from '../../utils/format'
+import ThemeToggle from '../../features/theme/ThemeToggle'
 
 /* Navbar logo — the official Agrilink brand artwork (logo.png).
    The source PNG is square with generous margins, so object-cover
@@ -28,7 +29,7 @@ function SearchBar({ search, onSearch, id = 'nav-search' }) {
       <Search
         size={18}
         aria-hidden="true"
-        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"
+        className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-2"
       />
       <input
         id={id}
@@ -37,14 +38,14 @@ function SearchBar({ search, onSearch, id = 'nav-search' }) {
         onChange={(e) => onSearch(e.target.value)}
         placeholder="Search fresh produce, farms, counties…"
         aria-label="Search produce"
-        className="h-11 w-full rounded-full border border-neutral-200/80 bg-neutral-100/70 pl-11 pr-10 text-sm text-neutral-900 shadow-sm outline-none backdrop-blur transition-all placeholder:text-neutral-400 hover:bg-neutral-100 focus:border-primary/40 focus:bg-white focus:ring-4 focus:ring-primary/10"
+        className="h-11 w-full rounded-full border border-line/80 bg-soft/70 pl-11 pr-10 text-sm text-ink shadow-sm outline-none backdrop-blur transition-all placeholder:text-muted-2 hover:bg-soft focus:border-brand/40 focus:bg-paper focus:ring-4 focus:ring-brand/10"
       />
       {search && (
         <button
           type="button"
           onClick={() => onSearch('')}
           aria-label="Clear search"
-          className="absolute right-2.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-200 hover:text-neutral-600"
+          className="absolute right-2.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-muted-2 transition-colors hover:bg-soft-strong hover:text-ink-4"
         >
           <X size={14} aria-hidden="true" />
         </button>
@@ -65,7 +66,7 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={`Shopping cart, ${count} item${count === 1 ? '' : 's'}`}
-        className="relative grid h-11 w-11 place-items-center rounded-xl text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-primary focus-visible:bg-neutral-100"
+        className="relative grid h-11 w-11 place-items-center rounded-xl text-ink-4 transition-colors hover:bg-soft hover:text-brand focus-visible:bg-soft"
       >
         <ShoppingBag size={21} aria-hidden="true" />
         {/* Floating numeric badge — re-keyed every count change so the pop animation replays */}
@@ -84,36 +85,36 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
         <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} aria-hidden="true" />
       )}
       {open && (
-        <div className="absolute right-0 z-50 mt-3 w-80 animate-fade-up overflow-hidden rounded-2xl border border-white/60 bg-white/80 shadow-glass backdrop-blur-2xl">
+        <div className="absolute right-0 z-50 mt-3 w-80 animate-fade-up overflow-hidden rounded-2xl border border-white/60 bg-paper/80 shadow-glass backdrop-blur-2xl">
           {/*---------------------------- cart items ----------------------------*/}
-          <div className="flex items-center justify-between border-b border-neutral-200/60 px-4 py-3">
-            <p className="text-sm font-semibold text-neutral-900">Your basket</p>
-            <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
+          <div className="flex items-center justify-between border-b border-line/60 px-4 py-3">
+            <p className="text-sm font-semibold text-ink">Your basket</p>
+            <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-brand-deep">
               {count} item{count === 1 ? '' : 's'}
             </span>
           </div>
 
           {cart.length === 0 ? (
             <div className="px-4 py-10 text-center">
-              <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-neutral-100 text-neutral-300">
+              <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-soft text-faint">
                 <ShoppingBag size={22} aria-hidden="true" />
               </span>
-              <p className="mt-3 text-sm font-medium text-neutral-500">Your basket is empty</p>
-              <p className="mt-1 text-xs text-neutral-400">Fresh produce is one click away.</p>
+              <p className="mt-3 text-sm font-medium text-muted">Your basket is empty</p>
+              <p className="mt-1 text-xs text-muted-2">Fresh produce is one click away.</p>
             </div>
           ) : (
-            <ul className="max-h-64 divide-y divide-neutral-200/60 overflow-y-auto px-2">
+            <ul className="max-h-64 divide-y divide-line/60 overflow-y-auto px-2">
               {cart.map((it) => (
                 <li key={it.productId} className="flex items-center gap-3 px-2 py-3">
                   <img
                     src={it.image}
                     alt=""
                     loading="lazy"
-                    className="h-11 w-11 shrink-0 rounded-lg bg-neutral-100 object-cover"
+                    className="h-11 w-11 shrink-0 rounded-lg bg-soft object-cover"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13px] font-semibold text-neutral-900">{it.name}</p>
-                    <p className="text-xs text-neutral-400">
+                    <p className="truncate text-[13px] font-semibold text-ink">{it.name}</p>
+                    <p className="text-xs text-muted-2">
                       {kes(it.price)} / {it.unit}
                     </p>
                   </div>
@@ -122,7 +123,7 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
                       type="button"
                       onClick={() => onQty(it.productId, -1)}
                       aria-label={`Decrease ${it.name} quantity`}
-                      className={`grid h-7 w-7 place-items-center rounded-md border border-neutral-200 text-neutral-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500`}
+                      className={`grid h-7 w-7 place-items-center rounded-md border border-line text-muted transition-colors hover:border-danger-line hover:bg-danger-wash hover:text-danger`}
                     >
                       <Minus size={12} aria-hidden="true" />
                     </button>
@@ -131,7 +132,7 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
                       type="button"
                       onClick={() => onQty(it.productId, +1)}
                       aria-label={`Increase ${it.name} quantity`}
-                      className="grid h-7 w-7 place-items-center rounded-md border border-neutral-200 text-neutral-500 transition-colors hover:border-primary/30 hover:bg-primary-soft hover:text-primary"
+                      className="grid h-7 w-7 place-items-center rounded-md border border-line text-muted transition-colors hover:border-brand/30 hover:bg-primary-soft hover:text-brand"
                     >
                       <Plus size={12} aria-hidden="true" />
                     </button>
@@ -142,10 +143,10 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
           )}
 
           {cart.length > 0 && (
-            <div className="border-t border-neutral-200/60 bg-white/50 p-4">
+            <div className="border-t border-line/60 bg-paper/50 p-4">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-neutral-500">Subtotal</span>
-                <span className="font-display text-lg font-bold text-neutral-900">{kes(subtotal)}</span>
+                <span className="text-muted">Subtotal</span>
+                <span className="font-display text-lg font-bold text-ink">{kes(subtotal)}</span>
               </div>
               <button
                 type="button"
@@ -180,9 +181,9 @@ export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
         </span>
         {!mobile && (
           <span className="hidden leading-tight xl:block">
-            <span className="block max-w-[9rem] truncate text-[13px] font-semibold text-neutral-900">{user.name}</span>
+            <span className="block max-w-[9rem] truncate text-[13px] font-semibold text-ink">{user.name}</span>
             <span
-              className={`text-[10px] font-bold uppercase tracking-wider ${user.role === 'Farmer' ? 'text-secondary-dark' : 'text-primary'}`}
+              className={`text-[10px] font-bold uppercase tracking-wider ${user.role === 'Farmer' ? 'text-brand-amber-deep' : 'text-brand'}`}
             >
               {user.role}
             </span>
@@ -193,7 +194,7 @@ export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
           onClick={onSignOut}
           title="Sign out"
           aria-label="Sign out"
-          className="grid h-10 w-10 place-items-center rounded-xl text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-red-500"
+          className="grid h-10 w-10 place-items-center rounded-xl text-muted-2 transition-colors hover:bg-soft hover:text-danger"
         >
           <LogOut size={18} aria-hidden="true" />
         </button>
@@ -222,6 +223,7 @@ const NAV_LINKS = [
   { id: 'buyer/dashboard', label: 'Buyer Hub' },
   { id: 'how-it-works', label: 'How it works' },
   { id: 'about', label: 'About' },
+  { id: 'faq', label: 'FAQ' },
   { id: 'contact', label: 'Contact' },
 ]
 
@@ -239,7 +241,7 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
   const showSellingCta = !user || user.role !== 'Farmer'
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-neutral-200/60 bg-white/75 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/60">
+    <header className="fixed top-0 z-50 w-full border-b border-line/60 bg-paper/75 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-paper/60">
       <nav className="mx-auto flex h-[72px] max-w-7xl items-center gap-3 px-4 sm:gap-5 sm:px-6 lg:px-8">
         <Brand />
 
@@ -259,8 +261,8 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
                   aria-current={isActive(link) ? 'page' : undefined}
                   className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
                     isActive(link)
-                      ? 'bg-primary-soft text-primary-dark'
-                      : 'text-neutral-600 hover:bg-primary-soft/60 hover:text-primary-dark'
+                      ? 'bg-primary-soft text-brand-deep'
+                      : 'text-ink-4 hover:bg-primary-soft/60 hover:text-brand-deep'
                   }`}
                 >
                   {link.label}
@@ -274,12 +276,13 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
           {showSellingCta && (
             <a
               href="#/start-selling"
-              className="mr-1 hidden rounded-full border border-primary/25 bg-primary-soft/70 px-4 py-2 text-sm font-semibold text-primary-dark transition-colors hover:bg-primary-soft lg:inline-flex"
+              className="mr-1 hidden rounded-full border border-brand/25 bg-primary-soft/70 px-4 py-2 text-sm font-semibold text-brand-deep transition-colors hover:bg-primary-soft lg:inline-flex"
             >
               Start Selling
             </a>
           )}
 
+          <ThemeToggle className="h-11 w-11" size={20} />
           <CartButton cart={cart} count={cartCount} onQty={onQty} onRemove={onRemoveFromCart} onCheckout={onCheckout} />
           <div className="hidden sm:block">
             <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
@@ -291,7 +294,7 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
             onClick={() => setMobileOpen((v) => !v)}
             aria-expanded={mobileOpen}
             aria-label="Open menu"
-            className="grid h-11 w-11 place-items-center rounded-xl text-neutral-600 transition-colors hover:bg-neutral-100 lg:hidden"
+            className="grid h-11 w-11 place-items-center rounded-xl text-ink-4 transition-colors hover:bg-soft lg:hidden"
           >
             {mobileOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
@@ -299,13 +302,13 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
       </nav>
 
       {/* mobile search row */}
-      <div className="border-t border-neutral-200/50 px-4 py-2.5 md:hidden">
+      <div className="border-t border-line/50 px-4 py-2.5 md:hidden">
         <SearchBar search={search} onSearch={onSearch} id="nav-search-mobile" />
       </div>
 
       {/* mobile dropdown panel */}
       {mobileOpen && (
-        <div className="border-t border-neutral-200/60 bg-white/90 p-4 backdrop-blur-xl lg:hidden">
+        <div className="border-t border-line/60 bg-paper/90 p-4 backdrop-blur-xl lg:hidden">
           <ul className="space-y-1">
             {NAV_LINKS.map((link) => (
               <li key={link.id}>
@@ -318,12 +321,12 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
                   aria-current={isActive(link) ? 'page' : undefined}
                   className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
                     isActive(link)
-                      ? 'bg-primary-soft text-primary-dark'
-                      : 'text-neutral-700 hover:bg-neutral-100'
+                      ? 'bg-primary-soft text-brand-deep'
+                      : 'text-ink-3 hover:bg-soft'
                   }`}
                 >
                   {link.label}
-                  <ChevronDown size={16} className="rotate-[-90deg] text-neutral-300" aria-hidden="true" />
+                  <ChevronDown size={16} className="rotate-[-90deg] text-faint" aria-hidden="true" />
                 </button>
               </li>
             ))}
@@ -332,12 +335,21 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
             <a
               href="#/start-selling"
               onClick={() => setMobileOpen(false)}
-              className="mt-3 flex h-11 w-full items-center justify-center rounded-xl border border-primary/25 bg-primary-soft/70 text-sm font-semibold text-primary-dark transition-colors hover:bg-primary-soft"
+              className="mt-3 flex h-11 w-full items-center justify-center rounded-xl border border-brand/25 bg-primary-soft/70 text-sm font-semibold text-brand-deep transition-colors hover:bg-primary-soft"
             >
               Start Selling
             </a>
           )}
-          <div className="mt-3 border-t border-neutral-200/60 pt-3 sm:hidden">
+          {/* appearance row — the shared theme controller (footer spec keeps
+              the marketing footer off authenticated pages; this row follows
+              the same visual language as the rest of the dropdown) */}
+          <div className="mt-3 flex items-center justify-between border-t border-line/60 pt-3 sm:hidden">
+            <span className="flex items-center gap-2 text-sm font-medium text-ink-3">
+              Appearance
+            </span>
+            <ThemeToggle className="h-10 w-10 border border-line" size={18} />
+          </div>
+          <div className="mt-3 border-t border-line/60 pt-3 sm:hidden">
             <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} mobile />
           </div>
         </div>

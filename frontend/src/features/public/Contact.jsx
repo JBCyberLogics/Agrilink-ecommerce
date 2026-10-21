@@ -21,9 +21,9 @@ const CATEGORIES = [
 ]
 
 const SELECT_CLASS =
-  'h-12 w-full rounded-xl border border-neutral-200/80 bg-white/75 px-4 text-sm text-neutral-900 shadow-sm outline-none backdrop-blur-sm transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20'
+  'h-12 w-full rounded-xl border border-line/80 bg-paper/75 px-4 text-sm text-ink shadow-sm outline-none backdrop-blur-sm transition-colors focus:border-brand focus:ring-2 focus:ring-brand/20'
 const TEXTAREA_CLASS =
-  'w-full rounded-xl border border-neutral-200/80 bg-white/75 px-4 py-3 text-sm text-neutral-900 shadow-sm outline-none backdrop-blur-sm transition-colors placeholder:text-neutral-400 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20'
+  'w-full rounded-xl border border-line/80 bg-paper/75 px-4 py-3 text-sm text-ink shadow-sm outline-none backdrop-blur-sm transition-colors placeholder:text-muted-2 focus:border-brand focus:bg-paper focus:ring-2 focus:ring-brand/20'
 
 /* In-page smooth scroll that respects prefers-reduced-motion */
 const focusForm = (formRef) => {
@@ -89,7 +89,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
         <button
           type="button"
           onClick={() => focusForm(formRef)}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-deep"
         >
           Use the contact form <ArrowRight size={15} aria-hidden="true" />
         </button>
@@ -122,7 +122,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
         <button
           type="button"
           onClick={pickCategory('Technical support')}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-deep"
         >
           Report an issue <ArrowRight size={15} aria-hidden="true" />
         </button>
@@ -135,9 +135,9 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
       {/* ------------------------------ intro ------------------------------ */}
       <section className="grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Help & support</p>
-          <h1 className="mt-2 font-display text-3xl font-bold text-neutral-900 sm:text-4xl">Contact AgriLink</h1>
-          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand">Help & support</p>
+          <h1 className="mt-2 font-display text-3xl font-bold text-ink sm:text-4xl">Contact AgriLink</h1>
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-4">
             Farmers, buyers and visitors — reach the AgriLink team for anything from listing
             questions to account access. Choose a topic below or send a message with the form.
           </p>
@@ -148,19 +148,19 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
           src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&h=700&q=80"
           alt="Farmland rows at golden hour"
           loading="lazy"
-          className="h-44 w-full rounded-3xl object-cover ring-1 ring-neutral-200/70 sm:h-52 lg:h-56"
+          className="h-44 w-full rounded-3xl object-cover ring-1 ring-line/70 sm:h-52 lg:h-56"
         />
       </section>
 
       {/* --------------------------- option cards --------------------------- */}
       <section aria-label="Contact options" className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {optionCards.map((o) => (
-          <article key={o.title} className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary-dark">
+          <article key={o.title} className="rounded-2xl border border-line/80 bg-paper p-5 shadow-sm">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-brand-deep">
               <o.icon size={18} aria-hidden="true" />
             </span>
-            <h2 className="mt-3 text-[15px] font-semibold text-neutral-900">{o.title}</h2>
-            <p className="mt-1 text-[13px] leading-relaxed text-neutral-500">{o.desc}</p>
+            <h2 className="mt-3 text-[15px] font-semibold text-ink">{o.title}</h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-muted">{o.desc}</p>
             {o.actions ? (
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
                 {o.actions.map((a) =>
@@ -168,7 +168,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                     <a
                       key={a.label}
                       href={a.href}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-deep"
                     >
                       {a.label} <ArrowRight size={15} aria-hidden="true" />
                     </a>
@@ -177,7 +177,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                       key={a.label}
                       type="button"
                       onClick={a.onClick}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-deep"
                     >
                       {a.label} <ArrowRight size={15} aria-hidden="true" />
                     </button>
@@ -188,8 +188,8 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
               <div className="mt-3">{o.action}</div>
             )}
             {'note' in o && (
-              <p className="mt-2 text-xs text-neutral-400">
-                by email: <a href={`mailto:${o.note}`} className="font-medium text-neutral-500 hover:text-primary">{o.note}</a>
+              <p className="mt-2 text-xs text-muted-2">
+                by email: <a href={`mailto:${o.note}`} className="font-medium text-muted hover:text-brand">{o.note}</a>
               </p>
             )}
           </article>
@@ -199,19 +199,19 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
       {/* ------------------------------ form ------------------------------- */}
       <section ref={formRef} aria-label="Contact form" className="mt-10 scroll-mt-24">
         <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
-          <div className="rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm sm:p-8">
-            <h2 className="font-display text-xl font-bold text-neutral-900">Send a message</h2>
-            <p className="mt-1 text-sm text-neutral-500">
+          <div className="rounded-3xl border border-line/80 bg-paper p-6 shadow-sm sm:p-8">
+            <h2 className="font-display text-xl font-bold text-ink">Send a message</h2>
+            <p className="mt-1 text-sm text-muted">
               Fields marked * are required.
             </p>
 
             {status === 'unavailable' && (
               <div
                 role="alert"
-                className="mt-4 flex items-start gap-2.5 rounded-xl border border-primary/20 bg-primary-soft px-4 py-3"
+                className="mt-4 flex items-start gap-2.5 rounded-xl border border-brand/20 bg-primary-soft px-4 py-3"
               >
-                <CircleAlert size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-primary-dark" />
-                <p className="text-[13px] leading-relaxed text-primary-dark">
+                <CircleAlert size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-brand-deep" />
+                <p className="text-[13px] leading-relaxed text-brand-deep">
                   Message delivery isn't connected yet, so nothing was sent and nothing will be
                   lost — your message is still here to copy. You can also email us directly at{' '}
                   <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold underline">
@@ -247,7 +247,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
 
               {/* user type */}
               <div>
-                <label htmlFor="contact-user-type" className="mb-1.5 block text-[13px] font-semibold text-neutral-700">
+                <label htmlFor="contact-user-type" className="mb-1.5 block text-[13px] font-semibold text-ink-3">
                   User type *
                 </label>
                 <select
@@ -258,7 +258,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                   onChange={set('userType')}
                   aria-invalid={Boolean(errors.userType)}
                   aria-describedby={errors.userType ? 'contact-user-type-error' : undefined}
-                  className={`${SELECT_CLASS} ${errors.userType ? 'border-red-300' : ''}`}
+                  className={`${SELECT_CLASS} ${errors.userType ? 'border-danger-line' : ''}`}
                 >
                   <option value="">Select user type…</option>
                   {USER_TYPES.map((t) => (
@@ -266,7 +266,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                   ))}
                 </select>
                 {errors.userType && (
-                  <p id="contact-user-type-error" role="alert" className="mt-1.5 text-xs font-medium text-red-600">
+                  <p id="contact-user-type-error" role="alert" className="mt-1.5 text-xs font-medium text-danger">
                     {errors.userType}
                   </p>
                 )}
@@ -274,7 +274,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
 
               {/* category */}
               <div>
-                <label htmlFor="contact-category" className="mb-1.5 block text-[13px] font-semibold text-neutral-700">
+                <label htmlFor="contact-category" className="mb-1.5 block text-[13px] font-semibold text-ink-3">
                   Enquiry category *
                 </label>
                 <select
@@ -285,14 +285,14 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                   onChange={set('category')}
                   aria-invalid={Boolean(errors.category)}
                   aria-describedby={errors.category ? 'contact-category-error' : undefined}
-                  className={`${SELECT_CLASS} ${errors.category ? 'border-red-300' : ''}`}
+                  className={`${SELECT_CLASS} ${errors.category ? 'border-danger-line' : ''}`}
                 >
                   {CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
                 {errors.category && (
-                  <p id="contact-category-error" role="alert" className="mt-1.5 text-xs font-medium text-red-600">
+                  <p id="contact-category-error" role="alert" className="mt-1.5 text-xs font-medium text-danger">
                     {errors.category}
                   </p>
                 )}
@@ -312,7 +312,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
 
               {/* message */}
               <div className="sm:col-span-2">
-                <label htmlFor="contact-message" className="mb-1.5 block text-[13px] font-semibold text-neutral-700">
+                <label htmlFor="contact-message" className="mb-1.5 block text-[13px] font-semibold text-ink-3">
                   Message *
                 </label>
                 <textarea
@@ -324,10 +324,10 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                   placeholder="Tell us how we can help…"
                   aria-invalid={Boolean(errors.message)}
                   aria-describedby={errors.message ? 'contact-message-error' : undefined}
-                  className={`${TEXTAREA_CLASS} ${errors.message ? 'border-red-300 focus:border-red-400 focus:ring-red-200' : ''}`}
+                  className={`${TEXTAREA_CLASS} ${errors.message ? 'border-danger-line focus:border-danger focus:ring-danger-line' : ''}`}
                 />
                 {errors.message && (
-                  <p id="contact-message-error" role="alert" className="mt-1.5 text-xs font-medium text-red-600">
+                  <p id="contact-message-error" role="alert" className="mt-1.5 text-xs font-medium text-danger">
                     {errors.message}
                   </p>
                 )}
@@ -340,7 +340,7 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
                 >
                   Send message
                 </button>
-                <p className="mt-2 text-xs text-neutral-400">
+                <p className="mt-2 text-xs text-muted-2">
                   Submission needs a messaging service, which isn't configured yet — the form will
                   tell you honestly after validation.
                 </p>
@@ -350,40 +350,40 @@ export default function ContactPage({ onOpenAuth = () => {} }) {
 
           {/* ----------------------- help & navigation ----------------------- */}
           <aside className="space-y-4">
-            <div className="rounded-3xl border border-neutral-200/80 bg-white p-6 shadow-sm">
-              <h2 className="text-[15px] font-semibold text-neutral-900">Finding your way</h2>
+            <div className="rounded-3xl border border-line/80 bg-paper p-6 shadow-sm">
+              <h2 className="text-[15px] font-semibold text-ink">Finding your way</h2>
               <ul className="mt-3 space-y-3 text-sm">
                 <li>
-                  <a href="#/how-it-works" className="font-semibold text-primary hover:text-primary-dark">
+                  <a href="#/how-it-works" className="font-semibold text-brand hover:text-brand-deep">
                     How it works →
                   </a>
-                  <p className="text-[13px] text-neutral-500">Product guidance for both roles.</p>
+                  <p className="text-[13px] text-muted">Product guidance for both roles.</p>
                 </li>
                 <li>
                   <button
                     type="button"
                     onClick={() => onOpenAuth({ tab: 'login' })}
-                    className="font-semibold text-primary hover:text-primary-dark"
+                    className="font-semibold text-brand hover:text-brand-deep"
                   >
                     Sign in →
                   </button>
-                  <p className="text-[13px] text-neutral-500">Account-specific issues are handled after login.</p>
+                  <p className="text-[13px] text-muted">Account-specific issues are handled after login.</p>
                 </li>
                 <li>
-                  <a href="#/" className="font-semibold text-primary hover:text-primary-dark">
+                  <a href="#/" className="font-semibold text-brand hover:text-brand-deep">
                     Back to the marketplace →
                   </a>
-                  <p className="text-[13px] text-neutral-500">Continue browsing produce.</p>
+                  <p className="text-[13px] text-muted">Continue browsing produce.</p>
                 </li>
               </ul>
             </div>
-            <div className="rounded-3xl border border-neutral-200/80 bg-neutral-50 p-6">
-              <h2 className="text-[15px] font-semibold text-neutral-900">Verified contact details</h2>
-              <ul className="mt-2 space-y-1.5 text-sm text-neutral-600">
-                <li>Email: <a href={`mailto:${SUPPORT_EMAIL}`} className="font-medium text-primary hover:text-primary-dark">{SUPPORT_EMAIL}</a></li>
+            <div className="rounded-3xl border border-line/80 bg-paper-soft p-6">
+              <h2 className="text-[15px] font-semibold text-ink">Verified contact details</h2>
+              <ul className="mt-2 space-y-1.5 text-sm text-ink-4">
+                <li>Email: <a href={`mailto:${SUPPORT_EMAIL}`} className="font-medium text-brand hover:text-brand-deep">{SUPPORT_EMAIL}</a></li>
                 <li>Phone: +254 700 123 456</li>
               </ul>
-              <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-neutral-400">
+              <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-2">
                 <RotateCw size={12} aria-hidden="true" />
                 Same details as the site footer — nothing invented for this page.
               </p>

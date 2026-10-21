@@ -17,9 +17,9 @@ export default function NotFound({ user, onRoute }) {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center">
-      <AlertCircle size="48" className="mx-auto text-neutral-400 mb-4" aria-hidden="true" />
-      <h1 className="font-display text-2xl font-bold text-neutral-900">Page not found</h1>
-      <p className="mt-2 text-sm text-neutral-500">
+      <AlertCircle size="48" className="mx-auto text-muted-2 mb-4" aria-hidden="true" />
+      <h1 className="font-display text-2xl font-bold text-ink">Page not found</h1>
+      <p className="mt-2 text-sm text-muted">
         The page you&rsquo;re looking for doesn&rsquo;t exist. It may have been removed or the link
         may be outdated.
       </p>
@@ -40,7 +40,7 @@ export default function NotFound({ user, onRoute }) {
             type="button"
             onClick={() => onRoute(dashboardRoute)}
             aria-label={`Go to ${dashboardLabel}`}
-            className="flex h-11 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white text-sm font-semibold text-neutral-900 shadow-sm transition-colors hover:bg-neutral-100 active:scale-[0.98]"
+            className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-paper text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-soft active:scale-[0.98]"
           >
             <dashboardIcon size={16} aria-hidden="true" />
             Go to {dashboardLabel}

@@ -54,13 +54,13 @@ export default function InquiryDialog({ listing, onClose, onSent }) {
 
   return (
     <div className="fixed inset-0 z-[70] grid place-items-center px-4">
-      <div className="absolute inset-0 bg-farmer-ink/40" onClick={() => !saving && onClose()} aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/40" onClick={() => !saving && onClose()} aria-hidden="true" />
       <div
         ref={panel}
         role="dialog"
         aria-modal="true"
         aria-labelledby="inquiry-dialog-title"
-        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-lift"
+        className="relative w-full max-w-md overflow-hidden rounded-2xl bg-paper shadow-lift"
       >
         <div className="flex items-start justify-between gap-3 border-b border-farmer-line px-5 py-4">
           <div>
@@ -119,7 +119,7 @@ export default function InquiryDialog({ listing, onClose, onSent }) {
                 value={form.message}
                 onChange={set('message')}
                 placeholder="e.g. Is this available for delivery to Nyeri? What is the collection day?"
-                className="w-full rounded-lg border border-farmer-line bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border border-farmer-line bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
               {errors.message && (
                 <p className="mt-1 flex items-start gap-1.5 text-xs font-medium text-farmer-danger" role="alert">

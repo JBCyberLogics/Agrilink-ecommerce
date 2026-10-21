@@ -39,8 +39,8 @@ export default function Profile() {
 
   if (profileState.status === 'error' || (profileState.status === 'ok' && !profileState.user))
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -59,8 +59,8 @@ export default function Profile() {
   if (profileState.status === 'loading' || savedQ.status === 'loading')
     return (
       <div className="max-w-xl space-y-4" aria-busy="true" aria-label="Loading profile">
-        <div className="h-40 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
-        <div className="h-16 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+        <div className="h-40 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
+        <div className="h-16 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
       </div>
     )
 
@@ -70,7 +70,7 @@ export default function Profile() {
   return (
     <div className="max-w-xl space-y-5">
       {/* verified account card — the session the server attests to */}
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-start gap-4">
           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-farmer-primary font-display text-base font-bold text-white" aria-hidden="true">
             {initials}
@@ -85,7 +85,7 @@ export default function Profile() {
               </div>
               <div className="flex items-center gap-2 text-farmer-muted">
                 <dt className="sr-only">Role</dt>
-                <dd className="rounded-full bg-farmer-surface px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-farmer-primary">
+                <dd className="rounded-full bg-farmer-surface px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-farmer-brand">
                   {u.role} account
                 </dd>
               </div>
@@ -106,8 +106,8 @@ export default function Profile() {
 
       {/* real counters from the buyer's own records */}
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex items-center gap-3 rounded-xl border border-farmer-line bg-white p-5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-primary">
+        <div className="flex items-center gap-3 rounded-xl border border-farmer-line bg-paper p-5">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-brand">
             <Heart size={16} aria-hidden="true" />
           </span>
           <p className="text-[13px] text-farmer-muted">
@@ -115,8 +115,8 @@ export default function Profile() {
             saved produce
           </p>
         </div>
-        <div className="flex items-center gap-3 rounded-xl border border-farmer-line bg-white p-5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-primary">
+        <div className="flex items-center gap-3 rounded-xl border border-farmer-line bg-paper p-5">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-brand">
             <MessageSquare size={16} aria-hidden="true" />
           </span>
           <p className="text-[13px] text-farmer-muted">
@@ -127,7 +127,7 @@ export default function Profile() {
       </div>
 
       {/* honest "not built yet" — no fake edit form */}
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <EmptyState icon={UserRound} title="Profile editing is not available yet." className="border-none bg-transparent py-4">
           <span>
             Name and password changes (and account deletion) will arrive with an account-management stage — this page

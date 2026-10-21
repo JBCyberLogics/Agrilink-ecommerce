@@ -13,7 +13,7 @@ import EmptyState from '../parts/EmptyState'
 export default function MarketIntelligence() {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">Market price records</h2>
         <p className="mt-1 text-[13px] text-farmer-muted">
           Historical, verified observations — never presented as live prices.
@@ -22,7 +22,7 @@ export default function MarketIntelligence() {
           <span>
             This page activates when a market-price source is connected to the backend.
           </span>
-          <span className="mt-3 block rounded-lg border border-farmer-line bg-neutral-50 p-3 text-left font-mono text-[11px] leading-relaxed text-farmer-ink">
+          <span className="mt-3 block rounded-lg border border-farmer-line bg-paper-soft p-3 text-left font-mono text-[11px] leading-relaxed text-farmer-ink">
             GET /api/market/prices → [{'\n'} {'{'} produce, market, price, unit:{' '}
             {'"kg" | …'}, observedAt, source {'}'}{'\n'}]{'\n'}
             currency: KES (Kenyan Shillings), from the source

@@ -44,7 +44,7 @@ export const BUYER_PAGE_IDS = [
 export const SHOP_PAGE_IDS = ['checkout']
 
 /* Public content pages — plain top-level hash routes */
-export const PUBLIC_PAGE_IDS = ['contact', 'how-it-works', 'about', 'start-selling']
+export const PUBLIC_PAGE_IDS = ['contact', 'how-it-works', 'about', 'start-selling', 'faq']
 
 export const parseHash = () => {
   const h = window.location.hash.replace(/^#\/?/, '').toLowerCase()

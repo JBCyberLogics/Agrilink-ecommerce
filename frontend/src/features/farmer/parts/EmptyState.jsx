@@ -6,9 +6,9 @@
 export default function EmptyState({ icon: Icon, title, children, action, className = '' }) {
   return (
     <div
-      className={`flex flex-col items-center rounded-xl border border-dashed border-farmer-line bg-white px-6 py-10 text-center ${className}`}
+      className={`flex flex-col items-center rounded-xl border border-dashed border-farmer-line bg-paper px-6 py-10 text-center ${className}`}
     >
-      <span className="grid h-11 w-11 place-items-center rounded-xl bg-farmer-surface text-farmer-primary">
+      <span className="grid h-11 w-11 place-items-center rounded-xl bg-farmer-surface text-farmer-brand">
         {Icon && <Icon size={20} aria-hidden="true" />}
       </span>
       <p className="mt-3 text-sm font-semibold text-farmer-ink">{title}</p>

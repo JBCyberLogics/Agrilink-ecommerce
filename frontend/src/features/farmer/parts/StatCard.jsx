@@ -5,11 +5,11 @@
 export default function StatCard({ icon: Icon, label, value, hint }) {
   const hasValue = value !== null && value !== undefined && value !== '—'
   return (
-    <div className="rounded-xl border border-farmer-line bg-white p-5">
+    <div className="rounded-xl border border-farmer-line bg-paper p-5">
       <div className="flex items-center justify-between gap-3">
         <p className="text-[13px] font-medium text-farmer-muted">{label}</p>
         {Icon && (
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-primary">
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-farmer-surface text-farmer-brand">
             <Icon size={16} aria-hidden="true" />
           </span>
         )}

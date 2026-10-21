@@ -8,8 +8,8 @@ export default function StatusChip({ status }) {
     status === 'Accepted'
       ? 'bg-farmer-surface text-farmer-success'
       : status === 'Declined'
-        ? 'bg-red-50 text-farmer-danger'
-        : 'bg-secondary-soft text-secondary-dark'
+        ? 'bg-danger-wash text-farmer-danger'
+        : 'bg-secondary-soft text-brand-amber-deep'
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide ${cls}`}>
       {status}

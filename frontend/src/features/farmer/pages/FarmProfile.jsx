@@ -29,8 +29,8 @@ export default function FarmProfile() {
   const broken = state.status === 'ok' && !state.user
   if (broken || state.status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -48,7 +48,7 @@ export default function FarmProfile() {
 
   if (state.status === 'loading')
     return (
-      <div className="h-64 animate-pulse rounded-xl border border-farmer-line bg-white/70" aria-busy="true" aria-label="Loading profile" />
+      <div className="h-64 animate-pulse rounded-xl border border-farmer-line bg-paper/70" aria-busy="true" aria-label="Loading profile" />
     )
 
   const { user } = state
@@ -60,9 +60,9 @@ export default function FarmProfile() {
   ]
 
   return (
-    <section className="max-w-xl rounded-xl border border-farmer-line bg-white p-5 sm:p-6">
+    <section className="max-w-xl rounded-xl border border-farmer-line bg-paper p-5 sm:p-6">
       <div className="mb-5 flex items-center gap-3">
-        <span className="grid h-12 w-12 place-items-center rounded-xl bg-farmer-surface text-farmer-primary">
+        <span className="grid h-12 w-12 place-items-center rounded-xl bg-farmer-surface text-farmer-brand">
           <UserRound size={22} aria-hidden="true" />
         </span>
         <div>

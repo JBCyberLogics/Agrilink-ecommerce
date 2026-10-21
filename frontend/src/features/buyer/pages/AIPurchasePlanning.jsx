@@ -74,9 +74,9 @@ export default function AIPurchasePlanning() {
   if (!result && !error && !submitting) {
     return (
       <div className="space-y-6">
-        <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-            <Truck size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+            <Truck size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
             AI Purchase Planning
           </h2>
           <p className="mt-1 text-xs text-farmer-muted">
@@ -97,10 +97,10 @@ export default function AIPurchasePlanning() {
               placeholder="e.g. 500 kg of Grade A maize, 200 liters of fresh milk"
               aria-label="Produce requirements"
               aria-invalid={!!errors.produceRequirements}
-              className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+              className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                 errors.produceRequirements
                   ? 'border-farmer-danger'
-                  : 'border-farmer-line focus:border-farmer-primary/50'
+                  : 'border-farmer-line focus:border-farmer-brand/50'
               }`}
             />
             {errors.produceRequirements && (
@@ -125,10 +125,10 @@ export default function AIPurchasePlanning() {
               placeholder="e.g. 1000"
               aria-label="Required quantities"
               aria-invalid={!!errors.requiredQuantities}
-              className={`w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40 ${
+              className={`w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40 ${
                 errors.requiredQuantities
                   ? 'border-farmer-danger'
-                  : 'border-farmer-line focus:border-farmer-primary/50'
+                  : 'border-farmer-line focus:border-farmer-brand/50'
                 }`}
               />
               {errors.requiredQuantities && (
@@ -151,7 +151,7 @@ export default function AIPurchasePlanning() {
                 onChange={setField('budget')}
                 placeholder="e.g. 50000"
                 aria-label="Budget"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
             </label>
             <label className="block">
@@ -164,7 +164,7 @@ export default function AIPurchasePlanning() {
                 value={form.purchaseDeadline}
                 onChange={setField('purchaseDeadline')}
                 aria-label="Purchase deadline"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
             </label>
             <label className="block">
@@ -178,7 +178,7 @@ export default function AIPurchasePlanning() {
                 onChange={setField('deliveryArea')}
                 placeholder="e.g. Thika, Kiambu County"
                 aria-label="Delivery area"
-                className="w-full rounded-lg border bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40"
+                className="w-full rounded-lg border bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40"
               />
             </label>
           </div>
@@ -199,8 +199,8 @@ export default function AIPurchasePlanning() {
 if (error) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">
@@ -221,10 +221,10 @@ if (error) {
 if (submitting) {
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6">
         <div className="flex items-center gap-3">
           <span
-            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-primary/30 border-t-farmer-primary"
+            className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-farmer-brand/30 border-t-farmer-primary"
             aria-hidden="true"
           />
           <div>
@@ -241,7 +241,7 @@ if (submitting) {
 
 return (
   <div className="space-y-6">
-    <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+    <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
       <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
         <CheckCircle2 size={16} aria-hidden="true" className="mr-2 text-farmer-success" />
         Purchase plan summary
@@ -251,7 +251,7 @@ return (
       </p>
     </section>
     {result.checklist && result.checklist.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
           Requirement checklist
         </h2>
@@ -266,9 +266,9 @@ return (
       </section>
     )}
     {result.shortlist && result.shortlist.length > 0 && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
-          <Truck size={16} aria-hidden="true" className="mr-2 text-farmer-primary" />
+          <Truck size={16} aria-hidden="true" className="mr-2 text-farmer-brand" />
           Shortlist
         </h2>
         <ul className="space-y-3">
@@ -294,7 +294,7 @@ return (
       </section>
     )}
     {result.costBreakdown && (
-      <section className="rounded-xl border border-farmer-line bg-white p-6 sm:p-8">
+      <section className="rounded-xl border border-farmer-line bg-paper p-6 sm:p-8">
         <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
           Potential cost breakdown
         </h2>
@@ -303,7 +303,7 @@ return (
         </p>
       </section>
     )}
-    <p className="rounded-xl border border-farmer-line bg-white px-4 py-3 text-xs leading-relaxed text-farmer-muted">
+    <p className="rounded-xl border border-farmer-line bg-paper px-4 py-3 text-xs leading-relaxed text-farmer-muted">
       Planning insights require backend integration. This planner helps you
       organize purchase requirements based on your inputs — AI suggestions will
       appear once a service is connected.

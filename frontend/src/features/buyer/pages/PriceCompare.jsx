@@ -43,15 +43,15 @@ export default function PriceCompare() {
   if (feed.status === 'loading')
     return (
       <div className="space-y-4" aria-busy="true" aria-label="Loading comparison">
-        <div className="h-12 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
-        <div className="h-64 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+        <div className="h-12 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
+        <div className="h-64 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
       </div>
     )
 
   if (feed.status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-red-50 text-farmer-danger">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-danger-wash text-farmer-danger">
           <AlertCircle size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">{feed.error || 'The market feed is unreachable right now.'}</p>
@@ -67,8 +67,8 @@ export default function PriceCompare() {
 
   if (groups.length === 0)
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
-        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-farmer-surface text-farmer-primary">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
+        <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl bg-farmer-surface text-farmer-brand">
           <Scale size={20} aria-hidden="true" />
         </span>
         <p className="mt-3 text-sm font-semibold text-farmer-ink">Nothing to compare yet</p>
@@ -91,7 +91,7 @@ export default function PriceCompare() {
   return (
     <div className="space-y-4">
       {/* produce picker — offer counts computed from the real feed */}
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-farmer-line bg-white p-4">
+      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-farmer-line bg-paper p-4">
         <label className="min-w-[260px] flex-1">
           <span className="mb-1.5 block text-xs font-medium text-farmer-ink">Compare offers for</span>
           <select
@@ -114,7 +114,7 @@ export default function PriceCompare() {
       </div>
 
       {[...byUnit.entries()].map(([unit, offers]) => (
-        <section key={unit} className="overflow-hidden rounded-xl border border-farmer-line bg-white">
+        <section key={unit} className="overflow-hidden rounded-xl border border-farmer-line bg-paper">
           <header className="flex flex-wrap items-center justify-between gap-2 border-b border-farmer-line px-4 py-3 sm:px-5">
             <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
               {group.name} <span className="font-normal text-farmer-muted">· per {unit}</span>
@@ -150,7 +150,7 @@ export default function PriceCompare() {
                       </span>
                     )}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 font-bold text-farmer-primary">
+                  <td className="whitespace-nowrap px-4 py-3 font-bold text-farmer-brand">
                     {kes(o.price)} <span className="text-xs font-medium text-farmer-muted">/ {unit}</span>
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-farmer-muted">
@@ -183,7 +183,7 @@ export default function PriceCompare() {
                     </span>
                   )}
                 </p>
-                <p className="mt-1 text-[13px] font-bold text-farmer-primary">
+                <p className="mt-1 text-[13px] font-bold text-farmer-brand">
                   {kes(o.price)} <span className="text-xs font-medium text-farmer-muted">/ {unit}</span>
                 </p>
                 <p className="mt-0.5 text-xs text-farmer-muted">
@@ -196,7 +196,7 @@ export default function PriceCompare() {
         </section>
       ))}
 
-      <p className="rounded-xl border border-farmer-line bg-white px-4 py-3 text-xs leading-relaxed text-farmer-muted">
+      <p className="rounded-xl border border-farmer-line bg-paper px-4 py-3 text-xs leading-relaxed text-farmer-muted">
         These are individual farmers&apos; listing prices on Agrilink — not official market averages. Only offers of the
         same produce and the same unit appear together; units are never converted for you.
       </p>
@@ -205,4 +205,4 @@ export default function PriceCompare() {
 }
 
 const inputCls =
-  'w-full rounded-lg border border-farmer-line bg-white px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-primary/50 focus:outline-none focus:ring-2 focus:ring-farmer-primary/40'
+  'w-full rounded-lg border border-farmer-line bg-paper px-3 py-2.5 text-[13px] text-farmer-ink placeholder:text-farmer-muted/60 focus:border-farmer-brand/50 focus:outline-none focus:ring-2 focus:ring-farmer-brand/40'

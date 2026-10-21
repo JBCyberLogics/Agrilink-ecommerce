@@ -23,15 +23,15 @@ const CATEGORIES = [
 const UNITS = ['kg', 'litre', 'bunch', 'tray', 'crate', 'bird', 'head', 'cob', 'jar']
 
 const selectCls =
-  'h-12 w-full rounded-xl border border-neutral-200 bg-white px-3.5 text-sm text-neutral-900 shadow-sm outline-none transition-colors hover:border-neutral-300 focus:border-primary focus:ring-2 focus:ring-primary/20 aria-[invalid=true]:border-red-300 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-red-200'
+  'h-12 w-full rounded-xl border border-line bg-paper px-3.5 text-sm text-ink shadow-sm outline-none transition-colors hover:border-line-strong focus:border-brand focus:ring-2 focus:ring-brand/20 aria-[invalid=true]:border-danger-line aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-danger-line'
 
 function StatusChip({ stock }) {
   const low = stock > 0 && stock < 50
   const out = stock === 0
   const tone = out
-    ? 'bg-red-50 text-farmer-danger border-red-100'
+    ? 'bg-danger-wash text-farmer-danger border-danger-line'
     : low
-      ? 'bg-amber-50 text-farmer-warning border-amber-100'
+      ? 'bg-amber-50 text-[#946200] border-amber-100'
       : 'bg-farmer-surface text-farmer-success border-farmer-line'
   return (
     <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${tone}`}>
@@ -53,7 +53,7 @@ const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 function PhotoPicker({ url, busy, error, onPick, onClear }) {
   return (
     <div className="sm:col-span-2">
-      <span className="mb-1.5 block text-[13px] font-semibold text-neutral-700">Product photo</span>
+      <span className="mb-1.5 block text-[13px] font-semibold text-ink-3">Product photo</span>
       {/* the sr-only input is the focusable surface; the tile label follows it,
           so keyboard users tab to it, press Enter to open the file picker and
           still get a visible focus ring on the tile */}
@@ -69,11 +69,11 @@ function PhotoPicker({ url, busy, error, onPick, onClear }) {
       <div className="flex items-start gap-4">
         <label
           htmlFor="produce-image"
-          className="relative grid h-32 w-40 shrink-0 place-items-center overflow-hidden rounded-xl border-2 border-dashed border-farmer-line bg-farmer-page text-farmer-muted transition-colors hover:border-farmer-primary/40 hover:text-farmer-primary peer-focus-visible:ring-2 peer-focus-visible:ring-farmer-primary/40"
+          className="relative grid h-32 w-40 shrink-0 place-items-center overflow-hidden rounded-xl border-2 border-dashed border-farmer-line bg-farmer-page text-farmer-muted transition-colors hover:border-farmer-brand/40 hover:text-farmer-brand peer-focus-visible:ring-2 peer-focus-visible:ring-farmer-brand/40"
         >
           {busy ? (
             <span className="flex flex-col items-center gap-1.5" aria-live="polite">
-              <Loader2 size={20} aria-hidden="true" className="animate-spin text-farmer-primary" />
+              <Loader2 size={20} aria-hidden="true" className="animate-spin text-farmer-brand" />
               <span className="text-[11px] font-semibold">Uploading…</span>
             </span>
           ) : url ? (
@@ -94,7 +94,7 @@ function PhotoPicker({ url, busy, error, onPick, onClear }) {
             <button
               type="button"
               onClick={onClear}
-              className="inline-flex h-8 w-fit items-center gap-1.5 rounded-lg border border-farmer-line bg-white px-3 text-[12px] font-semibold text-farmer-ink hover:bg-farmer-page"
+              className="inline-flex h-8 w-fit items-center gap-1.5 rounded-lg border border-farmer-line bg-paper px-3 text-[12px] font-semibold text-farmer-ink hover:bg-farmer-page"
             >
               <X size={13} aria-hidden="true" /> Remove photo
             </button>
@@ -196,7 +196,7 @@ function PostForm({ onSaved }) {
           autoComplete="off"
         />
         <div>
-          <label htmlFor="produce-category" className="mb-1.5 block text-[13px] font-semibold text-neutral-700">
+          <label htmlFor="produce-category" className="mb-1.5 block text-[13px] font-semibold text-ink-3">
             Category
           </label>
           <select
@@ -228,7 +228,7 @@ function PostForm({ onSaved }) {
           error={errors.price}
         />
         <div>
-          <label htmlFor="produce-unit" className="mb-1.5 block text-[13px] font-semibold text-neutral-700">
+          <label htmlFor="produce-unit" className="mb-1.5 block text-[13px] font-semibold text-ink-3">
             Unit
           </label>
           <select id="produce-unit" value={form.unit} onChange={set('unit')} className={selectCls}>
@@ -261,7 +261,7 @@ function PostForm({ onSaved }) {
       </div>
 
       {failed && (
-        <p role="alert" className="flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-farmer-danger">
+        <p role="alert" className="flex items-center gap-1.5 rounded-lg bg-danger-wash px-3 py-2 text-xs font-medium text-farmer-danger">
           <AlertCircle size={13} aria-hidden="true" /> {failed}
         </p>
       )}
@@ -272,7 +272,7 @@ function PostForm({ onSaved }) {
       <button
         type="submit"
         disabled={saving}
-        className={`inline-flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-primary/40 focus-visible:ring-offset-2 ${
+        className={`inline-flex h-11 items-center gap-2 rounded-lg px-5 text-sm font-semibold text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-farmer-brand/40 focus-visible:ring-offset-2 ${
           saving ? 'cursor-wait bg-farmer-primary/70' : 'bg-farmer-primary hover:bg-farmer-primary-hover'
         }`}
       >
@@ -291,13 +291,13 @@ export default function MyProduce() {
   if (status === 'loading')
     return (
       <div className="space-y-4" aria-busy="true" aria-label="Loading produce">
-        <div className="h-64 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
-        <div className="h-40 animate-pulse rounded-xl border border-farmer-line bg-white/70" />
+        <div className="h-64 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
+        <div className="h-40 animate-pulse rounded-xl border border-farmer-line bg-paper/70" />
       </div>
     )
   if (status === 'error')
     return (
-      <div className="rounded-xl border border-farmer-line bg-white p-6 text-center">
+      <div className="rounded-xl border border-farmer-line bg-paper p-6 text-center">
         <p className="text-sm font-semibold text-farmer-ink">{error}</p>
         <button
           type="button"
@@ -326,19 +326,19 @@ export default function MyProduce() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-farmer-line bg-white p-5 sm:p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-5 sm:p-6">
         <h2 className="mb-4 flex items-center gap-2 font-display text-[15px] font-semibold text-farmer-ink">
-          <Sprout size={16} aria-hidden="true" className="text-farmer-primary" />
+          <Sprout size={16} aria-hidden="true" className="text-farmer-brand" />
           Post new produce
         </h2>
         <PostForm onSaved={saved} />
       </section>
 
-      <section className="rounded-xl border border-farmer-line bg-white p-5 sm:p-6">
+      <section className="rounded-xl border border-farmer-line bg-paper p-5 sm:p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="font-display text-[15px] font-semibold text-farmer-ink">
             Active listings
-            <span className="ml-2 rounded-full bg-farmer-surface px-2 py-0.5 text-[11px] font-semibold text-farmer-primary">
+            <span className="ml-2 rounded-full bg-farmer-surface px-2 py-0.5 text-[11px] font-semibold text-farmer-brand">
               {current.length}
             </span>
           </h2>

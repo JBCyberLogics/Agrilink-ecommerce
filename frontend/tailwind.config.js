@@ -8,7 +8,20 @@ import { fileURLToPath } from 'node:url'
 // correct from any CWD.
 const base = path.dirname(fileURLToPath(import.meta.url))
 
+/* ---------------------------------------------------------------- theme
+   Light/dark support (task AGRILINK-FAQ-GLOBAL-THEME-001):
+   • darkMode: 'class' — the shared ThemeProvider toggles `.dark` on <html>
+     (like the FAQ/theme tests assert); no page implements its own state.
+   • Every theme-sensitive color is a CSS variable (styles/index.css) fed
+     through rgb-triplet tokens so alpha variants (e.g. bg-paper/75) work.
+     Light values below are byte-identical to the palette this app shipped
+     with — toggling to dark only swaps the variable values.
+   • Button/overlay brand backgrounds (primary DEFAULT, farmer primary…)
+     stay constant hexes — white-on-green works in both modes. Text-brand
+     shades (brand, farmer.brand…) are variable-driven so they stay
+     readable on dark surfaces. */
 export default {
+  darkMode: 'class',
   content: [
     path.join(base, 'index.html'),
     path.join(base, 'src/**/*.{js,jsx}'),
@@ -21,14 +34,44 @@ export default {
           DEFAULT: '#2E7D32',
           dark: '#1B5E20',
           light: '#43A047',
-          soft: '#E8F5E9',
+          soft: 'rgb(var(--ag-brand-soft) / <alpha-value>)',
         },
         // Brand: Warm Amber
         secondary: {
           DEFAULT: '#FFA000',
           dark: '#C77800',
-          soft: '#FFF8E1',
+          soft: 'rgb(var(--ag-brand-amber-soft) / <alpha-value>)',
         },
+        // theme-aware palette (maps the hardcoded light-only shades:
+        // bg-white, neutral steps, red/green/blue state washes)
+        paper: 'rgb(var(--ag-paper) / <alpha-value>)',
+        'paper-soft': 'rgb(var(--ag-paper-soft) / <alpha-value>)',
+        soft: 'rgb(var(--ag-soft) / <alpha-value>)',
+        'soft-strong': 'rgb(var(--ag-soft-strong) / <alpha-value>)',
+        line: 'rgb(var(--ag-line) / <alpha-value>)',
+        'line-strong': 'rgb(var(--ag-line-strong) / <alpha-value>)',
+        ink: 'rgb(var(--ag-ink) / <alpha-value>)',
+        'ink-2': 'rgb(var(--ag-ink-2) / <alpha-value>)',
+        'ink-3': 'rgb(var(--ag-ink-3) / <alpha-value>)',
+        'ink-4': 'rgb(var(--ag-ink-4) / <alpha-value>)',
+        muted: 'rgb(var(--ag-muted) / <alpha-value>)',
+        'muted-2': 'rgb(var(--ag-muted-2) / <alpha-value>)',
+        faint: 'rgb(var(--ag-faint) / <alpha-value>)',
+        // text-safe brand shades (dark variants are lightened greens/ambers)
+        brand: 'rgb(var(--ag-brand) / <alpha-value>)',
+        'brand-deep': 'rgb(var(--ag-brand-deep) / <alpha-value>)',
+        'brand-amber': 'rgb(var(--ag-brand-amber) / <alpha-value>)',
+        'brand-amber-deep': 'rgb(var(--ag-brand-amber-deep) / <alpha-value>)',
+        // state washes (alerts, banners, error/success chips)
+        danger: 'rgb(var(--ag-danger) / <alpha-value>)',
+        'danger-wash': 'rgb(var(--ag-danger-wash) / <alpha-value>)',
+        'danger-line': 'rgb(var(--ag-danger-line) / <alpha-value>)',
+        ok: 'rgb(var(--ag-ok) / <alpha-value>)',
+        'ok-strong': 'rgb(var(--ag-ok-strong) / <alpha-value>)',
+        'ok-wash': 'rgb(var(--ag-ok-wash) / <alpha-value>)',
+        'ok-line': 'rgb(var(--ag-ok-line) / <alpha-value>)',
+        info: 'rgb(var(--ag-info) / <alpha-value>)',
+        'info-wash': 'rgb(var(--ag-info-wash) / <alpha-value>)',
         // Farmer dashboard palette (AGRILINK-FE-FARMER-001 design system) —
         // scoped to the dashboards; both the farmer and buyer shells share this
         // design system (the buyer spec's tokens are these exact values), while
@@ -36,14 +79,16 @@ export default {
         farmer: {
           primary: '#17633D',
           'primary-hover': '#124D30',
-          surface: '#EAF5EE',
-          page: '#F7F9F7',
-          ink: '#17231C',
-          muted: '#647067',
-          line: '#E1E8E2',
-          success: '#207A45',
-          warning: '#946200',
-          danger: '#B42318',
+          /* text-facing green (headings, active nav, links) */
+          brand: 'rgb(var(--ag-fbrand) / <alpha-value>)',
+          surface: 'rgb(var(--ag-fsurface) / <alpha-value>)',
+          page: 'rgb(var(--ag-fpage) / <alpha-value>)',
+          ink: 'rgb(var(--ag-fink) / <alpha-value>)',
+          muted: 'rgb(var(--ag-fmuted) / <alpha-value>)',
+          line: 'rgb(var(--ag-fline) / <alpha-value>)',
+          success: 'rgb(var(--ag-fsuccess) / <alpha-value>)',
+          warning: 'rgb(var(--ag-fwarning) / <alpha-value>)',
+          danger: 'rgb(var(--ag-fdanger) / <alpha-value>)',
         },
       },
       fontFamily: {

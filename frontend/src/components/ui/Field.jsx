@@ -32,7 +32,7 @@ export default function Field({
   const hasError = Boolean(error)
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1.5 block text-[13px] font-semibold text-neutral-700">
+      <label htmlFor={id} className="mb-1.5 block text-[13px] font-semibold text-ink-3">
         {label}
       </label>
       <div className="relative">
@@ -40,7 +40,7 @@ export default function Field({
           <Icon
             size={17}
             aria-hidden="true"
-            className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 ${hasError ? 'text-red-400' : 'text-neutral-400'}`}
+            className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 ${hasError ? 'text-danger' : 'text-muted-2'}`}
           />
         )}
         <input
@@ -54,17 +54,17 @@ export default function Field({
           aria-invalid={hasError}
           aria-describedby={hasError ? `${id}-error` : undefined}
           className={[
-            'h-12 w-full rounded-xl border bg-white/75 text-sm text-neutral-900 shadow-sm outline-none backdrop-blur-sm transition-colors placeholder:text-neutral-400',
+            'h-12 w-full rounded-xl border bg-paper/75 text-sm text-ink shadow-sm outline-none backdrop-blur-sm transition-colors placeholder:text-muted-2',
             Icon ? 'pl-10 pr-10' : 'px-4',
             hasError
-              ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-200'
-              : 'border-neutral-200/80 focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20',
+              ? 'border-danger-line focus:border-danger focus:ring-2 focus:ring-danger-line'
+              : 'border-line/80 focus:border-brand focus:bg-paper focus:ring-2 focus:ring-brand/20',
           ].join(' ')}
         />
         {rightSlot && <div className="absolute right-2 top-1/2 -translate-y-1/2">{rightSlot}</div>}
       </div>
       {hasError && (
-        <p id={`${id}-error`} role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-600">
+        <p id={`${id}-error`} role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-danger">
           <X size={12} aria-hidden="true" />
           {error}
         </p>

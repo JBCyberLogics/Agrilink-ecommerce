@@ -59,11 +59,11 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
       {/* ------------------------------ hero ------------------------------ */}
       <section className="grid items-center gap-8 lg:grid-cols-[1.15fr_1fr]">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">For farmers</p>
-          <h1 className="mt-2 font-display text-3xl font-bold text-neutral-900 sm:text-4xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand">For farmers</p>
+          <h1 className="mt-2 font-display text-3xl font-bold text-ink sm:text-4xl">
             Start Selling with AgriLink
           </h1>
-          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-neutral-600">
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-4">
             List your produce, show the details buyers care about, and let buyers come to you
             through the marketplace.
           </p>
@@ -91,7 +91,7 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
               <button
                 type="button"
                 onClick={() => onOpenAuth({ tab: 'login' })}
-                className="inline-flex h-12 items-center justify-center rounded-xl border border-neutral-200 px-6 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-100"
+                className="inline-flex h-12 items-center justify-center rounded-xl border border-line px-6 text-sm font-semibold text-ink-3 transition-colors hover:bg-soft"
               >
                 I already have an account — Log in
               </button>
@@ -102,7 +102,7 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
           src={IMAGES.heroCover}
           alt="Farmland rows at golden hour"
           loading="lazy"
-          className="h-44 w-full rounded-3xl object-cover ring-1 ring-neutral-200/70 sm:h-52 lg:h-56"
+          className="h-44 w-full rounded-3xl object-cover ring-1 ring-line/70 sm:h-52 lg:h-56"
         />
       </section>
 
@@ -110,12 +110,12 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
       {user && user.role === 'Buyer' && (
         <div
           role="note"
-          className="mt-6 flex items-start gap-3 rounded-2xl border border-primary/20 bg-primary-soft px-5 py-4"
+          className="mt-6 flex items-start gap-3 rounded-2xl border border-brand/20 bg-primary-soft px-5 py-4"
         >
-          <Info size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-primary-dark" />
+          <Info size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-brand-deep" />
           <div className="min-w-0">
-            <p className="text-[13px] font-semibold text-primary-dark">You're browsing as a buyer.</p>
-            <p className="mt-1 text-[13px] leading-relaxed text-primary-dark/90">
+            <p className="text-[13px] font-semibold text-brand-deep">You're browsing as a buyer.</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-brand-deep/90">
               Buyer and Farmer accounts are separate on AgriLink — your current account stays a
               buyer account. To sell, create a farmer account with a different email; your role is
               never changed silently.
@@ -131,7 +131,7 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
               <button
                 type="button"
                 onClick={() => onNavigate('buyer/dashboard')}
-                className="inline-flex h-9 items-center rounded-lg border border-primary/25 px-3.5 text-[13px] font-semibold text-primary-dark transition-colors hover:bg-white/60"
+                className="inline-flex h-9 items-center rounded-lg border border-brand/25 px-3.5 text-[13px] font-semibold text-brand-deep transition-colors hover:bg-paper/60"
               >
                 Go to Buyer Hub
               </button>
@@ -144,10 +144,10 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
       {!user && shown && (
         <div
           role="note"
-          className="mt-6 flex items-start gap-3 rounded-2xl border border-neutral-200/80 bg-neutral-50 px-5 py-4"
+          className="mt-6 flex items-start gap-3 rounded-2xl border border-line/80 bg-paper-soft px-5 py-4"
         >
-          <Sprout size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
-          <p className="text-[13px] leading-relaxed text-neutral-600">
+          <Sprout size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-brand" />
+          <p className="text-[13px] leading-relaxed text-ink-4">
             The signup form is open with the Farmer role preselected — fill in your details there.
             Accounts are role-specific, so you can always add a farmer later with a different
             email.
@@ -157,17 +157,17 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
 
       {/* ----------------------------- benefits ----------------------------- */}
       <section aria-labelledby="sell-benefits" className="mt-10">
-        <h2 id="sell-benefits" className="font-display text-xl font-bold text-neutral-900">
+        <h2 id="sell-benefits" className="font-display text-xl font-bold text-ink">
           What your farmer account gives you
         </h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {BENEFITS.map((b) => (
-            <article key={b.title} className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary-dark">
+            <article key={b.title} className="rounded-2xl border border-line/80 bg-paper p-5 shadow-sm">
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-brand-deep">
                 <b.icon size={18} aria-hidden="true" />
               </span>
-              <h3 className="mt-3 text-[15px] font-semibold text-neutral-900">{b.title}</h3>
-              <p className="mt-1 text-[13px] leading-relaxed text-neutral-500">{b.desc}</p>
+              <h3 className="mt-3 text-[15px] font-semibold text-ink">{b.title}</h3>
+              <p className="mt-1 text-[13px] leading-relaxed text-muted">{b.desc}</p>
             </article>
           ))}
         </div>
@@ -175,26 +175,26 @@ export default function StartSelling({ user, onOpenAuth = () => {}, onNavigate =
 
       {/* --------------------------- getting started ------------------------- */}
       <section aria-labelledby="sell-steps" className="mt-10">
-        <h2 id="sell-steps" className="font-display text-xl font-bold text-neutral-900">
+        <h2 id="sell-steps" className="font-display text-xl font-bold text-ink">
           Getting started
         </h2>
         <ol className="mt-4 grid gap-4 md:grid-cols-3">
           {STEPS.map((s, i) => (
-            <li key={s.title} className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm">
+            <li key={s.title} className="rounded-2xl border border-line/80 bg-paper p-5 shadow-sm">
               <span
                 aria-hidden="true"
                 className="grid h-8 w-8 place-items-center rounded-full bg-secondary text-[13px] font-bold text-neutral-900"
               >
                 {i + 1}
               </span>
-              <h3 className="mt-2.5 text-[15px] font-semibold text-neutral-900">{s.title}</h3>
-              <p className="mt-1 text-[13px] leading-relaxed text-neutral-500">{s.desc}</p>
+              <h3 className="mt-2.5 text-[15px] font-semibold text-ink">{s.title}</h3>
+              <p className="mt-1 text-[13px] leading-relaxed text-muted">{s.desc}</p>
             </li>
           ))}
         </ol>
         <a
           href="#/how-it-works"
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-primary-dark"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-deep"
         >
           More detail in How AgriLink Works <ArrowRight size={15} aria-hidden="true" />
         </a>
