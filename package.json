@@ -5,12 +5,12 @@
   "type": "module",
   "description": "Agrilink - agricultural e-commerce marketplace connecting farmers and buyers directly.",
   "scripts": {
-    "dev": "vite --port 5199 --strictPort",
+    "dev": "vite --port 5199 --strictPort --config frontend/vite.config.js",
     "dev:api": "node --watch server/index.js",
-    "build": "vite build",
-    "preview": "vite preview",
+    "build": "vite build --config frontend/vite.config.js",
+    "preview": "vite preview --config frontend/vite.config.js",
     "test:server": "AGRILINK_TEST_DB=agrilink_test vitest run --config vitest.config.server.js",
-    "test:client": "vitest run --config vitest.config.client.js",
+    "test:client": "vitest run --config frontend/vitest.config.client.js",
     "test": "npm run test:server && npm run test:client",
     "test:ci": "AGRILINK_TEST_DB=agrilink_test npm run test"
   },
