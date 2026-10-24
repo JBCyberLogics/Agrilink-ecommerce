@@ -4,22 +4,17 @@ import react from '@vitejs/plugin-react'
 
 // This config lives at frontend/ and the frontend project root is frontend/:
 // index.html, public/ and src/ all resolve relative to it. The production
-// build keeps landing at <repo>/dist — exactly where server/index.js has
-// always served the frontend from (path.join(__dirname, '..', 'dist')).
+// build lands at <repo>/dist.
+// Agrilink is frontend-only: there is no backend process to proxy to. API
+// calls go same-origin via services/apiClient.js and, until a real backend
+// is connected (VITE_API_BASE_URL), they surface an honest
+// "backend not configured" state instead of fabricating data.
 const root = fileURLToPath(new URL('.', import.meta.url))
 
 // https://vitejs.dev/config/
 export default defineConfig({
   root,
   plugins: [react()],
-  // forward /api/* AND /uploads/* (product photos) to the Express backend so
-  // the frontend and API share one origin in dev (first-party cookies, no CORS)
-  server: {
-    proxy: {
-      '/api': 'http://localhost:4000',
-      '/uploads': 'http://localhost:4000',
-    },
-  },
   build: {
     outDir: '../dist',
     emptyOutDir: true,

@@ -8,7 +8,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { X, AlertCircle, CheckCircle2, MessageSquarePlus } from 'lucide-react'
-import { buyerCreateRequest } from '../../../api/endpoints'
+import { buyerCreateRequest } from '../services/buyerService'
 import { kes } from '../../../utils/format'
 
 export default function RequestDialog({ listing, onClose, onSent }) {

@@ -7,19 +7,22 @@
  */
 import { useState } from 'react'
 import { Sprout, PackagePlus, Wheat, Carrot, Tractor, AlertCircle, RotateCw, ImagePlus, Loader2, X } from 'lucide-react'
-import { farmerUploadImage } from '../../../api/client'
-import { farmerCreateListing, farmerDeleteListing } from '../../../api/endpoints'
+import { farmerUploadImage } from '../services/farmerService'
+import { farmerCreateListing, farmerDeleteListing } from '../services/farmerService'
 import { kes, fmtDate } from '../../../utils/format'
 import Field, { FIELD_ICONS } from '../../../components/ui/Field'
-import EmptyState from '../parts/EmptyState'
-import ConfirmDelete from '../parts/ConfirmDelete'
-import useFarmerListings from '../parts/useFarmerListings'
+import EmptyState from '../../../components/feedback/EmptyState'
+import ConfirmDelete from '../../../components/ui/ConfirmDelete'
+import { CATEGORIES as CATEGORY_KEYS } from '../../../constants/index.js'
+import useFarmerListings from '../hooks/useFarmerListings'
 
-const CATEGORIES = [
-  { id: 'Grains', icon: Wheat },
-  { id: 'Fruits & Veg', icon: Carrot },
-  { id: 'Livestock', icon: Tractor },
-]
+/* Category options for the listing form — imported from shared constants
+   so they stay in sync with the backend Listing model enum. Icons are
+   mapped locally for display only. */
+const CATEGORIES = CATEGORY_KEYS.map((id) => ({
+  id,
+  icon: id === 'Grains' ? Wheat : id === 'Fruits & Veg' ? Carrot : Tractor,
+}))
 const UNITS = ['kg', 'litre', 'bunch', 'tray', 'crate', 'bird', 'head', 'cob', 'jar']
 
 const selectCls =

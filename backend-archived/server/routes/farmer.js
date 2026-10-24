@@ -16,6 +16,7 @@ import Listing, { CATEGORIES, UNITS } from '../models/Listing.js'
 import Order, { ORDER_STATUSES } from '../models/Order.js'
 import Inquiry, { INQUIRY_STATUSES } from '../models/Inquiry.js'
 import { requireAuth } from '../middleware/auth.js'
+import { authenticatedWriteLimiter } from '../middleware/rateLimit.js'
 
 const router = express.Router()
 
@@ -42,6 +43,7 @@ const shape = (l) => ({
 })
 
 router.use(requireAuth)
+router.use(authenticatedWriteLimiter)
 
 /* ------------------------------------------------------- photo uploads
    Real product photos live on this server's disk (server/uploads), never

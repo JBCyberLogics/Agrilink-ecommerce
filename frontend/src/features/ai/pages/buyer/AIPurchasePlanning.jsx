@@ -6,8 +6,8 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, RotateCw, Search, Truck } from 'lucide-react'
-import { aiPurchasePlanning } from '../../../services/ai'
-import { kes } from '../../../utils/format'
+import { aiPurchasePlanning } from '../../../../services/ai'
+import { kes } from '../../../../utils/format'
 
 const INITIAL_FORM = {
   produceRequirements: '',

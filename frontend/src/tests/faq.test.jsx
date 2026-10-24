@@ -14,9 +14,9 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, act, cleanup } from '@testing-library/react'
-import FAQ from '../features/faq/FAQ'
-import { FAQ_CATEGORIES, FAQ_ITEMS } from '../features/faq/faqContent'
-import App from '../App'
+import FAQ from '../features/support/pages/FAQ'
+import { FAQ_CATEGORIES, FAQ_ITEMS } from '../features/support/content/faqContent'
+import App from '../app/App'
 
 const STUBS = {
   '/api/auth/me': { ok: false, status: 401, json: async () => ({ error: 'unauthorized' }) },

@@ -21,7 +21,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, within, act, cleanup } from '@testing-library/react'
-import App from '../App'
+import App from '../app/App'
 
 /* the seeded demo buyer — an existing coded account, not an invention */
 const BUYER = { name: 'Wanjiku Kamau', email: 'wanjiku@agrilink.co.ke', role: 'Buyer' }
@@ -63,7 +63,7 @@ function navigateHash(hash) {
    (stubbed) → handleAuth. Mirrors what a user does; nothing fakes the
    session at the state level. */
 async function loginAsBuyer() {
-  fireEvent.click(screen.getByRole('button', { name: 'Sign In' }))
+  fireEvent.click(await screen.findByRole('button', { name: 'Sign In' }))
   const dialog = screen.getByRole('dialog')
   fireEvent.change(within(dialog).getByLabelText('Email address'), {
     target: { value: BUYER.email },

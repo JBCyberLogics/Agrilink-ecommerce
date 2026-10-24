@@ -5,7 +5,7 @@
  */
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent, cleanup } from '@testing-library/react'
-import Checkout from '../features/buyer/Checkout'
+import Checkout from '../features/cart/pages/Checkout'
 
 const user = { name: 'Wanjiku Kamau', email: 'wanjiku@example.com', role: 'Buyer' }
 

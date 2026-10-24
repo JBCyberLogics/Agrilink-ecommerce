@@ -6,9 +6,9 @@
  */
 import { useEffect, useState } from 'react'
 import { UserRound, Mail, Heart, MessageSquare, ShieldCheck, AlertCircle, RotateCw } from 'lucide-react'
-import { buyerProfile, buyerRequests } from '../../../api/endpoints'
-import { useBuyerSaved } from '../parts/useBuyerData'
-import EmptyState from '../parts/EmptyState'
+import { buyerProfile, buyerRequests } from '../services/buyerService'
+import { useBuyerSaved } from '../hooks/useBuyerData'
+import EmptyState from '../../../components/feedback/EmptyState'
 import { fmtDate } from '../../../utils/format'
 
 export default function Profile() {

@@ -7,9 +7,10 @@
  */
 import { useEffect, useState } from 'react'
 import { Receipt, AlertCircle, RotateCw, Truck } from 'lucide-react'
+import { farmerOrders, farmerUpdateOrderStatus } from '../../orders/services/orderService'
 import { kes, fmtDate } from '../../../utils/format'
-import EmptyState from '../parts/EmptyState'
-import ConfirmDelete from '../parts/ConfirmDelete'
+import EmptyState from '../../../components/feedback/EmptyState'
+import ConfirmDelete from '../../../components/ui/ConfirmDelete'
 
 export default function Orders() {
   const [status, setStatus] = useState('loading') // loading | ok | error
@@ -19,8 +20,7 @@ export default function Orders() {
 
   useEffect(() => {
     let alive = true
-    fetch('/api/farmer/orders')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load orders'))))
+    farmerOrders()
       .then((d) => alive && setOrders(d.orders ?? []))
       .then(() => alive && setStatus('ok'))
       .catch(() => alive && setStatus('error'))
@@ -31,22 +31,21 @@ export default function Orders() {
 
   const refresh = () => {
     setStatus('loading')
-    fetch('/api/farmer/orders')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load orders'))))
+    farmerOrders()
       .then((d) => setOrders(d.orders ?? []))
       .then(() => setStatus('ok'))
       .catch(() => setStatus('error'))
   }
 
   const updateStatus = async (id, newStatus) => {
-    const res = await fetch(`/api/farmer/orders/${id}/status`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: newStatus }),
-    })
-    if (!res.ok) throw new Error(`Could not ${newStatus} this order.`)
-    const d = await res.json()
-    setOrders((prev) => prev.map((o) => (o.id === d.order.id ? { ...o, status: d.order.status, paymentStatus: d.order.paymentStatus } : o)))
+    try {
+      const d = await farmerUpdateOrderStatus(id, newStatus)
+      setOrders((prev) => prev.map((o) => (o.id === d.order.id ? { ...o, status: d.order.status, paymentStatus: d.order.paymentStatus } : o)))
+    } catch (err) {
+      /* the transport rejects with { status, error }: surface the server's
+         exact message through the callers' existing error mapping */
+      throw new Error(err?.error || err?.message || `Could not ${newStatus} this order.`)
+    }
   }
 
   const cancel = async (id) => {

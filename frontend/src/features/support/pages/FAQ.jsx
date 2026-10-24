@@ -32,7 +32,7 @@ import {
   Headset,
   Wheat,
 } from 'lucide-react'
-import { FAQ_CATEGORIES, FAQ_ITEMS } from './faqContent'
+import { FAQ_CATEGORIES, FAQ_ITEMS } from '../content/faqContent'
 
 const ALL_QUESTIONS = FAQ_CATEGORIES[0]
 

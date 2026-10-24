@@ -7,8 +7,8 @@
  */
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, ShoppingBag, Truck, ShieldAlert, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { kes } from '../../utils/format'
-import { createOrder } from '../../api/endpoints'
+import { kes } from '../../../utils/format'
+import { createOrder } from '../../orders/services/orderService'
 
 export default function Checkout({ cart, user, onQty, onRemove, onBack, onSignIn, onOrderPlaced }) {
   const subtotal = cart.reduce((sum, it) => sum + it.price * it.qty, 0)

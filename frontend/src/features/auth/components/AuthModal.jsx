@@ -24,8 +24,8 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { Sprout, X, LogIn, UserPlus, ShoppingBag, Tractor, Check, Eye, EyeOff, Lock, Loader2, ShieldCheck, AlertCircle } from 'lucide-react'
-import Field, { FIELD_ICONS } from '../../components/ui/Field'
-import { signup as apiSignup, login as apiLogin } from '../../api/endpoints'
+import Field, { FIELD_ICONS } from '../../../components/ui/Field'
+import { signup as apiSignup, login as apiLogin } from '../services/authService'
 import AuthBrandPanel from './AuthBrandPanel'
 import OrbitingBadges from './OrbitingBadges'
 

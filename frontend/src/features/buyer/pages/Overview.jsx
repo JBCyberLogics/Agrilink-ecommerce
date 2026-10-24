@@ -11,11 +11,11 @@
  */
 import { useEffect, useState } from 'react'
 import { ArrowRight, Search, Package, CheckCircle2, Clock3, AlertCircle, CalendarPlus, RotateCw } from 'lucide-react'
-import StatCard from '../../farmer/parts/StatCard'
-import EmptyState from '../parts/EmptyState'
-import StatusChip from '../parts/StatusChip'
-import { useBuyerData } from '../parts/useBuyerData'
-import { CATEGORIES, CATEGORY_FILTERS } from '../../../utils/constants'
+import StatCard from '../../../components/feedback/StatCard'
+import EmptyState from '../../../components/feedback/EmptyState'
+import StatusChip from '../../../components/feedback/StatusChip'
+import { useBuyerData } from '../hooks/useBuyerData'
+import { CATEGORIES, CATEGORY_FILTERS } from '../../../constants/index.js'
 import { kes, fmtDate } from '../../../utils/format'
 
 function Card({ title, children, action }) {

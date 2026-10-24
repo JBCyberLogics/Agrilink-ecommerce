@@ -11,7 +11,7 @@
  * claims the app cannot back.
  */
 import { Sprout, Store, Users, ShieldCheck } from 'lucide-react'
-import { IMAGES } from '../../utils/constants'
+import { IMAGES } from '../../../constants/index.js'
 
 const BENEFITS = [
   {

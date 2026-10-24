@@ -6,8 +6,8 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, DollarSign, RotateCw, Search } from 'lucide-react'
-import { aiPriceRecommendation } from '../../../services/ai'
-import { kes } from '../../../utils/format'
+import { aiPriceRecommendation } from '../../../../services/ai'
+import { kes } from '../../../../utils/format'
 
 const INITIAL_FORM = {
   produce: '',

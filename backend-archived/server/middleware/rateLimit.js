@@ -1,11 +1,44 @@
-/* In-memory request rate limiter — no extra dependency.
-   Applied to auth mutation routes (signup/login) so brute-force and
-   credential-stuffing attempts are slowed per IP+route. Not a substitute
-   for a distributed store behind multiple nodes; single-node here. */
-const WINDOW_MS = 15 * 60 * 1000 // 15 minutes
-const MAX = 20 // requests per window per (ip, route)
+/**
+ * Request rate limiter for the Agrilink API (AGRILINK-UI-SECURITY-INFRA-002).
+ *
+ * One bucket per (client IP, route) so an IP hammering /api/auth/login does
+ * not starve an IP browsing /api/market/listings.
+ *
+ * Limits are environment-driven with safe single-node defaults; no extra
+ * dependency is required. Multi-instance deployments MUST share a rate-limit
+ * store — see docs/LOAD_BALANCING_DEPLOYMENT.md (Redis-backed store wired via
+ * REDIS_URL when multi-node). In-memory counters are consistent only on a
+ * single node and that is the supported deployment today.
+ *
+ * `trust proxy` is honoured ONLY when TRUST_PROXY is set in server/.env —
+ * arbitrary X-Forwarded-For headers are never trusted, so a client cannot
+ * spoof its IP to evade limits.
+ *
+ * Responses return HTTP 429 with Retry-After and a generic, non-sensitive
+ * error body; no account-existence information leaks.
+ *
+ * Test hooks: `resetRateLimitBuckets()` clears all buckets between tests
+ * (used by server/tests/setup.server.js). Not part of the HTTP surface.
+ */
+
+const WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS ?? 15 * 60 * 1000) // 15 min
+
+/* Endpoint categories — stricter for abuse-prone auth/recovery, looser for
+   ordinary browsing. Route files apply the right one per route. */
+const MAX_AUTH = Number(process.env.RATE_LIMIT_MAX_AUTH ?? 20)     // login — strict
+const MAX_SIGNUP = Number(process.env.RATE_LIMIT_MAX_SIGNUP ?? 10) // signup — stricter
+const MAX_RECOVERY = Number(process.env.RATE_LIMIT_MAX_RECOVERY ?? 5) // password recovery — strictest
+const MAX_READ = Number(process.env.RATE_LIMIT_MAX_READ ?? 120)    // public reads — generous
+const MAX_WRITE = Number(process.env.RATE_LIMIT_MAX_WRITE ?? 60)   // authenticated writes
 
 const buckets = new Map() // key: `${ip}:${route}` → { count, resetAt }
+
+function clientIp(req) {
+  /* req.ip already reflects X-Forwarded-For when `trust proxy` is configured
+     in app.js; never read the raw header here — that would let a client
+     spoof its address. */
+  return (req.ip || req.socket?.remoteAddress || 'unknown').toString()
+}
 
 function prune() {
   const now = Date.now()
@@ -13,9 +46,9 @@ function prune() {
 }
 setInterval(prune, WINDOW_MS)
 
-export function rateLimit({ windowMs = WINDOW_MS, max = MAX } = {}) {
+function limiter({ windowMs = WINDOW_MS, max = MAX_WRITE } = {}) {
   return (req, res, next) => {
-    const ip = (req.ip || req.socket?.remoteAddress || 'unknown').toString()
+    const ip = clientIp(req)
     const key = `${ip}:${req.route?.path || req.path}`
     const now = Date.now()
     let b = buckets.get(key)
@@ -25,28 +58,37 @@ export function rateLimit({ windowMs = WINDOW_MS, max = MAX } = {}) {
     }
     b.count++
     const remaining = Math.max(0, max - b.count)
-    res.setHeader('Retry-After', Math.ceil((b.resetAt - now) / 1000))
-    if (b.count > max) {
-      res.setHeader('X-RateLimit-Limit', String(max))
-      res.setHeader('X-RateLimit-Remaining', '0')
-      return res.status(429).json({
-        error: 'Too many requests — please wait a moment and try again.',
-        retryAfter: Math.ceil((b.resetAt - now) / 1000),
-      })
-    }
+    const retryAfter = Math.ceil((b.resetAt - now) / 1000)
+    res.setHeader('Retry-After', String(retryAfter))
     res.setHeader('X-RateLimit-Limit', String(max))
     res.setHeader('X-RateLimit-Remaining', String(remaining))
+    if (b.count > max) {
+      return res.status(429).json({
+        error: 'Too many requests — please wait a moment and try again.',
+        retryAfter,
+      })
+    }
     next()
   }
 }
 
-/* Cleanup on process exit so long-running dev watches don't leak memory. */
-if (typeof process !== 'undefined' && process.on) {
-  process.on('exit', () => buckets.clear())
-}
+/* Presets — route files pick the one matching the endpoint's abuse risk. */
+export const authStrictLimiter = limiter({ max: MAX_AUTH, windowMs: WINDOW_MS })      // login
+export const signupLimiter = limiter({ max: MAX_SIGNUP, windowMs: WINDOW_MS })        // signup
+export const recoveryLimiter = limiter({ max: MAX_RECOVERY, windowMs: WINDOW_MS })    // password recovery
+export const publicReadLimiter = limiter({ max: MAX_READ, windowMs: WINDOW_MS })      // marketplace browsing
+export const authenticatedWriteLimiter = limiter({ max: MAX_WRITE, windowMs: WINDOW_MS }) // orders, inquiries, …
+
+/* Default export keeps the old `rateLimit({ max })` call shape working. */
+export default limiter
+export const rateLimit = limiter
 
 /* Test-only helper: clears all rate-limit buckets so tests are isolated from
    each other's request counts. Not used by the production server entry point. */
 export function resetRateLimitBuckets() {
   buckets.clear()
+}
+
+if (typeof process !== 'undefined' && process.on) {
+  process.on('exit', () => buckets.clear())
 }

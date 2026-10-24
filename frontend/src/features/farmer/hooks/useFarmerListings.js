@@ -4,7 +4,7 @@
  * guards against state updates after unmount.
  */
 import { useEffect, useState } from 'react'
-import { farmerListings } from '../../../api/endpoints'
+import { farmerListings } from '../services/farmerService'
 
 export default function useFarmerListings() {
   const [state, setState] = useState({ status: 'loading', listings: [], error: null })

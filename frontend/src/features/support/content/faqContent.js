@@ -11,14 +11,14 @@
  *   or pausing yet (farmer/pages/MyProduce.jsx; api endpoints.js).
  * • Buyers reach sellers per listing with the "Request" (purchase request)
  *   and "Inquire" (inquiry) controls on the dashboard cards
- *   (buyer/parts/ProduceCard.jsx) — there is no general chat.
+ *   (features/buyer/components/ProduceCard.jsx) — there is no general chat.
  * • Cart = navbar basket + checkout page on the public marketplace;
  *   "Place order" POSTs the order to the real API and only then reports
  *   success. Payments are NOT configured — orders stay Pending/Unpaid
- *   (features/buyer/Checkout.jsx; server/routes/orders.js).
+ *   (features/cart/pages/Checkout.jsx; backend-archived/server/routes/orders.js).
  * • Password recovery is NOT wired to any backend (AuthModal honestly says
  *   so) — no FAQ entry claims it does.
- * • Theme: the header theme toggle (features/theme) switches light/dark.
+ * • Theme: the header theme toggle (components/ui/ThemeToggle) switches light/dark.
  * No entry claims payments, deliveries, refunds, seller verification or
  * account recovery work — none of those are implemented.
  */

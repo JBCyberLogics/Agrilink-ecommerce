@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { SearchX, Sprout, RefreshCw } from 'lucide-react'
-import { CATEGORY_FILTERS } from '../../utils/constants'
-import { marketListings } from '../../api/endpoints'
+import { CATEGORY_FILTERS } from '../../../constants/index.js'
+import { marketListings } from '../services/marketplaceService'
 import CategoryFilter from './CategoryFilter'
 import ProductCard from './ProductCard'
 

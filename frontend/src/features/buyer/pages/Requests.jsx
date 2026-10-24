@@ -8,11 +8,11 @@
  */
 import { useEffect, useState } from 'react'
 import { MessageSquare, CheckCircle2, AlertCircle, RotateCw, PackageSearch } from 'lucide-react'
-import ConfirmDelete from '../parts/ConfirmDelete'
-import StatusChip from '../parts/StatusChip'
-import EmptyState from '../parts/EmptyState'
-import { useBuyerRequests } from '../parts/useBuyerData'
-import { buyerCancelRequest } from '../../../api/endpoints'
+import ConfirmDelete from '../../../components/ui/ConfirmDelete'
+import StatusChip from '../../../components/feedback/StatusChip'
+import EmptyState from '../../../components/feedback/EmptyState'
+import { useBuyerRequests } from '../hooks/useBuyerData'
+import { buyerCancelRequest } from '../services/buyerService'
 import { kes, fmtDate } from '../../../utils/format'
 
 export default function Requests() {

@@ -5,8 +5,8 @@
  */
 import { useEffect, useState } from 'react'
 import { MessageSquare, AlertCircle, RotateCw } from 'lucide-react'
-import EmptyState from '../parts/EmptyState'
-import { buyerInquiries } from '../../../api/endpoints'
+import EmptyState from '../../../components/feedback/EmptyState'
+import { buyerInquiries } from '../services/inquiryService'
 import { kes } from '../../../utils/format'
 import { fmtDate } from '../../../utils/format'
 

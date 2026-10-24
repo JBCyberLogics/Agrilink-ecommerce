@@ -25,10 +25,10 @@ import {
   AlertCircle,
   Info,
 } from 'lucide-react'
-import { buyerProfile } from '../../../api/endpoints'
+import { buyerProfile } from '../../buyer/services/buyerService'
 import { fmtDate } from '../../../utils/format'
-import AccountSummary from '../../../components/common/AccountSummary'
-import SettingUnavailable from '../../../components/common/SettingUnavailable'
+import AccountSummary from '../components/AccountSummary'
+import SettingUnavailable from '../components/SettingUnavailable'
 
 export default function Settings() {
   const [state, setState] = useState({ status: 'loading', user: null, error: null })

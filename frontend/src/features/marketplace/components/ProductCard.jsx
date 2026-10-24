@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MapPin, BadgeCheck, ShoppingCart, Check, Wheat, Carrot, Tractor } from 'lucide-react'
-import { kes } from '../../utils/format'
+import { kes } from '../../../utils/format'
 
 const LOW_STOCK = 50
 

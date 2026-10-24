@@ -8,7 +8,7 @@
  * exists, the reusable PriceTable component renders real observations.
  */
 import { LineChart } from 'lucide-react'
-import EmptyState from '../parts/EmptyState'
+import EmptyState from '../../../components/feedback/EmptyState'
 
 export default function MarketIntelligence() {
   return (

@@ -14,7 +14,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-library/react'
-import AuthModal from '../features/auth/AuthModal'
+import AuthModal from '../features/auth/components/AuthModal'
 
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {})

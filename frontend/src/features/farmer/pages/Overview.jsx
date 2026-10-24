@@ -10,11 +10,11 @@
  */
 import { useEffect, useState } from 'react'
 import { LineChart, Package, MessageSquare, Receipt, ArrowRight, ListChecks, CalendarPlus, Target, AlertCircle, RotateCw } from 'lucide-react'
-import { farmerProfile } from '../../../api/endpoints'
+import { farmerProfile } from '../services/farmerService'
 import { fmtDate } from '../../../utils/format'
-import StatCard from '../parts/StatCard'
-import EmptyState from '../parts/EmptyState'
-import useFarmerListings from '../parts/useFarmerListings'
+import StatCard from '../../../components/feedback/StatCard'
+import EmptyState from '../../../components/feedback/EmptyState'
+import useFarmerListings from '../hooks/useFarmerListings'
 
 function quickAction(onNavigate, page, label) {
   return (

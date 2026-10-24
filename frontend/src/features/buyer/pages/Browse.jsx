@@ -8,14 +8,14 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { AlertCircle, RotateCw, SlidersHorizontal, SearchX, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
-import { buyerSave, buyerUnsave } from '../../../api/endpoints'
-import { createInquiry } from '../../../api/endpoints'
-import { CATEGORIES } from '../../../utils/constants'
-import { useMarketFeed, useBuyerSaved } from '../parts/useBuyerData'
-import ProduceCard from '../parts/ProduceCard'
-import RequestDialog from '../parts/RequestDialog'
-import InquiryDialog from '../parts/InquiryDialog'
-import EmptyState from '../parts/EmptyState'
+import { buyerSave, buyerUnsave } from '../services/buyerService'
+import { createInquiry } from '../../inquiries/services/inquiryService'
+import { CATEGORIES } from '../../../constants/index.js'
+import { useMarketFeed, useBuyerSaved } from '../hooks/useBuyerData'
+import ProduceCard from '../components/ProduceCard'
+import RequestDialog from '../components/RequestDialog'
+import InquiryDialog from '../components/InquiryDialog'
+import EmptyState from '../../../components/feedback/EmptyState'
 
 const SORTS = [
   { id: 'newest', label: 'Newest first' },

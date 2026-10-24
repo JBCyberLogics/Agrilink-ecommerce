@@ -6,8 +6,8 @@
  */
 import { useEffect, useState } from 'react'
 import { Receipt, AlertCircle, RotateCw, Truck } from 'lucide-react'
-import EmptyState from '../parts/EmptyState'
-import { buyerOrders } from '../../../api/endpoints'
+import EmptyState from '../../../components/feedback/EmptyState'
+import { buyerOrders } from '../services/orderService'
 import { kes, fmtDate } from '../../../utils/format'
 
 export default function Orders() {

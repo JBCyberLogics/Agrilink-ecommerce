@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Sprout, Search, ShoppingBag, Menu, X, LogOut, ChevronDown, Plus, Minus, ArrowRight } from 'lucide-react'
 import { kes } from '../../utils/format'
-import ThemeToggle from '../../features/theme/ThemeToggle'
+import ThemeToggle from '../ui/ThemeToggle'
 
 /* Navbar logo — the official Agrilink brand artwork (logo.png).
    The source PNG is square with generous margins, so object-cover
@@ -150,7 +150,10 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
               </div>
               <button
                 type="button"
-                onClick={onCheckout}
+                onClick={() => {
+                  setOpen(false)
+                  onCheckout()
+                }}
                 className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary text-sm font-semibold text-white shadow-lift transition-all hover:bg-primary-dark active:scale-[0.98]"
               >
                 Checkout <ArrowRight size={16} aria-hidden="true" />
@@ -164,7 +167,26 @@ function CartButton({ cart, onQty, onRemove, count, onCheckout = () => {} }) {
 }
 
 /* Sign-in button OR the signed-in profile chip */
-export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
+export function AuthArea({ user, onSignIn, onSignOut, mobile = false, booting = false }) {
+  /* While the boot session check is in flight the slot holds a neutral
+     placeholder — identical footprint, so the row never shifts when the
+     real chip (or the Sign In button) arrives. No invented name/role. */
+  if (!user && booting) {
+    return (
+      <div className={mobile ? 'flex items-center gap-2' : 'ml-1 flex items-center gap-2'}>
+        <span
+          role="status"
+          className={`grid h-10 w-10 shrink-0 place-items-center rounded-full bg-soft ${mobile ? '' : 'animate-pulse'}`}
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+            <circle cx="12" cy="8" r="4" className="fill-muted-2/40" />
+            <path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5" className="stroke-muted-2/40" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          {!mobile && <span className="sr-only">Checking sign-in status…</span>}
+        </span>
+      </div>
+    )
+  }
   if (user) {
     return (
       <div className={mobile ? 'flex items-center gap-2' : 'ml-1 flex items-center gap-2'}>
@@ -212,23 +234,62 @@ export function AuthArea({ user, onSignIn, onSignOut, mobile = false }) {
   )
 }
 
-/* The top-level destinations — buttons (not anchors) switch routes.
-   Public content pages (how-it-works, about, contact) sit beside the app
-   destinations; Farmer/Buyer hubs are visible to everyone: clicking the
-   wrong one gets a polite role gate (server-verified), never a silent
-   dead end. */
-const NAV_LINKS = [
+/* Public destinations — visible to everyone, logged out or in.
+   Role dashboards are NOT public links: an authenticated user only ever
+   gets a link to THEIR OWN dashboard (see dashboardLinkFor below), so a
+   buyer never sees a farmer entry point and vice versa. */
+const PUBLIC_NAV_LINKS = [
   { id: 'shop', label: 'Marketplace' },
-  { id: 'farmer/dashboard', label: 'Farmer Panel' },
-  { id: 'buyer/dashboard', label: 'Buyer Hub' },
   { id: 'how-it-works', label: 'How it works' },
   { id: 'about', label: 'About' },
   { id: 'faq', label: 'FAQ' },
   { id: 'contact', label: 'Contact' },
 ]
 
-export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onCheckout, onSignIn, onSignOut, onOpenAuth = () => {} }) {
+/* Returns the authenticated user's own dashboard link, derived from the
+   server-validated session role (user.role) — never from a manually
+   selected frontend value, URL param or localStorage. Returns null for
+   logged-out users (they see Login/Sign Up via AuthArea). */
+function dashboardLinkFor(user) {
+  if (!user) return null
+  if (user.role === 'Farmer')
+    return { id: 'farmer/dashboard', label: 'Farmer Dashboard' }
+  if (user.role === 'Buyer')
+    return { id: 'buyer/dashboard', label: 'Buyer Dashboard' }
+  return null
+}
+
+/* Combined desktop + mobile link list: public links for everyone, plus
+   the signed-in user's own dashboard when authenticated. */
+function navLinksFor(user) {
+  if (!user) return PUBLIC_NAV_LINKS
+  const own = dashboardLinkFor(user)
+  return own ? [...PUBLIC_NAV_LINKS, own] : PUBLIC_NAV_LINKS
+}
+
+export default function Navbar({ user, route = 'shop', onRoute = () => {}, search, onSearch, cart, cartCount, onQty, onRemoveFromCart, onCheckout, onSignIn, onSignOut, onOpenAuth = () => {}, booting = false }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const mobileBtn = useRef(null)
+
+  /* Escape closes the mobile menu and returns focus to the trigger. */
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false)
+        mobileBtn.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [mobileOpen])
+
+  /* Any route change (button, hash edit, back/forward) closes the menu,
+     so the panel never lingers over a page the user already left. */
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [route])
+
   const isActive = (link) => {
     const base = link.id.split('/')[0]
     /* dashboard hubs stay active across their pages; simple pages match exactly */
@@ -253,7 +314,7 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
         {/* right cluster */}
         <div className="ml-auto flex items-center gap-1 sm:gap-2">
           <ul className="mr-2 hidden items-center gap-1 lg:flex">
-            {NAV_LINKS.map((link) => (
+            {navLinksFor(user).map((link) => (
               <li key={link.id}>
                 <button
                   type="button"
@@ -285,14 +346,22 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
           <ThemeToggle className="h-11 w-11" size={20} />
           <CartButton cart={cart} count={cartCount} onQty={onQty} onRemove={onRemoveFromCart} onCheckout={onCheckout} />
           <div className="hidden sm:block">
-            <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} />
+            <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} booting={booting} />
           </div>
 
           {/* mobile menu trigger */}
           <button
+            ref={mobileBtn}
             type="button"
-            onClick={() => setMobileOpen((v) => !v)}
+            onClick={() => {
+              if (!mobileOpen) setMobileOpen(true)
+              else {
+                setMobileOpen(false)
+                mobileBtn.current?.focus()
+              }
+            }}
             aria-expanded={mobileOpen}
+            aria-controls="nav-mobile-menu"
             aria-label="Open menu"
             className="grid h-11 w-11 place-items-center rounded-xl text-ink-4 transition-colors hover:bg-soft lg:hidden"
           >
@@ -308,9 +377,9 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
 
       {/* mobile dropdown panel */}
       {mobileOpen && (
-        <div className="border-t border-line/60 bg-paper/90 p-4 backdrop-blur-xl lg:hidden">
+        <div id="nav-mobile-menu" className="border-t border-line/60 bg-paper/90 p-4 backdrop-blur-xl lg:hidden">
           <ul className="space-y-1">
-            {NAV_LINKS.map((link) => (
+            {navLinksFor(user).map((link) => (
               <li key={link.id}>
                 <button
                   type="button"
@@ -350,7 +419,7 @@ export default function Navbar({ user, route = 'shop', onRoute = () => {}, searc
             <ThemeToggle className="h-10 w-10 border border-line" size={18} />
           </div>
           <div className="mt-3 border-t border-line/60 pt-3 sm:hidden">
-            <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} mobile />
+            <AuthArea user={user} onSignIn={onSignIn} onSignOut={onSignOut} booting={booting} mobile />
           </div>
         </div>
       )}

@@ -5,7 +5,7 @@
  * only the product's actual intent.
  */
 import { Sprout, ShoppingBag, ListPlus, Eye, MessagesSquare } from 'lucide-react'
-import CtaBand from '../../components/common/CtaBand'
+import CtaBand from '../components/CtaBand'
 
 export default function AboutPage() {
   return (

@@ -5,7 +5,8 @@
  * market feed (public), saved produce and purchase requests (buyer-only).
  */
 import { useEffect, useState } from 'react'
-import { marketListings, buyerSaved, buyerRequests } from '../../../api/endpoints'
+import { marketListings } from '../../marketplace/services/marketplaceService'
+import { buyerSaved, buyerRequests } from '../services/buyerService'
 
 export function useMarketFeed() {
   const [state, setState] = useState({ status: 'loading', listings: [], error: null })

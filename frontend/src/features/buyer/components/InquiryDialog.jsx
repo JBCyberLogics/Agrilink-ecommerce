@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { X, AlertCircle, CheckCircle2, MessageSquarePlus } from 'lucide-react'
-import { createInquiry } from '../../../api/endpoints'
+import { createInquiry } from '../../inquiries/services/inquiryService'
 
 export default function InquiryDialog({ listing, onClose, onSent }) {
   const [form, setForm] = useState({ message: '' })

@@ -5,7 +5,7 @@
  * (no verified sellers, guaranteed prices, payment or delivery claims).
  */
 import { UserPlus, UserRound, Package, MessageSquare, Search, Scale, Sprout, ShoppingBag } from 'lucide-react'
-import CtaBand from '../../components/common/CtaBand'
+import CtaBand from '../components/CtaBand'
 
 const FARMER_STEPS = [
   {

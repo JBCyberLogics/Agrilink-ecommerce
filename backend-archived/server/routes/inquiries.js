@@ -9,12 +9,14 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import { requireAuth } from '../middleware/auth.js'
+import { authenticatedWriteLimiter } from '../middleware/rateLimit.js'
 import Listing from '../models/Listing.js'
 import Inquiry from '../models/Inquiry.js'
 
 const router = express.Router()
 
 router.use(requireAuth)
+router.use(authenticatedWriteLimiter)
 
 const notFound = (res, msg) => res.status(404).json({ error: msg })
 const bad = (res, msg, field) => res.status(400).json({ error: msg, field })

@@ -7,7 +7,7 @@
  */
 import { useState } from 'react'
 import { AlertCircle, CheckCircle2, RefreshCw, Scale } from 'lucide-react'
-import { aiRecommendations } from '../../services/ai'
+import { aiRecommendations } from '../../../services/ai'
 
 const INITIAL_FORM = {
   role: '',

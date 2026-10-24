@@ -19,8 +19,8 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor, within, act, cleanup } from '@testing-library/react'
-import App from '../App'
-import { THEME_STORAGE_KEY } from '../features/theme/theme'
+import App from '../app/App'
+import { THEME_STORAGE_KEY } from '../app/providers/theme'
 
 /* the seeded demo buyer — an existing coded account, not an invention */
 const BUYER = { name: 'Wanjiku Kamau', email: 'wanjiku@agrilink.co.ke', role: 'Buyer' }
@@ -102,7 +102,7 @@ async function loginAs(role) {
     }
     return STUBS[url] ?? STUBS.default
   })
-  fireEvent.click(screen.getByRole('button', { name: 'Sign In' }))
+  fireEvent.click(await screen.findByRole('button', { name: 'Sign In' }))
   const dialog = screen.getByRole('dialog')
   fireEvent.change(within(dialog).getByLabelText('Email address'), {
     target: { value: role === 'farmer' ? FARMER.email : BUYER.email },

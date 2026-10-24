@@ -12,8 +12,8 @@
  */
 import { useState } from 'react'
 import { Sprout, ArrowRight, ListPlus, Eye, MessagesSquare, Info, UserPlus } from 'lucide-react'
-import { IMAGES } from '../../utils/constants'
-import CtaBand from '../../components/common/CtaBand'
+import { IMAGES } from '../../../constants/index.js'
+import CtaBand from '../components/CtaBand'
 
 const BENEFITS = [
   {

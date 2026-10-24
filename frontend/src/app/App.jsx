@@ -1,56 +1,56 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { RotateCw } from 'lucide-react'
-import Navbar from './components/layout/Navbar'
-import AuthModal from './features/auth/AuthModal'
-import Hero from './features/marketplace/Hero'
-import Marketplace from './features/marketplace/Marketplace'
-import FarmerShell from './features/farmer/FarmerShell'
-import BuyerShell from './features/buyer/BuyerShell'
-import Overview from './features/farmer/pages/Overview'
-import MarketIntelligence from './features/farmer/pages/MarketIntelligence'
-import MyProduce from './features/farmer/pages/MyProduce'
-import FarmProfile from './features/farmer/pages/FarmProfile'
-import FarmerOrders from './features/farmer/pages/Orders'
-import FarmerInquiries from './features/farmer/pages/Inquiries'
-import FarmerSettings from './features/farmer/pages/Settings'
-import ContactPage from './features/public/Contact'
-import HowItWorks from './features/public/HowItWorks'
-import AboutPage from './features/public/About'
-import StartSelling from './features/public/StartSelling'
-import BuyerOverview from './features/buyer/pages/Overview'
-import BuyerBrowse from './features/buyer/pages/Browse'
-import BuyerPriceCompare from './features/buyer/pages/PriceCompare'
-import BuyerRequests from './features/buyer/pages/Requests'
-import BuyerSaved from './features/buyer/pages/Saved'
-import BuyerOrders from './features/buyer/pages/Orders'
-import BuyerInquiries from './features/buyer/pages/Inquiries'
-import BuyerProfile from './features/buyer/pages/Profile'
-import BuyerSettings from './features/buyer/pages/Settings'
-import FAQ from './features/faq/FAQ'
-import { ThemeProvider } from './features/theme/theme'
+import Navbar from '../components/layout/Navbar'
+import AuthModal from '../features/auth/components/AuthModal'
+import Hero from '../features/marketplace/components/Hero'
+import Marketplace from '../features/marketplace/components/Marketplace'
+import FarmerShell from '../features/farmer/FarmerShell'
+import BuyerShell from '../features/buyer/BuyerShell'
+import Overview from '../features/farmer/pages/Overview'
+import MarketIntelligence from '../features/farmer/pages/MarketIntelligence'
+import MyProduce from '../features/farmer/pages/MyProduce'
+import FarmProfile from '../features/farmer/pages/FarmProfile'
+import FarmerOrders from '../features/orders/pages/FarmerOrders'
+import FarmerInquiries from '../features/inquiries/pages/FarmerInquiries'
+import FarmerSettings from '../features/settings/pages/FarmerSettings'
+import ContactPage from '../features/support/pages/Contact'
+import HowItWorks from '../features/support/pages/HowItWorks'
+import AboutPage from '../features/support/pages/About'
+import StartSelling from '../features/support/pages/StartSelling'
+import BuyerOverview from '../features/buyer/pages/Overview'
+import BuyerBrowse from '../features/buyer/pages/Browse'
+import BuyerPriceCompare from '../features/buyer/pages/PriceCompare'
+import BuyerRequests from '../features/buyer/pages/Requests'
+import BuyerSaved from '../features/buyer/pages/Saved'
+import BuyerOrders from '../features/orders/pages/BuyerOrders'
+import BuyerInquiries from '../features/inquiries/pages/BuyerInquiries'
+import BuyerProfile from '../features/buyer/pages/Profile'
+import BuyerSettings from '../features/settings/pages/BuyerSettings'
+import FAQ from '../features/support/pages/FAQ'
+import { ThemeProvider } from './providers/theme'
 
 /* Shared AI pages */
-import AIAdvisor from './features/ai/AIAdvisor'
-import AIAssistant from './features/ai/AIAssistant'
-import AIRecommendations from './features/ai/AIRecommendations'
+import AIAdvisor from '../features/ai/pages/AIAdvisor'
+import AIAssistant from '../features/ai/pages/AIAssistant'
+import AIRecommendations from '../features/ai/pages/AIRecommendations'
 
 /* Farmer AI pages */
-import AICropInsights from './features/farmer/pages/AICropInsights'
-import AIPriceRecommendation from './features/farmer/pages/AIPriceRecommendation'
-import AIListingImprovement from './features/farmer/pages/AIListingImprovement'
-import AIBuyerMatching from './features/farmer/pages/AIBuyerMatching'
-import AIHarvestPlanner from './features/farmer/pages/AIHarvestPlanner'
+import AICropInsights from '../features/ai/pages/farmer/AICropInsights'
+import AIPriceRecommendation from '../features/ai/pages/farmer/AIPriceRecommendation'
+import AIListingImprovement from '../features/ai/pages/farmer/AIListingImprovement'
+import AIBuyerMatching from '../features/ai/pages/farmer/AIBuyerMatching'
+import AIHarvestPlanner from '../features/ai/pages/farmer/AIHarvestPlanner'
 
 /* Buyer AI pages */
-import AIProduceFinder from './features/buyer/pages/AIProduceFinder'
-import AISupplierMatching from './features/buyer/pages/AISupplierMatching'
-import AIPurchasePlanning from './features/buyer/pages/AIPurchasePlanning'
-import Footer from './components/layout/Footer'
-import Checkout from './features/buyer/Checkout'
-import NotFound from './components/common/NotFound'
-import { me as fetchMe, login as demoLogin, logout as apiLogout } from './api/endpoints'
-import Browse, { EMPTY_FILTERS } from './features/buyer/pages/Browse'
-import { parseHash } from './router/routes'
+import AIProduceFinder from '../features/ai/pages/buyer/AIProduceFinder'
+import AISupplierMatching from '../features/ai/pages/buyer/AISupplierMatching'
+import AIPurchasePlanning from '../features/ai/pages/buyer/AIPurchasePlanning'
+import Footer from '../components/layout/Footer'
+import Checkout from '../features/cart/pages/Checkout'
+import NotFound from '../features/support/pages/NotFound'
+import { me as fetchMe, login as demoLogin, logout as apiLogout } from '../features/auth/services/authService'
+import Browse, { EMPTY_FILTERS } from '../features/buyer/pages/Browse'
+import { parseHash } from '../router/routes'
 
 /* Auth boot panel — shown on protected routes while the boot session
    check (httpOnly cookie restore via GET /api/auth/me) is still in
@@ -92,6 +92,10 @@ export default function App() {
   /* Where a farmer wanted to go before being asked to sign in — restored
      after a successful auth. A ref so the boot effect can read it too. */
   const returnTo = useRef(null)
+  /* Generation counter bumped on sign-out: any in-flight session restore
+     (or demo login) that resolves AFTER a logout is ignored, so a stale
+     response can never re-authenticate the UI (session security). */
+  const sessionEpoch = useRef(0)
 
   // ------------------------------------------------------------------ cart
   /* Persist the cart to a versioned localStorage key so it survives
@@ -247,7 +251,7 @@ export default function App() {
 
     if (params.get('demo') === 'farmer') {
       demoLogin({ email: 'demo@agrilink.co.ke', password: 'demo1234', role: 'Farmer' })
-        .then(handleAuth)
+        .then((u) => u && sessionEpoch.current === 0 && handleAuth(u))
         // API offline → visual fallback so the dashboard demo still shows
         .catch(() =>
           handleAuth({ name: 'Joseph Kariuki', email: 'joseph@agrilink.co.ke', role: 'Farmer' }),
@@ -262,6 +266,7 @@ export default function App() {
     if (params.get('demo') === 'buyer') {
       demoLogin({ email: 'wanjiku@agrilink.co.ke', password: 'demo1234', role: 'Buyer' })
         .then((u) => {
+          if (sessionEpoch.current !== 0) return
           setUser(u)
           setAuthOpen(false)
           goRoute('buyer/dashboard')
@@ -278,8 +283,16 @@ export default function App() {
 
     // plain visit — the signed JWT cookie decides who we are
     fetchMe()
-      .then((u) => u && handleAuth(u))
-      .catch(() => {})
+      .then((u) => {
+        if (u && sessionEpoch.current === 0) handleAuth(u)
+      })
+      /* A confirmed 401 means the stored JWT is expired/invalid: purge the
+         stale cookie server-side so it can never authenticate again.
+         Network failures (status 0) are NOT treated as logout — the user
+         keeps whatever session the cookie really holds (retry on refresh). */
+      .catch((err) => {
+        if (err?.status === 401) apiLogout().catch(() => {})
+      })
       .finally(() => setAuthReady(true))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -318,16 +331,35 @@ export default function App() {
     [goRoute],
   )
 
+  const [notice, setNotice] = useState(null) // sign-out confirmation (aria-live)
+
   const signOut = useCallback(async () => {
+    let serverConfirmed = false
     try {
       await apiLogout() // clear the session cookie server-side
+      serverConfirmed = true
     } catch {
-      /* API offline — clear local state anyway */
+      /* API offline — local state is still cleared below; the toast says
+         honestly that the server-side cookie could not be dropped. */
     }
+    /* bump the epoch FIRST so any request in flight can no longer restore
+       an authenticated state after the user asked to sign out */
+    sessionEpoch.current += 1
     setUser(null)
     returnTo.current = null
     goRoute('shop')
+    setNotice(
+      serverConfirmed
+        ? 'You are signed out.'
+        : 'Signed out on this device — but the server could not be reached to invalidate the session. Avoid shared computers.',
+    )
   }, [goRoute])
+
+  useEffect(() => {
+    if (!notice) return
+    const t = setTimeout(() => setNotice(null), 5000)
+    return () => clearTimeout(t)
+  }, [notice])
 
   // ----------------------------------------------------------------- render
   const page = route.startsWith('farmer/') ? route.slice('farmer/'.length) : null
@@ -374,6 +406,7 @@ export default function App() {
       <div className="min-h-screen">
       <Navbar
         user={user}
+        booting={!authReady}
         route={route}
         onRoute={goRoute}
         search={search}
@@ -477,6 +510,17 @@ export default function App() {
           <Footer onLogin={() => openAuth({ tab: 'login' })} />
         )}
       </main>
+
+      {/* Sign-out (etc.) confirmation — aria-live so screen readers hear it */}
+      {notice && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-4 left-1/2 z-[70] -translate-x-1/2 rounded-xl border border-line/70 bg-paper px-4 py-2.5 text-sm font-medium text-ink shadow-lg"
+        >
+          {notice}
+        </div>
+      )}
 
       <AuthModal
         open={authOpen}

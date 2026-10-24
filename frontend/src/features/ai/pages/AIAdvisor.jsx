@@ -6,7 +6,7 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, LineChart, RotateCw, Search } from 'lucide-react'
-import { aiMarketAdvisor } from '../../services/ai'
+import { aiMarketAdvisor } from '../../../services/ai'
 
 const INITIAL_FORM = {
   produce: '',

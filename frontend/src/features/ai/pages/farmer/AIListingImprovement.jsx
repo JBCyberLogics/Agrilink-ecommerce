@@ -6,7 +6,7 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, RotateCw, Search } from 'lucide-react'
-import { aiListingImprovement } from '../../../services/ai'
+import { aiListingImprovement } from '../../../../services/ai'
 
 const INITIAL_FORM = {
   existingTitle: '',

@@ -6,7 +6,7 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, RotateCw, Search, ShoppingBag, Sprout, Truck } from 'lucide-react'
-import { aiCropInsights } from '../../../services/ai'
+import { aiCropInsights } from '../../../../services/ai'
 
 const INITIAL_FORM = {
   produceType: '',

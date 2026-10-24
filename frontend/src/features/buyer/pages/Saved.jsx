@@ -8,10 +8,10 @@
  */
 import { useState } from 'react'
 import { Heart, HeartOff, AlertCircle, RotateCw } from 'lucide-react'
-import { buyerSave, buyerUnsave } from '../../../api/endpoints'
-import { useBuyerSaved } from '../parts/useBuyerData'
-import ProduceCard from '../parts/ProduceCard'
-import EmptyState from '../parts/EmptyState'
+import { buyerSave, buyerUnsave } from '../services/buyerService'
+import { useBuyerSaved } from '../hooks/useBuyerData'
+import ProduceCard from '../components/ProduceCard'
+import EmptyState from '../../../components/feedback/EmptyState'
 
 export default function Saved({ onBrowse }) {
   const { status, saved, error, refresh } = useBuyerSaved()

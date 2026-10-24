@@ -9,7 +9,7 @@
  */
 import { useRef, useState } from 'react'
 import { Mail, Sprout, ShoppingBag, Wrench, CircleAlert, RotateCw, ArrowRight } from 'lucide-react'
-import Field, { FIELD_ICONS } from '../../components/ui/Field'
+import Field, { FIELD_ICONS } from '../../../components/ui/Field'
 
 const SUPPORT_EMAIL = 'hello@agrilink.co.ke'
 const USER_TYPES = ['Farmer', 'Buyer', 'Other']

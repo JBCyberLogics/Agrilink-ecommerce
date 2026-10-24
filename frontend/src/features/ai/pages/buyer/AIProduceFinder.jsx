@@ -6,8 +6,8 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, MapPin, RotateCw, Search, Truck } from 'lucide-react'
-import { aiProduceFinder } from '../../../services/ai'
-import { kes } from '../../../utils/format'
+import { aiProduceFinder } from '../../../../services/ai'
+import { kes } from '../../../../utils/format'
 
 const INITIAL_FORM = {
   produceType: '',

@@ -9,7 +9,7 @@
  * exposing the current state (true = dark mode active).
  */
 import { Moon, Sun } from 'lucide-react'
-import { useTheme } from './theme'
+import { useTheme } from '../../app/providers/theme'
 
 export default function ThemeToggle({ className = '', size = 17 }) {
   const { theme, toggleTheme } = useTheme()

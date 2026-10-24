@@ -5,7 +5,7 @@
  */
 import { useEffect, useState } from 'react'
 import { UserRound, Mail, CalendarPlus, ShieldCheck, AlertCircle, RotateCw } from 'lucide-react'
-import { farmerProfile } from '../../../api/endpoints'
+import { farmerProfile } from '../services/farmerService'
 import { fmtDate } from '../../../utils/format'
 
 export default function FarmProfile() {

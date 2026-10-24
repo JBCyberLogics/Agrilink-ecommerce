@@ -13,7 +13,7 @@
  */
 import { useEffect, useMemo, useState } from 'react'
 import { Scale, AlertCircle, MapPin, Check, RotateCw } from 'lucide-react'
-import { useMarketFeed } from '../parts/useBuyerData'
+import { useMarketFeed } from '../hooks/useBuyerData'
 import { kes, fmtDate } from '../../../utils/format'
 
 export default function PriceCompare() {

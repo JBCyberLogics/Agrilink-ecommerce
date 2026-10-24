@@ -16,10 +16,12 @@ import User from '../models/User.js'
 import Listing from '../models/Listing.js'
 import PurchaseRequest from '../models/PurchaseRequest.js'
 import { requireAuth } from '../middleware/auth.js'
+import { authenticatedWriteLimiter } from '../middleware/rateLimit.js'
 
 const router = express.Router()
 
 router.use(requireAuth)
+router.use(authenticatedWriteLimiter)
 
 /* Buyer-role gate — farmers/admins never reach buyer-owned functionality. */
 function buyerOnly(req, res, next) {

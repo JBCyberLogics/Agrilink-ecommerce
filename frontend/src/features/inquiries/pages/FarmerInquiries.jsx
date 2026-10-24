@@ -5,7 +5,8 @@
  */
 import { useEffect, useState } from 'react'
 import { MessageSquare, AlertCircle, RotateCw, Truck } from 'lucide-react'
-import EmptyState from '../parts/EmptyState'
+import EmptyState from '../../../components/feedback/EmptyState'
+import { farmerInquiries, farmerRespondInquiry } from '../services/inquiryService'
 import { fmtDate } from '../../../utils/format'
 
 export default function Inquiries() {
@@ -16,8 +17,7 @@ export default function Inquiries() {
 
   useEffect(() => {
     let alive = true
-    fetch('/api/farmer/inquiries')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load inquiries'))))
+    farmerInquiries()
       .then((d) => alive && setInquiries(d.inquiries ?? []))
       .then(() => alive && setStatus('ok'))
       .catch(() => alive && setStatus('error'))
@@ -28,8 +28,7 @@ export default function Inquiries() {
 
   const refresh = () => {
     setStatus('loading')
-    fetch('/api/farmer/inquiries')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load inquiries'))))
+    farmerInquiries()
       .then((d) => setInquiries(d.inquiries ?? []))
       .then(() => setStatus('ok'))
       .catch(() => setStatus('error'))
@@ -38,18 +37,15 @@ export default function Inquiries() {
   const respond = async (id, newStatus, reply) => {
     setReplying(id)
     try {
-      const res = await fetch(`/api/farmer/inquiries/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status, reply }),
-      })
-      if (!res.ok) throw new Error('Could not update this inquiry.')
-      const d = await res.json()
+      /* PATCH the requested transition ('Replied' | 'Closed'). The earlier
+         build sent the page's outer loading-state string here, which the
+         server rejected on every click — fixed during the restructure. */
+      const d = await farmerRespondInquiry(id, newStatus, reply)
       setInquiries((prev) =>
         prev.map((i) => (i.id === d.inquiry.id ? { ...i, status: d.inquiry.status, reply: d.inquiry.reply } : i)),
       )
     } catch (err) {
-      setError(err?.message || 'Could not update this inquiry. Please try again.')
+      setError((err?.error || err?.message) || 'Could not update this inquiry. Please try again.')
     } finally {
       setReplying(null)
     }

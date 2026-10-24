@@ -6,7 +6,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, MessageSquare, RotateCw, Send } from 'lucide-react'
-import { aiAgriculturalAssistant } from '../../services/ai'
+import { aiAgriculturalAssistant } from '../../../services/ai'
 
 const INITIAL_MESSAGES = [
   {

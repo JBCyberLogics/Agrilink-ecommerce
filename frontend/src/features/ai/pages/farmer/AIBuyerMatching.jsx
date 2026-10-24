@@ -6,7 +6,7 @@
  */
 import { useRef, useState } from 'react'
 import { AlertCircle, CheckCircle2, MapPin, RotateCw, Search, Truck } from 'lucide-react'
-import { aiBuyerMatching } from '../../../services/ai'
+import { aiBuyerMatching } from '../../../../services/ai'
 
 const INITIAL_FORM = {
   produceType: '',
